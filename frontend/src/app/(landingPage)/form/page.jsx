@@ -12,7 +12,7 @@ import {
 } from "@/lib/utils/form-validator";
 import PrimaryButton from "@/components/ui/button/PrimaryButton";
 
-const Home = () => {
+const Form = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -136,4 +136,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Form;
