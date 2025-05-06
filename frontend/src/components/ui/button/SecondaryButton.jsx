@@ -12,7 +12,7 @@ const SecondaryButton = ({ nextRoute, children }) => {
   return (
     <button
       onClick={handleNext}
-      className="inline-block px-6 py-2 rounded-3xl text-center text-white bg-[#090909]
+      className="inline-block min-w-[200px] px-6 py-2 rounded-3xl text-center text-white bg-[#090909]
                  hover:bg-[#1f1f1f] 
                  active:bg-[#333333] transition duration-200 "
     >
