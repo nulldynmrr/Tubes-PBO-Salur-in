@@ -1,12 +1,6 @@
-export async function getServerSideProps() {
-  return {
-    redirect: {
-      destination: "/home",
-      permanent: false,
-    },
-  };
-}
+// src/app/page.jsx
+import { redirect } from "next/navigation";
 
-export default function RedirectToHome() {
-  return <p>Redirecting...</p>;
+export default function Page() {
+  redirect("/home");
 }
