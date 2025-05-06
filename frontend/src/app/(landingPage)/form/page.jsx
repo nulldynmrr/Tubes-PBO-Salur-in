@@ -12,6 +12,15 @@ import {
 } from "@/lib/utils/form-validator";
 import PrimaryButton from "@/components/ui/button/PrimaryButton";
 
+import Table from "@/components/ui/table";
+
+const data = [
+  { id: 1, nama: "Ayu", status: "Accepted" },
+  { id: 2, nama: "Budi", status: "Rejected" },
+  { id: 3, nama: "Citra", status: "Pending" },
+  { id: 4, nama: "Dedi", status: "Accepted" },
+];
+
 const Form = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -132,6 +141,7 @@ const Form = () => {
           Submit
         </PrimaryButton>
       </form>
+      <Table data={data} />
     </div>
   );
 };
