@@ -13,6 +13,7 @@ import {
 import PrimaryButton from "@/components/ui/button/PrimaryButton";
 
 import Table from "@/components/ui/table";
+import StatCard from "@/components/card/StatCard";
 
 const data = [
   { id: 1, nama: "Ayu", status: "Accepted" },
@@ -142,6 +143,7 @@ const Form = () => {
         </PrimaryButton>
       </form>
       <Table data={data} />
+      <StatCard/>
     </div>
   );
 };
