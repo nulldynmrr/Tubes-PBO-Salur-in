@@ -136,7 +136,7 @@ const InputField = ({
             ${
               error
                 ? "border-red-500 focus:border-red-500 focus:ring-red-500"
-                : "border-gray-300 focus:border-gray-400 focus:ring-gray-400"
+                : "border-gray-300 focus:border-blue-400 focus:ring-blue-400"
             }
             focus:outline-none focus:ring-2 focus:ring-opacity-20
           `}
