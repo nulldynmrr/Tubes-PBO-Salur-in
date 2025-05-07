@@ -11,9 +11,9 @@ import {
   validatePassword,
 } from "@/lib/utils/form-validator";
 import PrimaryButton from "@/components/ui/button/PrimaryButton";
-
+import DonationCard from "@/components/card/DonationCard";
 import Table from "@/components/ui/table";
-import CardAccordion from "@/components/card/CardAccordion";
+  
 
 const data = [
   { id: 1, nama: "Ayu", status: "Accepted" },
@@ -139,7 +139,7 @@ const Form = () => {
         <PrimaryButton>Submit</PrimaryButton>
       </form>
       <Table data={data} />
-      <CardAccordion className="mt-8" />
+      <DonationCard />
     </div>
   );
 };
