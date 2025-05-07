@@ -136,12 +136,7 @@ const Form = () => {
           rows={4}
         />
 
-        <PrimaryButton
-          type="submit"
-          className="w-full bg-gray-800 text-white py-2 px-4 rounded-md hover:bg-gray-700 transition-colors"
-        >
-          Submit
-        </PrimaryButton>
+        <PrimaryButton>Submit</PrimaryButton>
       </form>
       <Table data={data} />
       <CardAccordion className="mt-8" />

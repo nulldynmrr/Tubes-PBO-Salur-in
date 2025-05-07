@@ -32,7 +32,7 @@ const Login = () => {
     }
   };
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex px-[50px]">
       <div className="w-1/2 my-6 mx-12 rounded-md bg-blue-600 text-white flex flex-col items-center justify-center p-10">
         <h1 className="text-4xl font-semibold mb-2">Mari Berbagi</h1>
         <p className="mb-12 text-xl">Wujudkan Harapan Bersama</p>
@@ -47,8 +47,8 @@ const Login = () => {
         </div>
       </div>
 
-      <div className="flex items-center justify-center p-10">
-        <div className="w-full max-w-md">
+      <div className="w-1/2 flex items-center justify-center p-10 ">
+        <div className="w-full">
           <h1 className="text-4xl font-bold mb-2">LOGO</h1>
           <h2 className="text-xl font-semibold">Hola, Selamat Datang!</h2>
           <p className="text-sm text-gray-500 mb-6">
