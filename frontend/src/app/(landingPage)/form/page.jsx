@@ -13,6 +13,7 @@ import {
 import PrimaryButton from "@/components/ui/button/PrimaryButton";
 
 import Table from "@/components/ui/table";
+import CardAccordion from "@/components/card/CardAccordion";
 
 const data = [
   { id: 1, nama: "Ayu", status: "Accepted" },
@@ -54,6 +55,7 @@ const Form = () => {
   return (
     <div>
       <Navbar />
+
       <h1 className="text-2xl font-bold mb-6">Form</h1>
 
       <form
@@ -142,6 +144,7 @@ const Form = () => {
         </PrimaryButton>
       </form>
       <Table data={data} />
+      <CardAccordion className="mt-8" />
     </div>
   );
 };
