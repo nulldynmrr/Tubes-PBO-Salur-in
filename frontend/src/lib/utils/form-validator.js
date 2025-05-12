@@ -13,7 +13,7 @@ export const validateRequired = (value) => {
 
 // Validasi format nama (minimal 2 huruf, hanya huruf dan spasi)
 export const validateName = (value) => {
-  if (!value.trim()) return "Name harus diisi";
+  if (!value.trim()) return "Nama harus diisi";
   if (!/^[A-Za-z\s]{2,}$/.test(value)) {
     return "Nama harus minimal 2 karakter dan hanya terdiri dari huruf";
   }
