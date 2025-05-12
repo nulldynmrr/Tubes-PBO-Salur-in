@@ -2,7 +2,7 @@ import Image from "next/image";
 import ProgressBar from "./Progressbar";
 
 export default function DonationCard() {
-  const percentage = 72;
+  const percentage = 2;
 
   return (
     <div className="max-w-sm rounded-lg shadow-md overflow-hidden border border-gray-200 bg-white">
@@ -19,8 +19,8 @@ export default function DonationCard() {
         <p className="text-sm text-gray-600 mb-4">
           Membantu kelurahan desa bojongsoang untuk menemukan air bersih
         </p>
-        
-        <ProgressBar percentage={10} />
+
+        <ProgressBar percentage={percentage} />
 
         <button className="mt-4 w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-200">
           Donasi Sekarang
