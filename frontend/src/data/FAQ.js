@@ -1,37 +1,44 @@
-const faqData = [
-  {
-    id: 1,
-    question:
-      "Jenis amal apa yang bisa saya donasikan, dan bagaimana cara menemukannya?",
-    answer:
-      "Ada banyak jenis badan amal, mulai dari organisasi lokal hingga organisasi internasional besar. Anda bisa berdonasi kepada badan amal yang fokus pada tujuan tertentu, seperti kesejahteraan hewan.",
-  },
-  {
-    id: 2,
-    question:
-      "Apakah donasi saya dapat dikurangkan dari pajak, dan bagaimana cara mengklaimnya di pajak saya?",
-    answer:
-      "Tergantung pada hukum pajak di negara Anda. Beberapa donasi bisa dikurangkan dari pajak jika Anda menyumbang ke organisasi yang diakui. Simpan bukti donasi untuk keperluan pelaporan pajak.",
-  },
-  {
-    id: 3,
-    question: "Bisakah saya berdonasi secara anonim?",
-    answer:
-      "Ya, banyak platform donasi menyediakan opsi untuk berdonasi tanpa menampilkan nama Anda kepada publik atau penerima donasi.",
-  },
-  {
-    id: 4,
-    question:
-      "Berapa persen dari donasi saya yang sebenarnya digunakan oleh badan amal untuk keperluan administratif?",
-    answer:
-      "Setiap badan amal berbeda-beda, namun sebagian besar akan menginformasikan transparansi alokasi dana. Idealnya, sebagian besar dana digunakan langsung untuk program bantuan.",
-  },
-  {
-    id: 5,
-    question: "Bisakah saya menyumbangkan barang atau jasa alih-alih uang?",
-    answer:
-      "Beberapa organisasi menerima donasi dalam bentuk barang atau jasa, tergantung pada kebutuhan mereka. Cek syarat dan ketentuan masing-masing badan amal.",
-  },
-];
+import FaqItem from "../components/FaqItem";
 
-export default faqData;
+export default function FAQPage() {
+  const faqs = [
+    {
+      question: "Jenis amal apa yang bisa saya donasikan, dan bagaimana cara menemukannya?",
+      answer:
+        "Ada banyak jenis badan amal, mulai dari organisasi lokal hingga organisasi internasional besar. Anda bisa berdonasi kepada badan amal yang fokus pada tujuan tertentu, seperti kesejahteraan hewan.",
+    },
+    {
+      question: "Apakah donasi saya dapat dikurangkan dari pajak, dan bagaimana cara mengklaimnya di pajak saya?",
+      answer: "",
+    },
+    {
+      question: "Bisakah saya berdonasi secara anonim?",
+      answer: "",
+    },
+    {
+      question: "Berapa persen dari donasi saya yang sebenarnya digunakan oleh badan amal untuk keperluan administratif?",
+      answer: "",
+    },
+    {
+      question: "Bisakah saya menyumbangkan barang atau jasa alih-alih uang?",
+      answer: "",
+    },
+  ];
+
+  return (
+    <div className="min-h-screen bg-white px-4 py-12 md:px-20">
+      <div className="max-w-3xl mx-auto text-center">
+        <img src="/img/FAQ.png" alt="FAQ" className="mx-auto mb-6 w-40" />
+        <h1 className="text-2xl font-bold mb-2">Frequently Asked Question</h1>
+        <p className="text-gray-600 text-sm mb-10">
+          Ada pertanyaan lain? hubungi kita di rinopler@gmail.com
+        </p>
+        <div className="text-left">
+          {faqs.map((faq, index) => (
+            <FaqItem key={index} {...faq} />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
