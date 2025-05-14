@@ -1,7 +1,8 @@
 "use client"
-import React, {useState} from "react";
+import React, { useState } from "react";
 import InputField from "@/components/ui/form-field/InputField";
 import {
+  validateEmail,
   validateName,
   validatePassword,
 } from "@/lib/utils/form-validator";
@@ -9,42 +10,43 @@ import Image from "next/image";
 
 const Login = () => {
   const [formData, setFormData] = useState({
-      name: "",
-      email: "",
-      phone: "",
-      password: "",
-      country: "",
-      message: "",
-    });
-  
-    const handleChange = (e) => {
-      const { name, value } = e.target;
-      setFormData((prev) => ({ ...prev, [name]: value }));
-    };
-  
-    const handleSubmit = (e) => {
-      e.preventDefault();
-  
-      const nameError = validateName(formData.name);
-      const passwordError = validatePassword(formData.password);
-  
-      if (!nameError && !passwordError) {
-        console.log("Form submitted:", formData);
-      } else {
-        console.log("Form has errors");
-      }
-    };
+    name: "",
+    email: "",
+    phone: "",
+    password: "",
+    country: "",
+    message: "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const nameError = validateName(formData.name);
+    const passwordError = validatePassword(formData.password);
+
+    if (!nameError && !passwordError) {
+      console.log("Form submitted:", formData);
+    } else {
+      console.log("Form has errors");
+    }
+  };
   return (
-    <div className="min-h-screen flex">
-      <div className="w-1/2 bg-blue-600 text-white flex flex-col items-center justify-center p-10">
+    <div className="flex justify-center items-center py-20 bg-gray-100">
+      <div className="bg-blue-600 rounded-2xl p-12 w-[350px]  text-center text-white shadow-lg">
         <h1 className="text-2xl font-semibold mb-2">Mari Berbagi</h1>
         <p className="mb-6">Wujudkan Harapan Bersama</p>
         <div className="w-72 h-72 relative">
           <Image
-            src="/img/ilustrasi.svg"
-  alt="Ilustrasi Donasi"
-  width={300}
-  height={300}
+            src="/img/ilustrasi 1.svg"
+            alt="Ilustrasi Donasi"
+            width={300}
+            height={300}
+
             className="w-full h-full object-contain"
           />
         </div>
@@ -60,27 +62,28 @@ const Login = () => {
           </p>
 
           <form className="space-y-4" onClick={handleSubmit}>
-          <InputField
-          id="name"
-          name="name"
-          label="Nama Lengkap"
-          placeholder="Masukkan Nama Lengkap"
-          value={formData.name}
-          onChange={handleChange}
-          required
-          validate={validateName}
-        />
-           <InputField
-          id="password"
-          name="password"
-          label="Password"
-          type="password"
-          placeholder="Buat Password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-          validate={validatePassword}
-        />
+            <InputField
+              id="email"
+              name="email"
+              label="Email"
+              placeholder="Masukkan Email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+              validate={validateEmail}
+            />
+
+            <InputField
+              id="password"
+              name="password"
+              label="Password"
+              type="password"
+              placeholder="Buat Password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+              validate={validatePassword}
+            />
 
             <button className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition">
               Login
@@ -89,7 +92,9 @@ const Login = () => {
 
           <p className="mt-4 text-sm text-center">
             Belum punya akun?{" "}
+
             <span className="text-blue-600 cursor-pointer hover:underline">Daftar</span>
+
           </p>
         </div>
       </div>
