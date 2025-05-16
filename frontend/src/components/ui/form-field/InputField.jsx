@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Label } from "@/components/ui/label";
+import { Label } from "@/components/ui/form-field/LabelField";
 import {
   User,
   Mail,
@@ -43,7 +43,6 @@ const InputField = ({
 
   const handleChange = (e) => {
     if (onChange) onChange(e);
-
     if (touched && validate) {
       const validationError = validate(e.target.value);
       setError(validationError);
@@ -53,7 +52,6 @@ const InputField = ({
   const handleBlur = (e) => {
     setTouched(true);
     if (onBlur) onBlur(e);
-
     if (validate) {
       const validationError = validate(e.target.value);
       setError(validationError);
@@ -64,10 +62,8 @@ const InputField = ({
     setShowPassword((prev) => !prev);
   };
 
-  // Determine which icon to use based on type or explicit icon prop
   const getIcon = () => {
     if (icon) return icon;
-
     switch (type) {
       case "email":
         return <Mail className="h-4 w-4 text-gray-500" />;
@@ -97,14 +93,7 @@ const InputField = ({
   return (
     <div className={`w-full space-y-2 ${className}`}>
       {label && (
-        <Label
-          htmlFor={id}
-          className={`text-sm font-medium ${
-            required
-              ? "after:content-['*'] after:ml-0.5 after:text-red-500"
-              : ""
-          }`}
-        >
+        <Label htmlFor={id} required={required}>
           {label}
         </Label>
       )}
