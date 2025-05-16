@@ -13,7 +13,7 @@ export const validateRequired = (value) => {
 
 // Validasi format nama (minimal 2 huruf, hanya huruf dan spasi)
 export const validateName = (value) => {
-  if (!value.trim()) return "Name is required";
+  if (!value.trim()) return "Nama harus diisi";
   if (!/^[A-Za-z\s]{2,}$/.test(value)) {
     return "Nama harus minimal 2 karakter dan hanya terdiri dari huruf";
   }
@@ -35,16 +35,16 @@ export const validatePassword = (value) => {
   if (!value) return "Password harus diisi";
   const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
   if (!passwordRegex.test(value)) {
-    return "Password must be at least 8 characters and include letters, numbers, and symbols";
+    return "Kata sandi harus terdiri dari minimal 8 karakter dan mencakup huruf, angka, serta simbol";
   }
   return "";
 };
 
 // Validasi nomor telepon (hanya angka, 10-15 digit)
 export const validatePhone = (value) => {
-  if (!value.trim()) return "Phone number is required";
+  if (!value.trim()) return "Nomor Telepon harus diisi";
   if (!/^\d{10,15}$/.test(value)) {
-    return "Phone number must be 10-15 digits";
+    return "Nomor Telepon harus 10-15 digit";
   }
   return "";
 };
@@ -56,7 +56,7 @@ export const validateUrl = (value) => {
     new URL(value);
     return "";
   } catch (e) {
-    return "Invalid URL format";
+    return "URL tidak Valid";
   }
 };
 
@@ -65,7 +65,7 @@ export const validateDate = (value) => {
   if (!value) return "";
   const date = new Date(value);
   if (isNaN(date.getTime())) {
-    return "Invalid date format";
+    return "Tanggal tidak Valis";
   }
   return "";
 };
@@ -74,7 +74,7 @@ export const validateDate = (value) => {
 export const validateMinLength = (value, min) => {
   if (!value) return "";
   if (value.length < min) {
-    return `Must be at least ${min} characters`;
+    return `Minimal ${min} karakter`;
   }
   return "";
 };
@@ -83,7 +83,7 @@ export const validateMinLength = (value, min) => {
 export const validateMaxLength = (value, max) => {
   if (!value) return "";
   if (value.length > max) {
-    return `Must be no more than ${max} characters`;
+    return `Kata sandi tidak boleh lebih dari ${max} karakter.`;
   }
   return "";
 };
@@ -91,7 +91,7 @@ export const validateMaxLength = (value, max) => {
 // Validasi bahwa dua bidang cocok
 export const validateMatch = (value, fieldToMatch) => {
   if (value !== fieldToMatch) {
-    return "Fields do not match";
+    return "Tidak sama";
   }
   return "";
 };
@@ -99,9 +99,9 @@ export const validateMatch = (value, fieldToMatch) => {
 // Validasi format kode pos/zip
 export const validatePostalCode = (value) => {
   if (!value.trim()) return "";
-  const postalRegex = /^[A-Za-z0-9\s-]{3,10}$/;
+  const postalRegex = /^[0-9]{5}$/;
   if (!postalRegex.test(value)) {
-    return "Invalid postal/zip code format";
+    return "Kode Pos Tidak Valid";
   }
   return "";
 };
@@ -145,7 +145,7 @@ export const validateCreditCard = (value) => {
 export const validatePattern = (value, regex, message) => {
   if (!value) return "";
   if (!regex.test(value)) {
-    return message || "Invalid format";
+    return message || "Format Tidak Valid";
   }
   return "";
 };

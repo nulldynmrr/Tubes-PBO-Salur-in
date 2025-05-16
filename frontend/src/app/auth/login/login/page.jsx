@@ -1,0 +1,109 @@
+"use client";
+import React, { useState } from "react";
+import InputField from "@/components/ui/form-field/InputField";
+import { validateEmail, validateName, validatePassword } from "@/lib/utils/form-validator";
+import Image from "next/image";
+import { dataKampanye } from "@/data/campaign";
+
+const Login = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    password: "",
+    country: "",
+    message: "",
+  });
+
+  const handleChange = (e) => {
+    const { email, value } = e.target;
+    setFormData((prev) => ({ ...prev, [email]: value }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const emailError = validateEmail(formData.email);
+    const passwordError = validatePassword(formData.password);
+
+    if (!emailError && !passwordError) {
+      const user = dataKampanye.find(
+        (u) => u.email === formData.email && u.password === formData.password
+      );
+
+      if (user) {
+        console.log("Login berhasil: ", user);
+      } else {
+        console.log("Login gagal: nama atau password salah");
+      }
+    } else {
+      console.log("Form has errors");
+    }
+  };
+  return (
+    <div className="min-h-screen flex">
+      <div className="w-[48%] bg-blue-600 text-white flex flex-col items-center justify-center p-10">
+        <h1 className="text-4xl font-semibold mb-2">Mari Berbagi</h1>
+        <p className="mb-12 text-xl">Wujudkan Harapan Bersama</p>
+        <div className="w-96 h-96 relative">
+          <Image
+            src="/img/ilustrasi 1.svg"
+            alt="Ilustrasi Donasi"
+            width={600}
+            height={600}
+            className="w-full h-full object-contain"
+          />
+        </div>
+      </div>
+
+      <div className="w-[52%] flex items-center justify-center px-[150px] ">
+        <div className="w-full">
+          <h1 className="text-4xl font-bold mb-2">LOGO</h1>
+          <h2 className="text-xl font-semibold">Hola, Selamat Datang!</h2>
+          <p className="text-sm text-gray-500 mb-6">
+            Mari lanjutkan kebaikan. Dunia butuh lebih banyak orang baik seperti
+            kamu.
+          </p>
+
+          <form className="space-y-4" onClick={handleSubmit}>
+            <InputField
+              id="email"
+              name="email"
+              label="Email"
+              placeholder="Masukkan Email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+              validate={validateEmail}
+            />
+
+            <InputField
+              id="password"
+              name="password"
+              label="Password"
+              type="password"
+              placeholder="Buat Password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+              validate={validatePassword}
+            />
+
+            <button className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition">
+              Login
+            </button>
+          </form>
+
+          <p className="mt-4 text-sm text-center">
+            Belum punya akun?
+            <span className="pl-1 text-blue-600 cursor-pointer hover:underline">
+              Daftar
+            </span>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Login;

@@ -11,9 +11,7 @@ import {
   validatePassword,
 } from "@/lib/utils/form-validator";
 import PrimaryButton from "@/components/ui/button/PrimaryButton";
-import DonationCard from "@/components/card/DonationCard";
 import Table from "@/components/ui/table";
-  
 
 const data = [
   { id: 1, nama: "Ayu", status: "Accepted" },
@@ -22,7 +20,7 @@ const data = [
   { id: 4, nama: "Dedi", status: "Accepted" },
 ];
 
-const Form = () => {
+const KonfirmasiDonasi = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -51,12 +49,9 @@ const Form = () => {
       console.log("Form has errors");
     }
   };
-
   return (
-    <div>
-      <Navbar />
-
-      <h1 className="text-2xl font-bold mb-6">Form</h1>
+    <>
+      <h3>Konfirmasi Donasi</h3>
 
       <form
         className="space-y-6 px-6 md:px-[110px] my-[100px]"
@@ -139,9 +134,8 @@ const Form = () => {
         <PrimaryButton>Submit</PrimaryButton>
       </form>
       <Table data={data} />
-      <DonationCard />
-    </div>
+    </>
   );
 };
 
-export default Form;
+export default KonfirmasiDonasi;
