@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import InputField from "@/components/ui/form-field/InputField";
 import { validateName, validatePassword } from "@/lib/utils/form-validator";
 import Image from "next/image";
+import { dataKampanye } from "@/data/campaign";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -26,7 +27,15 @@ const Login = () => {
     const passwordError = validatePassword(formData.password);
 
     if (!nameError && !passwordError) {
-      console.log("Form submitted:", formData);
+      const user = dataKampanye.find(
+        (u) => u.nama === formData.name && u.password === formData.password
+      );
+
+      if (user) {
+        console.log("Login berhasil: ", user);
+      } else {
+        console.log("Login gagal: nama atau password salah");
+      }
     } else {
       console.log("Form has errors");
     }

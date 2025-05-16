@@ -1,5 +1,5 @@
-'use client';
-import { useState } from 'react';
+"use client";
+import { useState } from "react";
 
 export const Accordion = ({ children }) => {
   return <div className="space-y-4">{children}</div>;
