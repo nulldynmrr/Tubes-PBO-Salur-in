@@ -3,9 +3,13 @@ import React, { useState } from "react";
 import InputField from "@/components/ui/form-field/InputField";
 import { validateName, validatePassword } from "@/lib/utils/form-validator";
 import Image from "next/image";
-import { dataKampanye } from "@/data/campaign";
+import { dataCampaign } from "@/data/campaign";
+import { useRouter } from "next/navigation";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -27,22 +31,36 @@ const Login = () => {
     const passwordError = validatePassword(formData.password);
 
     if (!nameError && !passwordError) {
-      const user = dataKampanye.find(
+      const user = dataCampaign.find(
         (u) => u.nama === formData.name && u.password === formData.password
       );
 
       if (user) {
-        console.log("Login berhasil: ", user);
+        router.push("/donasi");
       } else {
-        console.log("Login gagal: nama atau password salah");
+        if (!toast.isActive("user-not-registered")) {
+          toast.error("User belum terdaftar, silakan signup dulu.", {
+            toastId: "user-not-registered",
+            autoClose: 3000,
+          });
+        }
       }
     } else {
-      console.log("Form has errors");
+      if (nameError && !toast.isActive("name-error")) {
+        toast.error(nameError, { toastId: "name-error", autoClose: 2000 });
+      }
+      if (passwordError && !toast.isActive("password-error")) {
+        toast.error(passwordError, {
+          toastId: "password-error",
+          autoClose: 3000,
+        });
+      }
     }
   };
+
   return (
-    <div className="min-h-screen flex">
-      <div className="w-[48%] bg-blue-600 text-white flex flex-col items-center justify-center p-10">
+    <div className="md:min-h-screen flex flex-col md:flex-row">
+      <div className="md:w-[48%] bg-blue-600 text-white flex flex-col items-center justify-center p-10">
         <h1 className="text-4xl font-semibold mb-2">Mari Berbagi</h1>
         <p className="mb-12 text-xl">Wujudkan Harapan Bersama</p>
         <div className="w-96 h-96 relative">
@@ -56,7 +74,7 @@ const Login = () => {
         </div>
       </div>
 
-      <div className="w-[52%] flex items-center justify-center px-[150px] ">
+      <div className="md:w-[52%] my-12 md:mt-0 flex items-center justify-center px-4 md:px-[150px] ">
         <div className="w-full">
           <h1 className="text-4xl font-bold mb-2">LOGO</h1>
           <h2 className="text-xl font-semibold">Hola, Selamat Datang!</h2>
@@ -65,7 +83,7 @@ const Login = () => {
             kamu.
           </p>
 
-          <form className="space-y-4" onClick={handleSubmit}>
+          <form className="space-y-4" onSubmit={handleSubmit}>
             <InputField
               id="name"
               name="name"
@@ -88,11 +106,14 @@ const Login = () => {
               validate={validatePassword}
             />
 
-            <button className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition">
+            <button
+              type="submit"
+              className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+            >
               Login
             </button>
           </form>
-
+          <ToastContainer />
           <p className="mt-4 text-sm text-center">
             Belum punya akun?
             <span className="pl-1 text-blue-600 cursor-pointer hover:underline">
