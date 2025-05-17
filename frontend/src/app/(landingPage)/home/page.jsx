@@ -9,6 +9,8 @@ import PrimaryButton from "@/components/ui/button/PrimaryButton";
 import { HandCoins, Users2, Megaphone } from "lucide-react";
 import DonationCard from "@/components/card/DonationCard";
 import { FaTwitter, FaFacebook, FaInstagram } from "react-icons/fa";
+import { dataCampaign } from "@/data/campaign";
+import { dataUsers } from "@/data/users";
 
 const Home = () => {
   return (
@@ -133,7 +135,6 @@ const Home = () => {
               Mulai Kebaikanmu, Wujudkan Harapan Mereka
             </h2>
 
-            {/* Step 1 */}
             <div className="flex items-start gap-4">
               <div className="w-8 h-8 rounded-full bg-[#1962F8] text-white flex items-center justify-center font-bold">
                 1
@@ -150,7 +151,6 @@ const Home = () => {
               </div>
             </div>
 
-            {/* Step 2 */}
             <div className="flex items-start gap-4">
               <div className="w-8 h-8 rounded-full bg-[#A7C4F8] text-white flex items-center justify-center font-bold">
                 2
@@ -167,7 +167,6 @@ const Home = () => {
               </div>
             </div>
 
-            {/* Step 3 */}
             <div className="flex items-start gap-4">
               <div className="w-8 h-8 text-[#1962F8] font-bold flex items-center justify-center">
                 3
@@ -241,16 +240,27 @@ const Home = () => {
           {/* Header */}
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-xl font-semibold">Program Donasi</h2>
-            <a href="#" className="text-sm text-gray-600 hover:text-blue-600">
+            <a
+              href="/donasi"
+              className="text-sm text-gray-600 hover:text-blue-600"
+            >
               Lihat Semua
             </a>
           </div>
 
           {/* Grid Card */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <DonationCard />
-            <DonationCard />
-            <DonationCard />
+            {dataCampaign
+              .flatMap((campaign) => campaign.pengajuanDonasi)
+              .slice(0, 3)
+              .map((donasi) => (
+                <DonationCard
+                  key={donasi.id_donasi}
+                  idDonasi={donasi.id_donasi}
+                  dataCampaign={dataCampaign}
+                  userDonasi={dataUsers}
+                />
+              ))}
           </div>
         </div>
       </section>
