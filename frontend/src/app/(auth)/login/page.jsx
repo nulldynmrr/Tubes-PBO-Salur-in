@@ -24,12 +24,49 @@ const Login = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const nameError = validateName(formData.name);
     const passwordError = validatePassword(formData.password);
 
+    //api
+    if (!nameError && !passwordError) {
+      try {
+        const response = await fetch("http://localhost:8080/api/auth/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: formData.name,
+            password: formData.password,
+          }),
+        });
+
+        if (response.ok) {
+          router.push("/donasi");
+        } else {
+          const errorText = await response.text();
+          toast.error(errorText || "Login gagal", {
+            toastId: "login-failed",
+          });
+        }
+      } catch (error) {
+        toast.error("Gagal menghubungi server", {
+          toastId: "network-error",
+        });
+      }
+    } else {
+      if (nameError && !toast.isActive("name-error")) {
+        toast.error(nameError, { toastId: "name-error" });
+      }
+      if (passwordError && !toast.isActive("password-error")) {
+        toast.error(passwordError, { toastId: "password-error" });
+      }
+    }
+    
+    //pakai data js
     if (!nameError && !passwordError) {
       const user = dataCampaign.find(
         (u) => u.nama === formData.name && u.password === formData.password
@@ -116,9 +153,12 @@ const Login = () => {
           <ToastContainer />
           <p className="mt-4 text-sm text-center">
             Belum punya akun?
-            <span className="pl-1 text-blue-600 cursor-pointer hover:underline">
+            <a
+              className="pl-1 text-blue-600 cursor-pointer hover:underline underline-none"
+              href="/register/campaign"
+            >
               Daftar
-            </span>
+            </a>
           </p>
         </div>
       </div>
