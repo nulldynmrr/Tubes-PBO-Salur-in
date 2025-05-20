@@ -1,43 +1,159 @@
 "use client";
 
-import { useState } from "react";
-import { usePathname } from "next/navigation";
-import { dataKampanye as dataCampaign } from "@/data/campaign";
-import PrimaryButton from "@/components/ui/button/PrimaryButton";
+import { useState, useEffect } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { dataCampaign } from "@/data/campaign";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "@/styles/toast.css";
+import Loading from "@/components/loading/Loading";
 
 const CampaignDetail = () => {
+  const [activeTab, setActiveTab] = useState("proposal");
+  const [status, setStatus] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [campaign, setCampaign] = useState(null);
+  const [donasi, setDonasi] = useState(null);
+  const router = useRouter();
   const pathname = usePathname();
   const slug = pathname.split("/").pop();
 
-  if (!slug) {
-    return <div>Loading...</div>;
+  useEffect(() => {
+    if (!slug) return;
+
+    const parts = slug.split("-");
+    const id = parts[parts.length - 1];
+    const namaCampaignSlug = parts.slice(0, -1).join("-").toLowerCase();
+
+    // Ambil data dari localStorage jika ada, jika tidak gunakan data default
+    const storedData = localStorage.getItem("dataCampaign");
+    const campaignData = storedData ? JSON.parse(storedData) : dataCampaign;
+
+    // Find campaign and donasi
+    const foundCampaign = campaignData.find((c) => {
+      const foundDonasi = c.pengajuanDonasi.find(
+        (d) => String(d.id_donasi) === id
+      );
+      if (!foundDonasi) return false;
+
+      const campaignSlug = foundDonasi.judulCampaign
+        .toLowerCase()
+        .replace(/\s+/g, "-");
+      return campaignSlug === namaCampaignSlug;
+    });
+
+    if (foundCampaign) {
+      const foundDonasi = foundCampaign.pengajuanDonasi.find(
+        (d) => String(d.id_donasi) === id
+      );
+      setCampaign(foundCampaign);
+      setDonasi(foundDonasi);
+      setStatus(foundDonasi.status);
+    }
+
+    setIsLoading(false);
+  }, [slug]);
+
+  const handleStatusUpdate = async (newStatus) => {
+    try {
+      setIsLoading(true);
+
+      // Update status di data campaign
+      const updatedCampaign = dataCampaign.map((c) => {
+        if (c.pengajuanDonasi.some((d) => d.id_donasi === donasi.id_donasi)) {
+          return {
+            ...c,
+            pengajuanDonasi: c.pengajuanDonasi.map((d) => {
+              if (d.id_donasi === donasi.id_donasi) {
+                return { ...d, status: newStatus };
+              }
+              return d;
+            }),
+          };
+        }
+        return c;
+      });
+
+      // Simpan perubahan ke localStorage
+      localStorage.setItem("dataCampaign", JSON.stringify(updatedCampaign));
+
+      // Update state lokal
+      setStatus(newStatus);
+
+      // Show success message
+      if (newStatus === "diterima") {
+        toast.success(`Campaign ${newStatus}`, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
+      } else {
+        toast.error(`Campaign ${newStatus}`, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
+      }
+
+      // Tunggu sebentar agar toast terlihat
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      // Redirect ke halaman dashboard
+      router.push("/admin/dashboard");
+    } catch (error) {
+      toast.error("Terjadi kesalahan saat mengupdate status", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+      console.error("Error updating status:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  if (isLoading) {
+    return <Loading />;
   }
 
-  const parts = slug.split("-");
-  const id = parts[parts.length - 1];
-  const namaCampaignSlug = parts.slice(0, -1).join("-").toLowerCase();
-
-  const campaign = dataCampaign.find(
-    (campaign) =>
-      String(campaign.id) === id &&
-      campaign.namaCampaign.toLowerCase().replace(/\s+/g, "-") ===
-        namaCampaignSlug
-  );
-
-  if (!campaign) {
-    return <div>Campaign not found</div>;
+  if (!campaign || !donasi) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <h2 className="text-2xl font-semibold text-gray-800">
+            Campaign tidak ditemukan
+          </h2>
+          <p className="text-gray-600 mt-2">
+            Silakan kembali ke halaman dashboard
+          </p>
+          <button
+            onClick={() => router.push("/admin/dashboard")}
+            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Kembali ke Dashboard
+          </button>
+        </div>
+      </div>
+    );
   }
-
-  const [activeTab, setActiveTab] = useState("proposal");
 
   return (
     <div className="px-6 md:px-[110px] py-6 container mx-auto space-y-4">
       <h1 className="text-4xl font-bold text-gray-900 tracking-tight">
-        {campaign.judulCampaign}
+        {donasi.judulCampaign}
       </h1>
 
       <p className="text-lg text-gray-700 leading-relaxed">
-        {campaign.deskripsi}
+        {donasi.deskripsi}
       </p>
 
       <div className="flex items-center gap-4 text-lg text-gray-700 pb-12">
@@ -51,18 +167,18 @@ const CampaignDetail = () => {
         </span>
         <span
           className={`px-3 py-1 rounded-full text-sm font-medium capitalize ${
-            campaign.status === "diterima"
+            status === "diterima"
               ? "bg-green-100 text-green-600"
-              : campaign.status === "ditolak"
+              : status === "ditolak"
               ? "bg-red-100 text-red-600"
               : "bg-gray-100 text-gray-600"
           }`}
         >
-          {campaign.status}
+          {status}
         </span>
       </div>
 
-      <div className="space-y-4 ">
+      <div className="space-y-4">
         <div className="flex space-x-8 border-b pb-4">
           <button
             className={`text-xl font-semibold pb-2 px-4 ${
@@ -90,11 +206,12 @@ const CampaignDetail = () => {
           <div className="space-y-4">
             <div className="w-full h-[600px] overflow-hidden">
               <iframe
-                src={campaign.proposal}
+                src={donasi.proposal}
                 width="100%"
                 height="100%"
                 title="Proposal PDF"
                 frameBorder="0"
+                loading="lazy"
               ></iframe>
             </div>
           </div>
@@ -102,12 +219,13 @@ const CampaignDetail = () => {
 
         {activeTab === "dokumentasi" && (
           <div className="space-y-4">
-            {campaign.gambarBuktiCampaign && (
+            {donasi.gambarBuktiCampaign && (
               <div className="flex justify-center">
                 <img
-                  src={campaign.gambarBuktiCampaign}
+                  src={donasi.gambarBuktiCampaign}
                   alt="Bukti Campaign"
                   className="w-full w-xl rounded-lg shadow-lg"
+                  loading="lazy"
                 />
               </div>
             )}
@@ -117,12 +235,20 @@ const CampaignDetail = () => {
 
       <div className="fixed bottom-0 left-0 w-full h-20 bg-white border-t shadow-xl z-50 flex items-center justify-center">
         <div className="flex gap-4">
-          <PrimaryButton className="px-6 py-2 font-semibold text-white rounded-lg bg-green-600 hover:bg-green-700 transition-all duration-300">
-            Campaign Diterima
-          </PrimaryButton>
-          <PrimaryButton className="px-6 py-2 font-semibold text-white rounded-lg bg-red-600 hover:bg-red-700 transition-all duration-300">
-            Campaign Ditolak
-          </PrimaryButton>
+          <button
+            onClick={() => handleStatusUpdate("ditolak")}
+            disabled={isLoading}
+            className="inline-block min-w-[200px] px-6 py-2 rounded-3xl text-center text-white bg-red-600 hover:bg-red-700 active:bg-red-800 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isLoading ? "Memproses..." : "Campaign Ditolak"}
+          </button>
+          <button
+            onClick={() => handleStatusUpdate("diterima")}
+            disabled={isLoading}
+            className="inline-block min-w-[200px] px-6 py-2 rounded-3xl text-center text-white bg-[#1962F8] hover:bg-[#1554d6] active:bg-[#0e3ea6] transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isLoading ? "Memproses..." : "Campaign Diterima"}
+          </button>
         </div>
       </div>
     </div>
