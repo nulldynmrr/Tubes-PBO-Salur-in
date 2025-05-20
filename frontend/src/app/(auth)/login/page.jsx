@@ -24,6 +24,13 @@ const Login = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const setAuthCookie = (token) => {
+    // Set cookie yang akan expired dalam 7 hari
+    const expires = new Date();
+    expires.setDate(expires.getDate() + 7);
+    document.cookie = `auth_token=${token}; expires=${expires.toUTCString()}; path=/`;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -45,6 +52,8 @@ const Login = () => {
         });
 
         if (response.ok) {
+          const data = await response.json();
+          setAuthCookie(data.token);
           router.push("/donasi");
         } else {
           const errorText = await response.text();
@@ -65,7 +74,7 @@ const Login = () => {
         toast.error(passwordError, { toastId: "password-error" });
       }
     }
-    
+
     //pakai data js
     if (!nameError && !passwordError) {
       const user = dataCampaign.find(
@@ -73,6 +82,7 @@ const Login = () => {
       );
 
       if (user) {
+        setAuthCookie("demo_token");
         router.push("/donasi");
       } else {
         if (!toast.isActive("user-not-registered")) {
