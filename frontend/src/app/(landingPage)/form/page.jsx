@@ -13,7 +13,6 @@ import {
 import PrimaryButton from "@/components/ui/button/PrimaryButton";
 import DonationCard from "@/components/card/DonationCard";
 import Table from "@/components/ui/table";
-  
 
 const data = [
   { id: 1, nama: "Ayu", status: "Accepted" },
