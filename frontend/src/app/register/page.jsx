@@ -18,23 +18,65 @@ const Register = () => {
         message: "",
     });
 
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
+    const [success, setSuccess] = useState("");
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        setError("");
+        setSuccess("");
 
         const nameError = validateName(formData.name);
+        const emailError = validateEmail(formData.email);
         const passwordError = validatePassword(formData.password);
 
-        if (!nameError && !passwordError) {
-            console.log("Form submitted:", formData);
-        } else {
-            console.log("Form has errors");
+
+        if (nameError && emailError && passwordError) {
+            setError("Pastikan semua data valid.");
+            return;
+        }
+
+        try {
+            setLoading(true);
+            const response = await fetch("/api/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formData),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                setSuccess("Pendaftaran berhasil! Silakan login.");
+                setFormData({
+                    name: "",
+                    email: "",
+                    phone: "",
+                    password: "",
+                    country: "",
+                    message: "",
+                });
+            } else {
+                setError(data.message || "Gagal mendaftar.");
+            }
+        } catch (err) {
+            setError("Terjadi kesalahan pada server.");
+        } finally {
+            setLoading(false);
         }
     };
+
+
+
+
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100">
             <div className="bg-blue-600 rounded-2xl p-12 w-[350px]  text-center text-white shadow-lg">
@@ -104,13 +146,13 @@ const Register = () => {
                     <p className="mt-4 text-sm text-center">
                         Sudah punya akun?{" "}
                         <a href="Log">
-                        <span className="text-blue-600 cursor-pointer hover:underline">Masuk</span>
-                            </a>
+                            <span className="text-blue-600 cursor-pointer hover:underline">Masuk</span>
+                        </a>
                     </p>
                 </div>
             </div>
         </div>
     );
-};
 
+};
 export default Register;
