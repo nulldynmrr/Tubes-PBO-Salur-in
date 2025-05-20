@@ -42,10 +42,14 @@ export const validatePassword = (value) => {
 
 // Validasi nomor telepon (hanya angka, 10-15 digit)
 export const validatePhone = (value) => {
-  if (!value.trim()) return "Nomor Telepon harus diisi";
-  if (!/^\d{10,15}$/.test(value)) {
-    return "Nomor Telepon harus 10-15 digit";
+  const normalized = value.replace(/\s|-/g, ""); // hapus spasi atau strip jika ada
+  if (!normalized.trim()) return "Nomor telepon harus diisi";
+
+  const regex = /^(?:\+628|08)\d{8,11}$/;
+  if (!regex.test(normalized)) {
+    return "Gunakan format +628xxx atau 08xxx dengan panjang 10-13 digit angka";
   }
+
   return "";
 };
 
@@ -148,6 +152,15 @@ export const validatePattern = (value, regex, message) => {
     return message || "Format Tidak Valid";
   }
   return "";
+};
+
+export const validateJumlahDonasi = (value) => {
+  const number = parseInt(value.replace(/\D/g, ""), 10); // hapus karakter selain angka
+
+  if (!value.trim()) return "Jumlah donasi harus diisi";
+  if (isNaN(number) || number < 1000) return "Minimal donasi Rp1.000";
+
+  return ""; // valid
 };
 
 /**
