@@ -1,15 +1,16 @@
-export const dataKampanye = [
+export const dataCampaign = [
   {
     id: "1",
     namaCampaign: "Healty Organization",
     nama: "Rina Sehat",
     email: "rina@sehat.org",
-    password: "sehat123",
+    password: "Sehat@123",
     nomorTelepon: "+6281234567890",
     alamat: "Jl. Sehat No. 123, Jakarta, Indonesia",
     fotoKTP: "/images/ktp1.jpg",
     pengajuanDonasi: [
       {
+        id_donasi: "1",
         judulCampaign: "Bantu Organisasi Sehat",
         proposal:
           "https://media.neliti.com/media/publications/249244-none-837c3dfb.pdf",
@@ -23,6 +24,7 @@ export const dataKampanye = [
         status: "eksekusi",
       },
       {
+        id_donasi: "2",
         judulCampaign: "Bantu Perlengkapan Medis",
         proposal:
           "https://media.neliti.com/media/publications/249244-none-837c3dfb.pdf",
@@ -42,12 +44,13 @@ export const dataKampanye = [
     namaCampaign: "Bersih Desa",
     nama: "Ahmad Desa",
     email: "ahmad@bersihdesa.org",
-    password: "desa123",
+    password: "Desa#456@",
     nomorTelepon: "+6289876543210",
     alamat: "Jl. Desa Bersih No. 45, Bandung, Indonesia",
     fotoKTP: "/images/ktp2.jpg",
     pengajuanDonasi: [
       {
+        id_donasi: "3",
         judulCampaign: "Bersihkan Desa Kita",
         proposal:
           "https://media.neliti.com/media/publications/249244-none-837c3dfb.pdf",
@@ -61,6 +64,7 @@ export const dataKampanye = [
         status: "eksekusi",
       },
       {
+        id_donasi: "4",
         judulCampaign: "Tanam Pohon di Desa",
         proposal:
           "https://media.neliti.com/media/publications/249244-none-837c3dfb.pdf",
@@ -80,12 +84,13 @@ export const dataKampanye = [
     namaCampaign: "Pendidikan Anak",
     nama: "Sari Cerdas",
     email: "sari@pendidikananak.org",
-    password: "cerdas123",
+    password: "Cerdas!789",
     nomorTelepon: "+6281234987654",
     alamat: "Jl. Anak Cerdas No. 89, Surabaya, Indonesia",
     fotoKTP: "/images/ktp3.jpg",
     pengajuanDonasi: [
       {
+        id_donasi: "5",
         judulCampaign: "Bantu Pendidikan Anak-Anak",
         proposal:
           "https://media.neliti.com/media/publications/249244-none-837c3dfb.pdf",
@@ -99,6 +104,7 @@ export const dataKampanye = [
         status: "eksekusi",
       },
       {
+        id_donasi: "6",
         judulCampaign: "Buku untuk Sekolah Pelosok",
         proposal:
           "https://media.neliti.com/media/publications/249244-none-837c3dfb.pdf",
@@ -118,12 +124,13 @@ export const dataKampanye = [
     namaCampaign: "Donor Darah",
     nama: "Bayu PMI",
     email: "bayu@donordarah.org",
-    password: "donor123",
+    password: "Donor$321",
     nomorTelepon: "+6289998887777",
     alamat: "Jl. Donor No. 33, Yogyakarta, Indonesia",
     fotoKTP: "/images/ktp4.jpg",
     pengajuanDonasi: [
       {
+        id_donasi: "7",
         judulCampaign: "Donor Darah Massal",
         proposal:
           "https://media.neliti.com/media/publications/249244-none-837c3dfb.pdf",
@@ -137,11 +144,11 @@ export const dataKampanye = [
         status: "eksekusi",
       },
       {
+        id_donasi: "8",
         judulCampaign: "Stok Darah untuk Rumah Sakit",
         proposal:
           "https://media.neliti.com/media/publications/249244-none-837c3dfb.pdf",
-        gambarBuktiCampaign:
-          "https://bangkatengahkab.go.id/asset/foto_berita/1.JPG",
+        gambarBuktiCampaign: "/img/banner_donasi.svg",
         deskripsi: "Menambah stok darah rumah sakit daerah.",
         kategori: "Kesehatan",
         targetDonasi: "Rp 12.000.000",

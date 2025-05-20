@@ -1,5 +1,7 @@
 import DonationCard from "@/components/card/DonationCard";
 import React from "react";
+import { dataCampaign } from "@/data/campaign";
+import { dataUsers } from "@/data/users";
 
 const Donasi = () => {
   return (
@@ -16,11 +18,16 @@ const Donasi = () => {
       </section>
 
       <section className="mt-6 px-6 md:px-[110px] py-4 container mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 items-stretch">
-        <DonationCard />
-        <DonationCard />
-        <DonationCard />
-        <DonationCard />
-        <DonationCard />
+        {dataCampaign.map((campaign) =>
+          campaign.pengajuanDonasi.map((donasi) => (
+            <DonationCard
+              key={donasi.id_donasi}
+              idDonasi={donasi.id_donasi}
+              dataCampaign={dataCampaign}
+              userDonasi={dataUsers}
+            />
+          ))
+        )}
       </section>
     </>
   );
