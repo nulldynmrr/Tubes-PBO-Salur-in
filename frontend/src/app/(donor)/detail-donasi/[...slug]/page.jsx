@@ -43,8 +43,8 @@ export default function DetailDonasi({ params }) {
           <strong>Donasi/</strong>Informasi Donasi
         </h3>
       </section>
-      <section className="px-6 md:px-[110px] py-4 container mx-auto flex space-x-6">
-        <div className="w-2/3 h-[100px]">
+      <section className="px-6 md:px-[110px] py-4 container mx-auto flex flex-col md:flex-row md:space-x-6">
+        <div className="w-full md:w-2/3 md:h-[100px]">
           <img src={donasi.gambarBuktiCampaign} className="w-full rounded-md" />
           <div className="mt-6 flex space-x-2 divide-y divide-gray-200">
             <button
@@ -83,7 +83,7 @@ export default function DetailDonasi({ params }) {
             </div>
           )}
         </div>
-        <div className="w-1/3">
+        <div className="w-full md:w-1/3">
           <div className="p-4  rounded-lg shadow-sm overflow-hidden border border-gray-200 bg-white">
             <h2 className="text-2xl mb-2 font-semibold">
               {donasi.judulCampaign}
