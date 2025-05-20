@@ -1,33 +1,46 @@
 "use client";
 import React, { useState } from "react";
+import { Upload } from "lucide-react";
+import { useRouter } from "next/navigation";
 import InputField from "@/components/ui/form-field/InputField";
+import SelectField from "@/components/ui/form-field/SelectField";
 import {
   validateName,
   validateEmail,
   validatePhone,
+  validateJumlahDonasi,
 } from "@/lib/utils/form-validator";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Transaksi({ params }) {
   const { slug } = params;
+  const router = useRouter();
 
   const [formData, setFormData] = useState({
     nama: "",
     email: "",
     telepon: "",
     isAnonim: false,
+    total_donasi: "",
+    pembayaran_via: "",
+    bank_tujuan: "",
+    bukti_pembayaran: null,
   });
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    const val = type === "radio" ? value === "true" : value;
+  const [step, setStep] = useState(0);
+
+  const onChange = (e) => {
+    const { name, value, type, checked, files } = e.target;
+    const val =
+      type === "radio" ? value === "true" : type === "file" ? files[0] : value;
 
     setFormData((prev) => ({ ...prev, [name]: val }));
   };
 
-  const handleSubmit = (e) => {
+  const onSubmit = (e) => {
     e.preventDefault();
 
-    // Validasi manual jika tidak anonim
     if (!formData.isAnonim) {
       if (
         !validateName(formData.nama) ||
@@ -39,24 +52,60 @@ export default function Transaksi({ params }) {
       }
     }
 
-    console.log("Slug Campaign:", slug);
-    console.log("Data Donasi:", formData);
+    if (step < 2) {
+      setStep(step + 1);
+    } else {
+      console.log("Slug Campaign:", slug);
+      console.log("Data Donasi:", formData);
+    }
+
+    if (step === 2 && formData.isAnonim) {
+      if (
+        formData.total_donasi != "" &&
+        formData.bank_tujuan != "" &&
+        formData.bukti_pembayaran != ""
+      ) {
+        router.push("/donasi");
+      } else {
+        toast.error("Harap diisi dengan benar", {
+          toastId: "user-not-registered",
+          autoClose: 3000,
+        });
+        return;
+      }
+    } else if (step === 2 && !formData.isAnonim) {
+      if (
+        formData.nama != "" &&
+        formData.email != "" &&
+        formData.telepon != "" &&
+        formData.total_donasi != "" &&
+        formData.bank_tujuan != "" &&
+        formData.bukti_pembayaran != ""
+      ) {
+        router.push("/donasi");
+      } else {
+        toast.error("Harap diisi dengan benar", {
+          toastId: "user-not-registered",
+          autoClose: 3000,
+        });
+        return;
+      }
+    }
   };
 
   return (
-    <section className="mt-10 px-10 md:px-[210px] py-4 container mx-auto">
-      <h1 className="text-2xl font-semibold text-center mb-10">
+    <section className="h-screen flex flex-col px-6 md:px-[210px] py-4 ">
+      <h1 className="text-2xl font-semibold text-center mb-4">
         Transaksi Donasi untuk: <span className="text-blue-500">{slug}</span>
       </h1>
 
-      {/* STEP INDICATOR */}
-      <div className="relative flex justify-around items-center mb-11 px-4">
-        <div className="absolute top-4 left-0 w-full border-t-2 border-dashed border-gray-200 z-0" />
+      <div className="mt-10 relative flex justify-around items-center mb-4">
+        <div className="absolute top-4 left-0 w-full border-t-2 border-dashed border-gray-200 z-0  px-[200px] overflow-hidden" />
         {["data pribadi", "donasi", "bukti"].map((label, index) => (
           <div key={index} className="relative z-10 flex-1 text-center">
             <div
               className={`w-8 h-8 mx-auto rounded-full flex items-center justify-center text-white font-semibold ${
-                index === 0 ? "bg-blue-400" : "bg-gray-200"
+                index <= step ? "bg-blue-400" : "bg-gray-200"
               }`}
             >
               {index + 1}
@@ -66,85 +115,199 @@ export default function Transaksi({ params }) {
         ))}
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Radio Anonim */}
-        <div className="space-y-2">
-          <label className="block text-sm font-medium text-gray-700">
-            Idebtitas Anonim?
-          </label>
-          <div className="flex gap-6 mt-2">
-            {[
-              { label: "Ya", value: true },
-              { label: "Tidak", value: false },
-            ].map((option, idx) => (
-              <label
-                key={idx}
-                className={`flex items-center cursor-pointer px-4 py-2 rounded-lg border transition 
-          ${
-            formData.isAnonim === option.value
-              ? "bg-blue-100 border-blue-500 text-blue-700"
-              : "bg-white border-gray-300 text-gray-700 hover:border-gray-500"
-          }`}
-              >
-                <input
-                  type="radio"
-                  name="isAnonim"
-                  value={option.value}
-                  checked={formData.isAnonim === option.value}
-                  onChange={handleChange}
-                  className="hidden"
-                />
-                <span className="text-sm font-medium">{option.label}</span>
-              </label>
-            ))}
-          </div>
-        </div>
-
-        {/* Hanya tampilkan field jika tidak anonim */}
-        {!formData.isAnonim && (
-          <>
-            <InputField
-              id="nama"
-              name="nama"
-              label="Nama Lengkap"
-              placeholder="Masukkan Nama Lengkap"
-              value={formData.nama}
-              onChange={handleChange}
-              required
-              validate={validateName}
-            />
-            <InputField
-              id="email"
-              name="email"
-              label="Email"
-              type="email"
-              placeholder="Masukkan Email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              validate={validateEmail}
-            />
-            <InputField
-              id="telepon"
-              name="telepon"
-              label="Telepon"
-              type="tel"
-              placeholder="Masukkan Nomor Telepon (+62)"
-              value={formData.telepon}
-              onChange={handleChange}
-              required
-              validate={validatePhone}
-            />
-          </>
-        )}
-
-        <button
-          type="submit"
-          className="mt-10 w-full py-2 bg-black text-white rounded-md font-semibold hover:bg-gray-800 transition"
+      {step === 0 && (
+        <form
+          onSubmit={onSubmit}
+          className="flex flex-col flex-grow justify-between px-[180px] mt-8"
         >
-          Selanjutnya
-        </button>
-      </form>
+          <div className="space-y-4 overflow-y-auto">
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Identitas Anonim?
+              </label>
+              <div className="flex gap-6 mt-2">
+                {[
+                  { label: "Ya", value: true },
+                  { label: "Tidak", value: false },
+                ].map((option, idx) => (
+                  <label
+                    key={idx}
+                    className={`flex items-center cursor-pointer px-4 py-2 rounded-lg border transition 
+                      ${
+                        formData.isAnonim === option.value
+                          ? "bg-blue-100 border-blue-500 text-blue-700"
+                          : "bg-white border-gray-300 text-gray-700 hover:border-gray-500"
+                      }`}
+                  >
+                    <input
+                      type="radio"
+                      name="isAnonim"
+                      value={option.value}
+                      checked={formData.isAnonim === option.value}
+                      onChange={onChange}
+                      className="hidden"
+                    />
+                    <span className="text-sm font-medium">{option.label}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {!formData.isAnonim && (
+              <>
+                <InputField
+                  id="nama"
+                  name="nama"
+                  label="Nama Lengkap"
+                  placeholder="Masukkan Nama Lengkap"
+                  value={formData.nama}
+                  onChange={onChange}
+                  required
+                  validate={validateName}
+                />
+                <InputField
+                  id="email"
+                  name="email"
+                  label="Email"
+                  type="email"
+                  placeholder="Masukkan Email"
+                  value={formData.email}
+                  onChange={onChange}
+                  required
+                  validate={validateEmail}
+                />
+                <InputField
+                  id="telepon"
+                  name="telepon"
+                  label="Telepon"
+                  type="tel"
+                  placeholder="Masukkan Nomor Telepon (+62)"
+                  value={formData.telepon}
+                  onChange={onChange}
+                  required
+                  validate={validatePhone}
+                />
+              </>
+            )}
+          </div>
+
+          <div className="pb-[120px] flex justify-end">
+            <button
+              type="submit"
+              className="px-6 py-2 bg-black text-white rounded-md font-semibold hover:bg-gray-800 transition"
+            >
+              Selanjutnya
+            </button>
+          </div>
+        </form>
+      )}
+
+      {step === 1 && (
+        <form
+          onSubmit={onSubmit}
+          className="flex flex-col flex-grow justify-between px-[180px] mt-8"
+        >
+          <div className="space-y-4 overflow-y-auto">
+            <InputField
+              id="total_donasi"
+              name="total_donasi"
+              label="Jumlah Donasi"
+              placeholder="Masukkan Total Donasi (Rp)"
+              value={formData.total_donasi}
+              onChange={onChange}
+              validate={validateJumlahDonasi}
+              required
+            />
+            <SelectField
+              id="pembayaran_via"
+              name="pembayaran_via"
+              label="Metode Pembayaran"
+              value={formData.pembayaran_via}
+              onChange={onChange}
+              options={[
+                { value: "BCA", label: "BCA" },
+                { value: "BNI", label: "BNI" },
+                { value: "Mandiri", label: "Mandiri" },
+                { value: "QRIS", label: "QRIS" },
+              ]}
+              placeholder="Pilih Pembayaran"
+              required
+              validate={(value) => (value ? "" : "Mohon isi pembayaran")}
+            />
+            <SelectField
+              id="bank_tujuan"
+              name="bank_tujuan"
+              label="Bank Tujuan"
+              value={formData.bank_tujuan}
+              onChange={onChange}
+              options={[
+                { value: "BCA", label: "BCA - 75412541xx" },
+                { value: "BNI", label: "BNI - 123455xxx" },
+                { value: "Mandiri", label: "Mandiri - 5432231" },
+                { value: "QRIS", label: "QRIS" },
+              ]}
+              placeholder="Pilih Bank Tujuan"
+              required
+              validate={(value) => (value ? "" : "Mohon isi pembayaran")}
+            />
+          </div>
+
+          <div className="pb-[120px] flex justify-between">
+            <button
+              type="button"
+              onClick={() => setStep(step - 1)}
+              className="px-6 py-2 bg-gray-300 text-black rounded-md font-semibold hover:bg-gray-400 transition"
+            >
+              Sebelumnya
+            </button>
+            <button
+              type="submit"
+              className="px-6 py-2 bg-black text-white rounded-md font-semibold hover:bg-gray-800 transition"
+            >
+              Selanjutnya
+            </button>
+          </div>
+        </form>
+      )}
+
+      {step === 2 && (
+        <form
+          onSubmit={onSubmit}
+          className="flex flex-col flex-grow justify-between px-[180px] mt-8"
+        >
+          <div className="space-y-4 overflow-y-auto mt-4">
+            <label className="flex flex-col items-center justify-center border-2 border-dashed p-6 rounded-lg cursor-pointer text-center hover:bg-gray-50 transition">
+              <Upload className="w-10 h-10 text-blue-500 mb-2" />
+              <span className="text-gray-700 font-medium">
+                Unggah Bukti Pembayaran
+              </span>
+              <input
+                type="file"
+                name="bukti_pembayaran"
+                accept="image/*"
+                onChange={onChange}
+                className="hidden"
+              />
+            </label>
+          </div>
+
+          <div className="pb-[120px] flex justify-between">
+            <button
+              type="button"
+              onClick={() => setStep(step - 1)}
+              className="px-6 py-2 bg-gray-300 text-black rounded-md font-semibold hover:bg-gray-400 transition"
+            >
+              Sebelumnya
+            </button>
+            <button
+              type="submit"
+              className="px-6 py-2 bg-black text-white rounded-md font-semibold hover:bg-gray-800 transition"
+            >
+              Selesai
+            </button>
+          </div>
+        </form>
+      )}
     </section>
   );
 }

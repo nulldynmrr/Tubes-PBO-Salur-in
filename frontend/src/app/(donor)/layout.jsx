@@ -4,7 +4,7 @@ import Navbar from "@/components/Navbar";
 export default function RootLayout({ children }) {
   return (
     <>
-      <Navbar className="fixed " />
+      <Navbar className="fixed" />
       <div className="pt-[80px]">{children}</div>
     </>
   );
