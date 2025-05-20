@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import InputField from "@/components/ui/form-field/InputField";
-import { validateName, validatePassword } from "@/lib/utils/form-validator";
+import { validateEmail, validateName, validatePassword } from "@/lib/utils/form-validator";
 import Image from "next/image";
 import { dataCampaign } from "@/data/campaign";
 import { useRouter } from "next/navigation";
@@ -20,8 +20,8 @@ const Login = () => {
   });
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    const { email, value } = e.target;
+    setFormData((prev) => ({ ...prev, [email]: value }));
   };
 
   const setAuthCookie = (token) => {
@@ -34,9 +34,14 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const nameError = validateName(formData.name);
+    const emailError = validateEmail(formData.email);
     const passwordError = validatePassword(formData.password);
 
+<<<<<<< HEAD:frontend/src/app/auth/login/login/page.jsx
+    if (!emailError && !passwordError) {
+      const user = dataKampanye.find(
+        (u) => u.email === formData.email && u.password === formData.password
+=======
     //api
     if (!nameError && !passwordError) {
       try {
@@ -79,6 +84,7 @@ const Login = () => {
     if (!nameError && !passwordError) {
       const user = dataCampaign.find(
         (u) => u.nama === formData.name && u.password === formData.password
+>>>>>>> 6d841d0cf62e6c1d799e99c7c445de5f8cb97962:frontend/src/app/(auth)/login/page.jsx
       );
 
       if (user) {
@@ -132,15 +138,16 @@ const Login = () => {
 
           <form className="space-y-4" onSubmit={handleSubmit}>
             <InputField
-              id="name"
-              name="name"
-              label="Nama Lengkap"
-              placeholder="Masukkan Nama Lengkap"
-              value={formData.name}
+              id="email"
+              name="email"
+              label="Email"
+              placeholder="Masukkan Email"
+              value={formData.email}
               onChange={handleChange}
               required
-              validate={validateName}
+              validate={validateEmail}
             />
+
             <InputField
               id="password"
               name="password"
