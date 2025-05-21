@@ -12,12 +12,14 @@ import { FaTwitter, FaFacebook, FaInstagram } from "react-icons/fa";
 import { dataCampaign } from "@/data/campaign";
 import { dataUsers } from "@/data/users";
 
+
 const Home = () => {
   return (
     <div>
       <Navbar />
       {/* Hero Section */}
-      <section className="bg-white py-16 px-6 md:px-20 flex flex-col md:flex-row items-center justify-between relative overflow-hidden">
+      
+      <section className="bg-white px-6 md:px-[110px] py-16 container mx-auto flex justify-between items-center">
         {/* Text Area */}
         <div className="max-w-xl mb-10 md:mb-0">
           <h1 className="text-2xl md:text-4xl font-semibold text-gray-800 leading-relaxed">
@@ -70,7 +72,7 @@ const Home = () => {
       </section>
 
       {/* icon Section */}
-      <section className="bg-gray-50 py-10">
+      <section className="bg-sky-50 py-10">
         <div className="max-w-5xl mx-auto flex flex-col md:flex-row justify-center items-center gap-10 text-[#1962F8]">
           {/* Terhimpun */}
           <div className="flex items-center gap-3">
@@ -102,7 +104,8 @@ const Home = () => {
       </section>
 
       {/* Tentang Kami Section */}
-      <section className="py-16 px-4 bg-white">
+      
+      <section className="py-16 md:px-[110px] bg-white">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-10">
           {/* Gambar Placeholder */}
           <div className="w-full md:w-1/2">
@@ -127,7 +130,7 @@ const Home = () => {
       </section>
 
       {/* kalimat ajakan Section */}
-      <section className="bg-white py-16 px-6">
+      <section className="bg-sky-50 py-16 md:px-[110px]">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-12">
           {/* Kiri: Langkah-langkah */}
           <div className="flex-1 space-y-6">
@@ -199,7 +202,7 @@ const Home = () => {
       </section>
 
       {/* kata kata Section */}
-      <section className="bg-white px-6 py-12">
+      <section className="bg-white py-16 md:px-[110px]">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-12">
           {/* Gambar anak */}
           <div className="flex-1">
@@ -235,7 +238,7 @@ const Home = () => {
       </section>
 
       {/* Donation Card section */}
-      <section className="px-6 py-12 bg-white">
+      <section className="py-16 md:px-[110px] bg-sky-50">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
           <div className="flex justify-between items-center mb-6">
@@ -255,10 +258,7 @@ const Home = () => {
               .slice(0, 3)
               .map((donasi) => (
                 <DonationCard
-                  key={donasi.id_donasi}
-                  idDonasi={donasi.id_donasi}
-                  dataCampaign={dataCampaign}
-                  userDonasi={dataUsers}
+                  
                 />
               ))}
           </div>
@@ -307,7 +307,7 @@ const Home = () => {
         <div className="bg-blue-600 text-white rounded-md mx-4 md:mx-10 p-6 md:p-10">
           <div className="flex flex-col md:flex-row md:justify-between gap-8">
             {/* Deskripsi */}
-            <div className="flex-1">
+            <div className="flex-1 ">
               <h2 className="text-2xl font-semibold mb-2">Salur.in</h2>
               <p className="text-sm leading-relaxed">
                 Salur.in adalah sebuah website penyalur donasi yang memudahkan
@@ -358,11 +358,7 @@ const Home = () => {
                   <a href="#">Hak Cipta</a>
                 </li>
               </ul>
-              <ul>
-                <li>
-                  <a href="#">Informasi Legal</a>
-                </li>
-              </ul>
+              
             </div>
           </div>
         </div>

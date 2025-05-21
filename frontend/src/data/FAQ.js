@@ -26,9 +26,9 @@ export default function FAQPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-white px-4 py-12 md:px-20">
+    <div className="min-h-screen bg-white py-16 md:px-[110px]">
       <div className="max-w-3xl mx-auto text-center">
-        <img src="/img/FAQ.png" alt="FAQ" className="mx-auto mb-6 w-40" />
+        <img src="/img/FAQ.png" alt="FAQ" className="mx-auto mb-6 w-80" />
         <h1 className="text-2xl font-bold mb-2">Frequently Asked Question</h1>
         <p className="text-gray-600 text-sm mb-10">
           Ada pertanyaan lain? hubungi kita di rinopler@gmail.com
