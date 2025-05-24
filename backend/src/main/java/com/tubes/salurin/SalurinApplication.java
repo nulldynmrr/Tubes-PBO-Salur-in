@@ -1,13 +1,13 @@
-package com.example.projectpbo;
+package com.tubes.salurin;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ProjectpboApplication {
+public class SalurinApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ProjectpboApplication.class, args);
+		SpringApplication.run(SalurinApplication.class, args);
 	}
 
 }
