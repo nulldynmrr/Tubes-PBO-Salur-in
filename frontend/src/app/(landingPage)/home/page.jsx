@@ -5,12 +5,12 @@ import FAQ from "@/data/FAQ";
 import Image from "next/image";
 // import { motion } from "framer-motion";
 // import { Accordion, AccordionItem } from "@/components/ui/accordion";
-import PrimaryButton from "@/components/ui/button/PrimaryButton";
 import { HandCoins, Users2, Megaphone } from "lucide-react";
 import DonationCard from "@/components/card/DonationCard";
 import { FaTwitter, FaFacebook, FaInstagram } from "react-icons/fa";
 import { dataCampaign } from "@/data/campaign";
 import { dataUsers } from "@/data/users";
+import Button from "@/components/ui/button/PrimaryButton";
 
 
 const Home = () => {
@@ -19,57 +19,58 @@ const Home = () => {
       <Navbar />
       {/* Hero Section */}
       
-      <section className="bg-white px-6 md:px-[110px] py-16 container mx-auto flex justify-between items-center">
-        {/* Text Area */}
-        <div className="max-w-xl mb-10 md:mb-0">
-          <h1 className="text-2xl md:text-4xl font-semibold text-gray-800 leading-relaxed">
-            <span className="text-blue-300 roboto">Sekecil apapun </span>
-            <span className="text-blue-600 font-bold roboto">
-              Besar Artinya{" "}
-            </span>
-            <span className="text-blue-300 roboto">Bagi Mereka</span>
-          </h1>
-          <h1 className="text-xl md:text-3xl font-semibold text-gray-800 leading-relaxed">
-            <span className="text-black roboto">
-              Satu Klikmu Bisa Selamatkan Hidup{" "}
-            </span>
-          </h1>
-          <PrimaryButton className="mt-4">Donasi</PrimaryButton>
-        </div>
+      <section className="bg-[#F7F9FD] px-6 md:px-[110px] py-20 flex flex-col md:flex-row items-center justify-between gap-10">
+  {/* Text Area */}
+  <div className="max-w-xl text-left">
+    <h1 className="text-[40px] md:text-[36px] leading-tight font-semibold">
+      <span className="text-[#93B4FB]">Sekecil apapun </span>
+      <span className="text-[#2E68FF]">Besar Artinya </span>
+      <span className="text-[#93B4FB]">Bagi Mereka</span>
+    </h1>
+    <p className="mt-2 text-[32px] md:text-xl text-[#1C1C1C] font-semibold">
+      Satu Klikmu Bisa Selamatkan Hidup
+    </p>
+      <div className="mt-4 px-6 py-2 text-base">
+        <Button nextRoute="/donasi" >
+          Donasi
+        </Button>
+      </div>
+    
+  </div>
 
-        {/* Images */}
-        <div className="mt-14 relative w-full md:w-1/2 flex justify-center items-center">
-          {/* Background circle */}
-          <div className="absolute w-[300px] h-[300px] rounded-full border border-blue-100 opacity-50 animate-pulse z-0"></div>
+  {/* Images Area */}
+  <div className="relative w-full md:w-auto flex justify-center items-center">
+    {/* Background Ring */}
+    <div className="absolute w-[350px] h-[350px] rounded-full border-2 border-blue-100 z-0 opacity-40 animate-pulse"></div>
 
-          {/* Images */}
-          <div className="relative z-10 flex flex-col gap-4">
-            <div className="flex gap-4">
-              <Image
-                src="/img/imgsec2.png" // Ganti dengan path yang sesuai
-                alt="Children Happy"
-                width={300}
-                height={400}
-                className="rounded-lg object-cover"
-              />
-              <Image
-                src="/img/imgsec1.png" // Ganti dengan path yang sesuai
-                alt="Children Craft"
-                width={150}
-                height={100}
-                className="rounded-lg object-cover"
-              />
-            </div>
-            <Image
-              src="/img/imgsec3.png" // Ganti dengan path yang sesuai
-              alt="Group of Kids"
-              width={300}
-              height={400}
-              className="rounded-xl object-cover"
-            />
-          </div>
-        </div>
-      </section>
+    {/* Images Grid */}
+    <div className="relative z-10 flex flex-col gap-4">
+      <div className="flex gap-4">
+        <Image
+          src="/img/imgsec1.png"
+          alt="Children Craft"
+          width={160}
+          height={100}
+          className="rounded-lg object-cover"
+        />
+        <Image
+          src="/img/imgsec2.png"
+          alt="Children Happy"
+          width={240}
+          height={160}
+          className="rounded-lg object-cover"
+        />
+      </div>
+      <Image
+        src="/img/imgsec3.png"
+        alt="Group of Kids"
+        width={300}
+        height={300}
+        className="rounded-xl object-cover"
+      />
+    </div>
+  </div>
+</section>
 
       {/* icon Section */}
       <section className="bg-sky-50 py-10">
@@ -202,40 +203,42 @@ const Home = () => {
       </section>
 
       {/* kata kata Section */}
-      <section className="bg-white py-16 md:px-[110px]">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-12">
-          {/* Gambar anak */}
-          <div className="flex-1">
-            <Image
-              src="/images/anak-palestina.jpg" // Ganti sesuai path gambar kamu
-              alt="Anak Palestina"
-              width={500}
-              height={500}
-              className="rounded-xl object-cover w-full h-auto"
-            />
-          </div>
+      <section className="bg-white py-20 px-6 md:px-[110px]">
+  <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-12">
+    
+    {/* Gambar anak Palestina */}
+    <div className="flex-1 w-full">
+      <Image
+        src="/img/palestinekidflag.png"
+        alt="Anak Palestina"
+        width={500}
+        height={500}
+        className="rounded-xl object-cover w-full h-auto"
+      />
+    </div>
 
-          {/* Teks dan tombol */}
-          <div className="flex-1 space-y-4 text-center md:text-left">
-            <h2 className="text-[#3793F9] text-xl font-bold">
-              Di balik tangan yang terbuka,
-            </h2>
-            <h2 className="text-[#A7D0F9] text-xl font-semibold">
-              Tersimpan kasih tanpa suara
-            </h2>
-            <h2 className="text-[#FDE6D3] text-xl font-semibold">
-              Satu donasi, satu harapan,
-            </h2>
-            <h2 className="text-[#FB8C2B] text-xl font-bold">
-              Untuk dunia yang lebih bermakna
-            </h2>
+    {/* Teks dan tombol */}
+    <div className="flex-1 w-full space-y-2 text-center md:text-left">
+      <h2 className="text-[#3793F9] text-[20px] md:text-[35px] font-bold">
+        Di balik tangan yang terbuka,
+      </h2>
+      <h2 className="text-[#A7D0F9] text-[20px] md:text-[35px] font-semibold">
+        Tersimpan kasih tanpa suara
+      </h2>
+      <h2 className="text-[#FDE6D3] text-[20px] md:text-[35px] font-semibold">
+        Satu donasi, satu harapan,
+      </h2>
+      <h2 className="text-[#FB8C2B] text-[20px] md:text-[32px] font-bold">
+        Untuk dunia yang lebih bermakna
+      </h2>
 
-            <button className="mt-4 px-6 py-2 bg-[#1962F8] text-white rounded-full text-sm font-medium">
-              Gerak Donasi
-            </button>
-          </div>
-        </div>
-      </section>
+      <button>
+        Gerak Donasi
+      </button>
+    </div>
+  </div>
+</section>
+
 
       {/* Donation Card section */}
       <section className="py-16 md:px-[110px] bg-sky-50">
@@ -270,38 +273,7 @@ const Home = () => {
         <FAQ />
       </section>
 
-      <section
-        className="relative bg-cover bg-center min-h-[250px] flex items-center text-white"
-        style={{
-          backgroundImage: "url('/img/pahlawan.png')",
-        }}
-      >
-        {/* Overlay gelap */}
-        <div className="absolute inset-0 bg-black bg-opacity-50" />
-
-        {/* Konten */}
-        <div className="relative z-10 container mx-auto px-4 py-10 flex flex-col md:flex-row items-center justify-between">
-          <div className="text-left max-w-xl">
-            <h1 className="text-2xl md:text-4xl font-bold italic">
-              Ulurkan Tangan, Selamatkan Harapan
-            </h1>
-            <p className="mt-2 text-sm md:text-base text-gray-200">
-              Ada banyak jenis badan amal, mulai dari organisasi lokal hingga
-              organisasi internasional besar. Anda bisa berdonasi kepada badan
-              amal yang fokus pada tujuan tertentu, seperti kesejahteraan hewan.
-            </p>
-          </div>
-
-          <div className="mt-6 md:mt-0">
-            <a
-              href="#"
-              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-md shadow-md transition"
-            >
-              Bantu Sekarang
-            </a>
-          </div>
-        </div>
-      </section>
+      
 
       <footer className="bg-white pt-10">
         <div className="bg-blue-600 text-white rounded-md mx-4 md:mx-10 p-6 md:p-10">
