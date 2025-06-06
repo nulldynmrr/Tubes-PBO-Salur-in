@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import InputField from "@/components/ui/form-field/InputField";
-import { validateName, validatePassword } from "@/lib/utils/form-validator";
+import { validateEmail, validatePassword } from "@/lib/utils/form-validator";
 import Image from "next/image";
 import { dataCampaign } from "@/data/campaign";
 import { useRouter } from "next/navigation";
@@ -12,24 +12,25 @@ import { authService } from "@/services/auth.service";
 const Login = () => {
   const router = useRouter();
   const [formData, setFormData] = useState({
-    name: "",
+    email: "",
     password: "",
   });
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  const { name, value } = e.target;
+  setFormData((prev) => ({ ...prev, [name]: value }));
+};
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const nameError = validateName(formData.name);
+    const emailError = validateEmail(formData.email);
     const passwordError = validatePassword(formData.password);
 
-    if (nameError || passwordError) {
-      if (nameError) {
-        toast.error(nameError, { toastId: "name-error" });
+    if (emailError || passwordError) {
+      if (emailError) {
+        toast.error(emailError, { toastId: "email-error" });
       }
       if (passwordError) {
         toast.error(passwordError, { toastId: "password-error" });
@@ -39,14 +40,14 @@ const Login = () => {
 
     try {
       // Coba login dengan API menggunakan auth service
-      const data = await authService.login(formData.name, formData.password);
+      const data = await authService.login(formData.email, formData.password);
       authService.setAuthToken(data.token);
       toast.success("Login berhasil!", { toastId: "login-success" });
       router.push("/donasi");
     } catch (error) {
       // Jika API gagal, coba login dengan data lokal
       const user = dataCampaign.find(
-        (u) => u.nama === formData.name && u.password === formData.password
+        (u) => u.email === formData.email && u.password === formData.password
       );
 
       if (user) {
@@ -88,14 +89,15 @@ const Login = () => {
 
           <form className="space-y-4" onSubmit={handleSubmit}>
             <InputField
-              id="name"
-              name="name"
-              label="Nama Lengkap"
-              placeholder="Masukkan Nama Lengkap"
-              value={formData.name}
+              id="email"
+              name="email"
+              label="Email"
+              type="email"
+              placeholder="Masukkan email"
+              value={formData.email}
               onChange={handleChange}
               required
-              validate={validateName}
+              validate={validateEmail}
             />
             <InputField
               id="password"

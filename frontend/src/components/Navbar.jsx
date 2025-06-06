@@ -28,7 +28,7 @@ export const Navbar = () => {
           <Link href="/" className="text-gray-700 hover:text-black">
             Tentang Kami
           </Link>
-          <Link href="/" className="text-gray-700 hover:text-black">
+          <Link href="/form" className="text-gray-700 hover:text-black">
             Komunitas
           </Link>
           <SecondaryButton nextRoute="/">Daftar Campaign</SecondaryButton>
@@ -43,7 +43,7 @@ export const Navbar = () => {
           <Link href="/" className="text-gray-700 hover:text-black">
             Komunitas
           </Link>
-          <SecondaryButton nextRoute="/">Daftar Campaign</SecondaryButton>
+          <SecondaryButton nextRoute="/form/page.jsx">Daftar Campaign</SecondaryButton>
         </div>
       )}
     </nav>

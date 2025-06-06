@@ -55,7 +55,7 @@ const Form = () => {
     <div>
       <Navbar />
 
-      <h1 className="text-2xl font-bold mb-6">Form</h1>
+      <h1 className="text-2xl text-white mb-6">-</h1>
 
       <form
         className="space-y-6 px-6 md:px-[110px] my-[100px]"
@@ -137,8 +137,8 @@ const Form = () => {
 
         <PrimaryButton>Submit</PrimaryButton>
       </form>
-      <Table data={data} />
-      <DonationCard />
+      {/* <Table data={data} />
+      <DonationCard /> */}
     </div>
   );
 };

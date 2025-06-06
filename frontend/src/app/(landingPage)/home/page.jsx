@@ -11,6 +11,7 @@ import { FaTwitter, FaFacebook, FaInstagram } from "react-icons/fa";
 import { dataCampaign } from "@/data/campaign";
 import { dataUsers } from "@/data/users";
 import Button from "@/components/ui/button/PrimaryButton";
+import Link from 'next/link';
 
 
 const Home = () => {
@@ -18,59 +19,59 @@ const Home = () => {
     <div>
       <Navbar />
       {/* Hero Section */}
-      
+
       <section className="bg-[#F7F9FD] px-6 md:px-[110px] py-20 flex flex-col md:flex-row items-center justify-between gap-10">
-  {/* Text Area */}
-  <div className="max-w-xl text-left">
-    <h1 className="text-[40px] md:text-[36px] leading-tight font-semibold">
-      <span className="text-[#93B4FB]">Sekecil apapun </span>
-      <span className="text-[#2E68FF]">Besar Artinya </span>
-      <span className="text-[#93B4FB]">Bagi Mereka</span>
-    </h1>
-    <p className="mt-2 text-[32px] md:text-xl text-[#1C1C1C] font-semibold">
-      Satu Klikmu Bisa Selamatkan Hidup
-    </p>
-      <div className="mt-4 px-6 py-2 text-base">
-        <Button nextRoute="/donasi" >
-          Donasi
-        </Button>
-      </div>
-    
-  </div>
+        {/* Text Area */}
+        <div className="max-w-xl text-left">
+          <h1 className="text-[40px] md:text-[36px] leading-tight font-semibold">
+            <span className="text-[#93B4FB]">Sekecil apapun </span>
+            <span className="text-[#2E68FF]">Besar Artinya </span>
+            <span className="text-[#93B4FB]">Bagi Mereka</span>
+          </h1>
+          <p className="mt-2 text-[32px] md:text-xl text-[#1C1C1C] font-semibold">
+            Satu Klikmu Bisa Selamatkan Hidup
+          </p>
+          <div className="mt-4 px-6 py-2 text-base">
+            <Button nextRoute="/donasi" >
+              Donasi
+            </Button>
+          </div>
 
-  {/* Images Area */}
-  <div className="relative w-full md:w-auto flex justify-center items-center">
-    {/* Background Ring */}
-    <div className="absolute w-[350px] h-[350px] rounded-full border-2 border-blue-100 z-0 opacity-40 animate-pulse"></div>
+        </div>
 
-    {/* Images Grid */}
-    <div className="relative z-10 flex flex-col gap-4">
-      <div className="flex gap-4">
-        <Image
-          src="/img/imgsec1.png"
-          alt="Children Craft"
-          width={160}
-          height={100}
-          className="rounded-lg object-cover"
-        />
-        <Image
-          src="/img/imgsec2.png"
-          alt="Children Happy"
-          width={240}
-          height={160}
-          className="rounded-lg object-cover"
-        />
-      </div>
-      <Image
-        src="/img/imgsec3.png"
-        alt="Group of Kids"
-        width={300}
-        height={300}
-        className="rounded-xl object-cover"
-      />
-    </div>
-  </div>
-</section>
+        {/* Images Area */}
+        <div className="relative w-full md:w-auto flex justify-center items-center">
+          {/* Background Ring */}
+          <div className="absolute w-[350px] h-[350px] rounded-full border-2 border-blue-100 z-0 opacity-40 animate-pulse"></div>
+
+          {/* Images Grid */}
+          <div className="relative z-10 flex flex-col gap-4">
+            <div className="flex gap-4">
+              <Image
+                src="/img/imgsec1.png"
+                alt="Children Craft"
+                width={160}
+                height={100}
+                className="rounded-lg object-cover"
+              />
+              <Image
+                src="/img/imgsec2.png"
+                alt="Children Happy"
+                width={240}
+                height={160}
+                className="rounded-lg object-cover"
+              />
+            </div>
+            <Image
+              src="/img/imgsec3.png"
+              alt="Group of Kids"
+              width={300}
+              height={300}
+              className="rounded-xl object-cover"
+            />
+          </div>
+        </div>
+      </section>
 
       {/* icon Section */}
       <section className="bg-sky-50 py-10">
@@ -105,7 +106,7 @@ const Home = () => {
       </section>
 
       {/* Tentang Kami Section */}
-      
+
       <section className="py-16 md:px-[110px] bg-white">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-10">
           {/* Gambar Placeholder */}
@@ -204,40 +205,40 @@ const Home = () => {
 
       {/* kata kata Section */}
       <section className="bg-white py-20 px-6 md:px-[110px]">
-  <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-12">
-    
-    {/* Gambar anak Palestina */}
-    <div className="flex-1 w-full">
-      <Image
-        src="/img/palestinekidflag.png"
-        alt="Anak Palestina"
-        width={500}
-        height={500}
-        className="rounded-xl object-cover w-full h-auto"
-      />
-    </div>
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-12">
 
-    {/* Teks dan tombol */}
-    <div className="flex-1 w-full space-y-2 text-center md:text-left">
-      <h2 className="text-[#3793F9] text-[20px] md:text-[35px] font-bold">
-        Di balik tangan yang terbuka,
-      </h2>
-      <h2 className="text-[#A7D0F9] text-[20px] md:text-[35px] font-semibold">
-        Tersimpan kasih tanpa suara
-      </h2>
-      <h2 className="text-[#FDE6D3] text-[20px] md:text-[35px] font-semibold">
-        Satu donasi, satu harapan,
-      </h2>
-      <h2 className="text-[#FB8C2B] text-[20px] md:text-[32px] font-bold">
-        Untuk dunia yang lebih bermakna
-      </h2>
+          {/* Gambar anak Palestina */}
+          <div className="flex-1 w-full">
+            <Image
+              src="/img/palestinekidflag.png"
+              alt="Anak Palestina"
+              width={500}
+              height={500}
+              className="rounded-xl object-cover w-full h-auto"
+            />
+          </div>
 
-      <button>
-        Gerak Donasi
-      </button>
-    </div>
-  </div>
-</section>
+          {/* Teks dan tombol */}
+          <div className="flex-1 w-full space-y-2 text-center md:text-left">
+            <h2 className="text-[#3793F9] text-[20px] md:text-[35px] font-bold">
+              Di balik tangan yang terbuka,
+            </h2>
+            <h2 className="text-[#A7D0F9] text-[20px] md:text-[35px] font-semibold">
+              Tersimpan kasih tanpa suara
+            </h2>
+            <h2 className="text-[#FDE6D3] text-[20px] md:text-[35px] font-semibold">
+              Satu donasi, satu harapan,
+            </h2>
+            <h2 className="text-[#FB8C2B] text-[20px] md:text-[32px] font-bold">
+              Untuk dunia yang lebih bermakna
+            </h2>
+
+            <button>
+              Gerak Donasi
+            </button>
+          </div>
+        </div>
+      </section>
 
 
       {/* Donation Card section */}
@@ -261,7 +262,7 @@ const Home = () => {
               .slice(0, 3)
               .map((donasi) => (
                 <DonationCard
-                  
+
                 />
               ))}
           </div>
@@ -273,7 +274,7 @@ const Home = () => {
         <FAQ />
       </section>
 
-      
+
 
       <footer className="bg-white pt-10">
         <div className="bg-blue-600 text-white rounded-md mx-4 md:mx-10 p-6 md:p-10">
@@ -304,8 +305,9 @@ const Home = () => {
                   <a href="#">Program Donasi</a>
                 </li>
                 <li className="mb-2">
-                  <a href="#">Daftar Campaign</a>
+                  <a href="/form/page.jsx">Daftar Campaign</a>
                 </li>
+
                 <li className="mb-2">
                   <a href="#">Cara Donasi</a>
                 </li>
@@ -330,7 +332,7 @@ const Home = () => {
                   <a href="#">Hak Cipta</a>
                 </li>
               </ul>
-              
+
             </div>
           </div>
         </div>
