@@ -1,15 +1,17 @@
 import StatusLabel from "@/components/ui/label";
 
 export default function TableData({ columns, data }) {
+  if (!Array.isArray(columns) || !Array.isArray(data)) {
+    return 
+  }
+
   return (
     <div className="overflow-x-auto">
       <table className="w-full border-collapse mt-4">
         <thead>
           <tr className="bg-gray-100 text-left">
             {columns.map((col, i) => (
-              <th key={i} className="p-2 border">
-                {col}
-              </th>
+              <th key={i} className="p-2 border">{col}</th>
             ))}
           </tr>
         </thead>
@@ -32,3 +34,4 @@ export default function TableData({ columns, data }) {
     </div>
   );
 }
+
