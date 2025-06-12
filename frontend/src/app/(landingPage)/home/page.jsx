@@ -10,6 +10,7 @@ import { FaTwitter, FaFacebook, FaInstagram } from "react-icons/fa";
 import { dataCampaign } from "@/data/campaign";
 import { dataUsers } from "@/data/users";
 import { hitungPersentaseDonasi } from "@/lib/utils/campaign-helpers";
+import { useState } from "react";
 
 const Home = () => {
   const donasiIds = new Set();
@@ -19,6 +20,40 @@ const Home = () => {
     });
   });
   const totDonatur = donasiIds.size;
+
+const [hoveredIndex, setHoveredIndex] = useState(0);
+
+  const steps = [
+    {
+      title: "Mulai Kebaikanmu, Wujudkan Harapan Mereka",
+      description:
+        "Kami bantu kamu menyusun kampanye donasi dengan panduan langkah demi langkah. Tentukan tujuan, ceritakan kebutuhanmu, dan perbarui info kapan saja.",
+      badgeColor: "#1962F8",
+      cardTitle: "Wujudkan Harapan Mereka",
+      cardDesc:
+        "Jadi orang yang mendorong kebaikan dengan membuat campaign",
+    },
+    {
+      title: "Sebarkan Ceritamu, Ajak Lebih Banyak Hati",
+      description:
+        "Bagikan tautan kampanye ke orang-orang terdekat dan media sosial. Manfaatkan fitur berbagi di dashboard untuk menjangkau lebih luas dan menyentuh lebih banyak jiwa.",
+      badgeColor: "#A7C4F8",
+      cardTitle: "Sebarkan Ceritamu",
+      cardDesc:
+        "Bagikan kampanye agar lebih banyak orang ikut membantu.",
+    },
+    {
+      title: "Terima Donasi Secara Aman & Cepat",
+      description:
+        "Masukkan informasi rekening atau ajak penerima manfaat mengisi datanya. Dana akan dikirim dengan sistem yang aman, cepat, dan transparan.",
+      badgeColor: "transparent",
+      textColor: "#1962F8",
+      cardTitle: "Terima Donasi",
+      cardDesc:
+        "Pastikan data lengkap agar bantuan cepat tersalurkan.",
+    },
+  ];
+
 
   return (
     <>
@@ -113,73 +148,50 @@ const Home = () => {
       </section>
 
       <section className="bg-sky-50 py-16 md:px-[110px]">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-12">
-          <div className="flex-1 space-y-6">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-800">
-              Mulai Kebaikanmu, Wujudkan Harapan Mereka
-            </h2>
+      <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-12">
+        {/* Left Steps */}
+        <div className="flex-1 space-y-6">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-800">
+            Mulai Kebaikanmu, Wujudkan Harapan Mereka
+          </h2>
 
-            <div className="flex items-start gap-4">
-              <div className="w-8 h-8 rounded-full bg-[#1962F8] text-white flex items-center justify-center font-bold">
-                1
+          {steps.map((step, index) => (
+            <div
+              key={index}
+              className="flex items-start gap-4 cursor-pointer"
+              onMouseEnter={() => setHoveredIndex(index)}
+              onMouseLeave={() => setHoveredIndex(index)}
+            >
+              <div
+                className="w-16 h-8 rounded-full flex items-center justify-center font-bold text-sm"
+                style={{
+                  backgroundColor: step.badgeColor,
+                  color: step.textColor || "#fff",
+                }}
+              >
+                {index + 1}
               </div>
               <div>
-                <h3 className="font-semibold text-gray-800">
-                  Mulai Kebaikanmu, Wujudkan Harapan Mereka
-                </h3>
-                <p className="text-gray-600 text-sm">
-                  Kami bantu kamu menyusun kampanye donasi dengan panduan
-                  langkah demi langkah. Tentukan tujuan, ceritakan kebutuhanmu,
-                  dan perbarui info kapan saja.
-                </p>
+                <h3 className="font-semibold text-gray-800">{step.title}</h3>
+                <p className="text-gray-600 text-sm">{step.description}</p>
               </div>
             </div>
+          ))}
+        </div>
 
-            <div className="flex items-start gap-4">
-              <div className="w-8 h-8 rounded-full bg-[#A7C4F8] text-white flex items-center justify-center font-bold">
-                2
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-800">
-                  Sebarkan Ceritamu, Ajak Lebih Banyak Hati
-                </h3>
-                <p className="text-gray-600 text-sm">
-                  Bagikan tautan kampanye ke orang-orang terdekat dan media
-                  sosial. Manfaatkan fitur berbagi di dashboard untuk menjangkau
-                  lebih luas dan menyentuh lebih banyak jiwa.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-4">
-              <div className="w-8 h-8 text-[#1962F8] font-bold flex items-center justify-center">
-                3
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-800">
-                  Terima Donasi Secara Aman & Cepat
-                </h3>
-                <p className="text-gray-600 text-sm">
-                  Masukkan informasi rekening atau ajak penerima manfaat mengisi
-                  datanya. Dana akan dikirim dengan sistem yang aman, cepat, dan
-                  transparan.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex-1 relative">
-            <div className="absolute top-4 left-4 w-full h-full bg-[#A7C4F8] rounded-lg rotate-[2deg]"></div>
-            <div className="absolute top-2 left-2 w-full h-full bg-[#739FF6] rounded-lg rotate-[-2deg]"></div>
-            <div className="relative bg-[#4285F4] text-white rounded-lg p-6 text-center shadow-lg z-10">
-              <h3 className="text-lg font-semibold">Wujudkan Harapan Mereka</h3>
-              <p className="text-sm">
-                Jadi orang yang mendorong kebaikan dengan membuat campaign
-              </p>
-            </div>
+        {/* Right Card */}
+        <div className="flex-1 relative">
+          <div className="absolute top-4 left-4 w-full h-full bg-[#A7C4F8] rounded-lg rotate-[2deg]"></div>
+          <div className="absolute top-2 left-2 w-full h-full bg-[#739FF6] rounded-lg rotate-[-2deg]"></div>
+          <div className="relative bg-[#4285F4] text-white rounded-lg p-6 text-center shadow-lg z-10 transition-all duration-300 ease-in-out">
+            <h3 className="text-lg font-semibold">
+              {steps[hoveredIndex].cardTitle}
+            </h3>
+            <p className="text-sm">{steps[hoveredIndex].cardDesc}</p>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
 
       <section className="bg-white py-16 md:px-[110px]">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-12">
