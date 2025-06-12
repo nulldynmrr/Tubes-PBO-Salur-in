@@ -3,116 +3,99 @@ import React from "react";
 import Navbar from "@/components/Navbar";
 import FAQ from "@/data/FAQ";
 import Image from "next/image";
-// import { motion } from "framer-motion";
-// import { Accordion, AccordionItem } from "@/components/ui/accordion";
 import PrimaryButton from "@/components/ui/button/PrimaryButton";
 import { HandCoins, Users2, Megaphone } from "lucide-react";
 import DonationCard from "@/components/card/DonationCard";
 import { FaTwitter, FaFacebook, FaInstagram } from "react-icons/fa";
 import { dataCampaign } from "@/data/campaign";
 import { dataUsers } from "@/data/users";
-
+import { hitungPersentaseDonasi } from "@/lib/utils/campaign-helpers";
 
 const Home = () => {
+  const donasiIds = new Set();
+  dataUsers.forEach((user) => {
+    user.donasi.forEach((donasi) => {
+      donasiIds.add(donasi.id_donasi);
+    });
+  });
+  const totDonatur = donasiIds.size;
+
   return (
-    <div>
+    <>
       <Navbar />
-      {/* Hero Section */}
-      
-      <section className="bg-white px-6 md:px-[110px] py-16 container mx-auto flex justify-between items-center">
-        {/* Text Area */}
-        <div className="max-w-xl mb-10 md:mb-0">
-          <h1 className="text-2xl md:text-4xl font-semibold text-gray-800 leading-relaxed">
+
+      <section className="relative pt-[64px] bg-[radial-gradient(ellipse_at_center,_#FCFCFF_0%,_#EFF2FF_45%,_#FCFDFF_100%)] px-6 md:px-[110px] py-16 container mx-auto flex flex-col md:flex-row items-center md:items-stretch gap-10 md:gap-0">
+        <div className="mt-[100px]  flex-1 flex flex-col justify-center md:justify-start md:items-start items-center text-center md:text-left">
+          <h1 className="text-2xl md:text-4xl font-semibold leading-relaxed">
             <span className="text-blue-300 roboto">Sekecil apapun </span>
             <span className="text-blue-600 font-bold roboto">
               Besar Artinya{" "}
             </span>
             <span className="text-blue-300 roboto">Bagi Mereka</span>
           </h1>
-          <h1 className="text-xl md:text-3xl font-semibold text-gray-800 leading-relaxed">
-            <span className="text-black roboto">
-              Satu Klikmu Bisa Selamatkan Hidup{" "}
-            </span>
-          </h1>
-          <PrimaryButton className="mt-4">Donasi</PrimaryButton>
+          <h2 className="mb-8 mt-2 text-lg md:text-2xl font-semibold text-black leading-relaxed">
+            Satu Klikmu Bisa Selamatkan Hidup
+          </h2>
+          <PrimaryButton className="mt-2 w-[120px]" nextRoute="/donasi">
+            Donasi
+          </PrimaryButton>
         </div>
-
-        {/* Images */}
-        <div className="mt-14 relative w-full md:w-1/2 flex justify-center items-center">
-          {/* Background circle */}
-          <div className="absolute w-[300px] h-[300px] rounded-full border border-blue-100 opacity-50 animate-pulse z-0"></div>
-
-          {/* Images */}
-          <div className="relative z-10 flex flex-col gap-4">
-            <div className="flex gap-4">
+        <div className="mt-[30px]  flex-1 flex justify-center items-center relative min-h-[400px]">
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[520px] h-[520px] border-2 border-blue-100 rounded-full opacity-40 z-0"></div>
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[420px] h-[420px] border border-blue-100 rounded-full opacity-30 z-0"></div>
+          <div className="relative z-10 flex flex-row gap-8 items-center">
+            <div className="flex flex-col gap-6 items-end">
               <Image
-                src="/img/imgsec2.png" // Ganti dengan path yang sesuai
-                alt="Children Happy"
-                width={300}
-                height={400}
-                className="rounded-lg object-cover"
+                src="/img/imgsec1.png"
+                alt="Children Craft"
+                width={170}
+                height={120}
+                className="rounded-lg object-cover shadow-md w-[270px] h-[140px]"
               />
               <Image
-                src="/img/imgsec1.png" // Ganti dengan path yang sesuai
-                alt="Children Craft"
-                width={150}
-                height={100}
-                className="rounded-lg object-cover"
+                src="/img/imgsec3.png"
+                alt="Group of Kids"
+                width={170}
+                height={120}
+                className="rounded-lg object-cover shadow-md w-[190px] h-[120px]"
               />
             </div>
             <Image
-              src="/img/imgsec3.png" // Ganti dengan path yang sesuai
-              alt="Group of Kids"
-              width={300}
-              height={400}
-              className="rounded-xl object-cover"
+              src="/img/imgsec2.png"
+              alt="Children Happy"
+              width={260}
+              height={340}
+              className="rounded-xl object-cover shadow-lg w-[280px] h-[340px]"
             />
           </div>
         </div>
       </section>
 
-      {/* icon Section */}
       <section className="bg-sky-50 py-10">
-        <div className="max-w-5xl mx-auto flex flex-col md:flex-row justify-center items-center gap-10 text-[#1962F8]">
-          {/* Terhimpun */}
-          <div className="flex items-center gap-3">
-            <HandCoins size={32} />
-            <div>
-              <div className="text-xl font-semibold">13M</div>
-              <div className="text-sm text-[#9DBEF9]">Terkumpul</div>
-            </div>
+        <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+          <div>
+            <HandCoins size={36} className="mx-auto text-blue-500 mb-2" />
+            <div className="text-3xl font-bold text-gray-800">13M</div>
+            <div className="text-base text-gray-500 mt-1">Terkumpul</div>
           </div>
-
-          {/* Pendonasi */}
-          <div className="flex items-center gap-3">
-            <Users2 size={32} />
-            <div>
-              <div className="text-xl font-semibold">320k</div>
-              <div className="text-sm text-[#9DBEF9]">Pendonasi</div>
-            </div>
+          <div>
+            <Users2 size={36} className="mx-auto text-blue-500 mb-2" />
+            <div className="text-3xl font-bold text-gray-800">{totDonatur}</div>
+            <div className="text-base text-gray-500 mt-1">Pendonasi</div>
           </div>
-
-          {/* Campaign */}
-          <div className="flex items-center gap-3">
-            <Megaphone size={32} />
-            <div>
-              <div className="text-xl font-semibold">108</div>
-              <div className="text-sm text-[#9DBEF9]">Campaign</div>
-            </div>
+          <div>
+            <Megaphone size={36} className="mx-auto text-blue-500 mb-2" />
+            <div className="text-3xl font-bold text-gray-800">108</div>
+            <div className="text-base text-gray-500 mt-1">Campaign</div>
           </div>
         </div>
       </section>
 
-      {/* Tentang Kami Section */}
-      
       <section className="py-16 md:px-[110px] bg-white">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-10">
-          {/* Gambar Placeholder */}
           <div className="w-full md:w-1/2">
             <div className="bg-gray-300 h-[300px] w-full rounded-lg"></div>
           </div>
-
-          {/* Teks Tentang Kami */}
           <div className="w-full md:w-1/2">
             <h2 className="text-2xl font-bold mb-4 text-gray-800">
               Tentang Kami
@@ -129,10 +112,8 @@ const Home = () => {
         </div>
       </section>
 
-      {/* kalimat ajakan Section */}
       <section className="bg-sky-50 py-16 md:px-[110px]">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-12">
-          {/* Kiri: Langkah-langkah */}
           <div className="flex-1 space-y-6">
             <h2 className="text-2xl md:text-3xl font-bold text-gray-800">
               Mulai Kebaikanmu, Wujudkan Harapan Mereka
@@ -187,7 +168,6 @@ const Home = () => {
             </div>
           </div>
 
-          {/* Kanan: Kotak Ajak Donasi */}
           <div className="flex-1 relative">
             <div className="absolute top-4 left-4 w-full h-full bg-[#A7C4F8] rounded-lg rotate-[2deg]"></div>
             <div className="absolute top-2 left-2 w-full h-full bg-[#739FF6] rounded-lg rotate-[-2deg]"></div>
@@ -201,13 +181,11 @@ const Home = () => {
         </div>
       </section>
 
-      {/* kata kata Section */}
       <section className="bg-white py-16 md:px-[110px]">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-12">
-          {/* Gambar anak */}
           <div className="flex-1">
             <Image
-              src="/images/anak-palestina.jpg" // Ganti sesuai path gambar kamu
+              src="/images/anak-palestina.jpg"
               alt="Anak Palestina"
               width={500}
               height={500}
@@ -215,7 +193,6 @@ const Home = () => {
             />
           </div>
 
-          {/* Teks dan tombol */}
           <div className="flex-1 space-y-4 text-center md:text-left">
             <h2 className="text-[#3793F9] text-xl font-bold">
               Di balik tangan yang terbuka,
@@ -230,17 +207,15 @@ const Home = () => {
               Untuk dunia yang lebih bermakna
             </h2>
 
-            <button className="mt-4 px-6 py-2 bg-[#1962F8] text-white rounded-full text-sm font-medium">
+            <PrimaryButton className="mt-4" nextRoute="/donasi">
               Gerak Donasi
-            </button>
+            </PrimaryButton>
           </div>
         </div>
       </section>
 
-      {/* Donation Card section */}
       <section className="py-16 md:px-[110px] bg-sky-50">
         <div className="max-w-6xl mx-auto">
-          {/* Header */}
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-xl font-semibold">Program Donasi</h2>
             <a
@@ -251,14 +226,23 @@ const Home = () => {
             </a>
           </div>
 
-          {/* Grid Card */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {dataCampaign
               .flatMap((campaign) => campaign.pengajuanDonasi)
               .slice(0, 3)
               .map((donasi) => (
                 <DonationCard
-                  
+                  key={donasi.id_donasi}
+                  campaign={{
+                    namaCampaign: donasi.judulCampaign,
+                    gambarBuktiCampaign: donasi.gambarBuktiCampaign,
+                    deskripsi: donasi.deskripsi,
+                    progress: hitungPersentaseDonasi(
+                      donasi.id_donasi,
+                      dataCampaign,
+                      dataUsers
+                    ),
+                  }}
                 />
               ))}
           </div>
@@ -319,7 +303,6 @@ const Home = () => {
               </p>
             </div>
 
-            {/* Link Navigasi */}
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
               <ul>
                 <li className="mb-2">
@@ -358,7 +341,6 @@ const Home = () => {
                   <a href="#">Hak Cipta</a>
                 </li>
               </ul>
-              
             </div>
           </div>
         </div>
@@ -382,7 +364,7 @@ const Home = () => {
           </div>
         </div>
       </footer>
-    </div>
+    </>
   );
 };
 
