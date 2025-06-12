@@ -1,11 +1,7 @@
 import React from "react";
 
-const page = () => {
-  return (
-    <div>
-      <h3>haiii</h3>
-    </div>
-  );
+const Campaigns = () => {
+  return <div></div>;
 };
 
-export default page;
+export default Campaigns;
