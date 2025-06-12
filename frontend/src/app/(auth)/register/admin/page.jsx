@@ -72,7 +72,7 @@ const RegisterAdmin = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row bg-gray-50">
+    <div className="h-screen flex flex-col md:flex-row bg-gray-50">
       <div className="md:w-[48%] bg-blue-600 text-white flex flex-col items-center justify-center p-10 relative overflow-hidden h-screen">
         <div className="absolute inset-0 bg-blue-700 opacity-10"></div>
         <div className="relative z-10 text-center">
@@ -91,7 +91,8 @@ const RegisterAdmin = () => {
         </div>
       </div>
 
-      <div className="md:w-[52%] flex items-center justify-center p-8 md:p-16 overflow-y-auto">
+      
+      <div className="md:w-[52%] flex items-center justify-center p-8 md:p-16 overflow-hidden">
         <div className="w-full max-w-md">
           <div className="text-center mb-8">
             <Link href="/" className="text-lg font-semibold">
