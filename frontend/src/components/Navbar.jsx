@@ -107,17 +107,7 @@ export const Navbar = () => {
 
       {menuOpen && (
         <div className="md:hidden absolute top-full left-0 w-full bg-gray-50 py-4 px-6 border-t flex flex-col gap-4 z-40">
-<<<<<<< HEAD
           {renderNavLinks()}
-=======
-          <Link href="/" className="text-gray-700 hover:text-black">
-            Tentang Kami
-          </Link>
-          <Link href="/" className="text-gray-700 hover:text-black">
-            Komunitas
-          </Link>
-          <SecondaryButton nextRoute="/form/page.jsx">Daftar Campaign</SecondaryButton>
->>>>>>> 6f61a22c9ae1cb4057706476acf8cc500337d7b8
         </div>
       )}
     </nav>
