@@ -121,30 +121,148 @@ const CampaignDetail = () => {
     }
   };
 
-  if (isLoading) {
-    return <Loading />;
-  }
+  //fetch data
+  // useEffect(() => {
+  //   const fetchCampaignDetail = async () => {
+  //     if (!slug) return;
 
-  if (!campaign || !donasi) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <h2 className="text-2xl font-semibold text-gray-800">
-            Campaign tidak ditemukan
-          </h2>
-          <p className="text-gray-600 mt-2">
-            Silakan kembali ke halaman dashboard
-          </p>
-          <button
-            onClick={() => router.push("/admin/dashboard")}
-            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            Kembali ke Dashboard
-          </button>
-        </div>
-      </div>
-    );
-  }
+  //     setIsLoading(true);
+  //     const parts = slug.split("-");
+  //     const id = parts[parts.length - 1];
+  //     const slugNamaCampaign = parts.slice(0, -1).join("-").toLowerCase();
+
+  //     try {
+  //       const res = await fetch(
+  //         `${process.env.NEXT_PUBLIC_API_URL}/campaign-detail/${id}`
+  //       );
+  //       if (!res.ok) throw new Error("Gagal fetch dari API");
+
+  //       const data = await res.json();
+  //       const validSlug = data.judulCampaign.toLowerCase().replace(/\s+/g, "-");
+
+  //       if (validSlug !== slugNamaCampaign) throw new Error("Slug tidak cocok");
+
+  //       setDonasi(data);
+  //       setCampaign({ namaCampaign: data.namaCampaign });
+  //       setStatus(data.status);
+  //     } catch (err) {
+  //       console.warn("Fetch gagal, gunakan localStorage", err);
+
+  //       const storedData = localStorage.getItem("dataCampaign");
+  //       const campaignData = storedData ? JSON.parse(storedData) : dataCampaign;
+
+  //       const foundCampaign = campaignData.find((c) =>
+  //         c.pengajuanDonasi.some((d) => String(d.id_donasi) === id)
+  //       );
+
+  //       if (foundCampaign) {
+  //         const foundDonasi = foundCampaign.pengajuanDonasi.find(
+  //           (d) => String(d.id_donasi) === id
+  //         );
+  //         const validSlug = foundDonasi.judulCampaign
+  //           .toLowerCase()
+  //           .replace(/\s+/g, "-");
+
+  //         if (validSlug === slugNamaCampaign) {
+  //           setDonasi(foundDonasi);
+  //           setCampaign(foundCampaign);
+  //           setStatus(foundDonasi.status);
+  //         } else {
+  //           toast.error("Slug tidak valid");
+  //         }
+  //       } else {
+  //         toast.error("Campaign tidak ditemukan");
+  //       }
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
+
+  //   fetchCampaignDetail();
+  // }, [slug]);
+
+  // const handleStatusUpdate = async (newStatus) => {
+  //   if (!donasi) return;
+
+  //   try {
+  //     setIsLoading(true);
+
+  //     const updatedCampaigns = dataCampaign.map((c) => ({
+  //       ...c,
+  //       pengajuanDonasi: c.pengajuanDonasi.map((d) =>
+  //         d.id_donasi === donasi.id_donasi ? { ...d, status: newStatus } : d
+  //       ),
+  //     }));
+
+  //     localStorage.setItem("dataCampaign", JSON.stringify(updatedCampaigns));
+  //     setStatus(newStatus);
+
+  //     const notif = {
+  //       position: "top-right",
+  //       autoClose: 2000,
+  //       hideProgressBar: false,
+  //       closeOnClick: true,
+  //       pauseOnHover: true,
+  //       draggable: true,
+  //     };
+
+  //     newStatus === "diterima"
+  //       ? toast.success("Campaign diterima", notif)
+  //       : toast.error("Campaign ditolak", notif);
+
+  //     await new Promise((resolve) => setTimeout(resolve, 1000));
+  //     router.push("/admin/dashboard");
+  //   } catch (err) {
+  //     toast.error("Gagal memperbarui status");
+  //     console.error("Error update status:", err);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
+
+  // if (isLoading) return <Loading />;
+
+  // if (!campaign || !donasi) {
+  //   return (
+  //     <div className="flex items-center justify-center min-h-screen">
+  //       <div className="text-center">
+  //         <h2 className="text-2xl font-semibold text-gray-800">
+  //           Campaign tidak ditemukan
+  //         </h2>
+  //         <p className="text-gray-600 mt-2">
+  //           Silakan kembali ke halaman dashboard
+  //         </p>
+  //         <button
+  //           onClick={() => router.push("/admin/dashboard")}
+  //           className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+  //         >
+  //           Kembali ke Dashboard
+  //         </button>
+  //       </div>
+  //     </div>
+  //   );
+  // }
+
+  // if (!campaign || !donasi) {
+  //   return (
+  //     <div className="flex items-center justify-center min-h-screen">
+  //       <div className="text-center">
+  //         <h2 className="text-2xl font-semibold text-gray-800">
+  //           Campaign tidak ditemukan
+  //         </h2>
+  //         <p className="text-gray-600 mt-2">
+  //           Silakan kembali ke halaman dashboard
+  //         </p>
+  //         <button
+  //           onClick={() => router.push("/admin/dashboard")}
+  //           className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+  //         >
+  //           Kembali ke Dashboard
+  //         </button>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="px-6 md:px-[110px] py-6 container mx-auto space-y-4">
