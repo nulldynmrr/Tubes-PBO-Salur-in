@@ -41,7 +41,7 @@ const RegisterAdmin = () => {
     if (emailError) newErrors.email = emailError;
     if (passwordError) newErrors.password = passwordError;
     if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "Password tidak cocok";
+      newErrors.confirmPassword = "Password tidak sama";
     }
 
     setErrors(newErrors);
@@ -94,7 +94,15 @@ const RegisterAdmin = () => {
       <div className="md:w-[52%] flex items-center justify-center p-8 md:p-16 overflow-y-auto">
         <div className="w-full max-w-md">
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-gray-800 mb-2">LOGO</h1>
+            <Link href="/" className="text-lg font-semibold">
+              <Image
+                src="/img/logo_salurin.svg"
+                alt="Salurin Logo"
+                width={160}
+                height={80}
+                priority
+              />
+            </Link>
             <p className="text-gray-500 mt-2">
               Mari bergabung untuk mengelola donasi dengan lebih baik
             </p>
