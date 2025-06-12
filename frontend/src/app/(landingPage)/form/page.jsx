@@ -114,11 +114,12 @@ const Form = () => {
           value={formData.country}
           onChange={handleChange}
           options={[
+            { value: "indonesia", label: "Indonesia" },
             { value: "usa", label: "United States" },
             { value: "canada", label: "Canada" },
             { value: "uk", label: "United Kingdom" },
             { value: "australia", label: "Australia" },
-            { value: "germany", label: "Germany" },
+           
           ]}
           placeholder="Pilih Negara"
           required
