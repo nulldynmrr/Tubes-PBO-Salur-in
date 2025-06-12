@@ -12,6 +12,7 @@ export const dataCampaign = [
       {
         id_donasi: "1",
         judulCampaign: "Bantu Organisasi Sehat",
+        lokasi: "Bojongsoang, Bandung",
         proposal:
           "https://media.neliti.com/media/publications/249244-none-837c3dfb.pdf",
         gambarBuktiCampaign:
@@ -26,6 +27,7 @@ export const dataCampaign = [
       {
         id_donasi: "2",
         judulCampaign: "Bantu Perlengkapan Medis",
+        lokasi: "Bojongsoang, Bandung",
         proposal:
           "https://media.neliti.com/media/publications/249244-none-837c3dfb.pdf",
         gambarBuktiCampaign:
@@ -52,6 +54,7 @@ export const dataCampaign = [
       {
         id_donasi: "3",
         judulCampaign: "Bersihkan Desa Kita",
+        lokasi: "Bojongsoang, Bandung",
         proposal:
           "https://media.neliti.com/media/publications/249244-none-837c3dfb.pdf",
         gambarBuktiCampaign:
@@ -66,6 +69,7 @@ export const dataCampaign = [
       {
         id_donasi: "4",
         judulCampaign: "Tanam Pohon di Desa",
+        lokasi: "Bojongsoang, Bandung",
         proposal:
           "https://media.neliti.com/media/publications/249244-none-837c3dfb.pdf",
         gambarBuktiCampaign:
@@ -92,6 +96,7 @@ export const dataCampaign = [
       {
         id_donasi: "5",
         judulCampaign: "Bantu Pendidikan Anak-Anak",
+        lokasi: "Bojongsoang, Bandung",
         proposal:
           "https://media.neliti.com/media/publications/249244-none-837c3dfb.pdf",
         gambarBuktiCampaign:
@@ -106,6 +111,7 @@ export const dataCampaign = [
       {
         id_donasi: "6",
         judulCampaign: "Buku untuk Sekolah Pelosok",
+        lokasi: "Bojongsoang, Bandung",
         proposal:
           "https://media.neliti.com/media/publications/249244-none-837c3dfb.pdf",
         gambarBuktiCampaign:
@@ -132,6 +138,7 @@ export const dataCampaign = [
       {
         id_donasi: "7",
         judulCampaign: "Donor Darah Massal",
+        lokasi: "Bojongsoang, Bandung",
         proposal:
           "https://media.neliti.com/media/publications/249244-none-837c3dfb.pdf",
         gambarBuktiCampaign:
@@ -146,6 +153,7 @@ export const dataCampaign = [
       {
         id_donasi: "8",
         judulCampaign: "Stok Darah untuk Rumah Sakit",
+        lokasi: "Bojongsoang, Bandung",
         proposal:
           "https://media.neliti.com/media/publications/249244-none-837c3dfb.pdf",
         gambarBuktiCampaign: "/img/banner_donasi.svg",
