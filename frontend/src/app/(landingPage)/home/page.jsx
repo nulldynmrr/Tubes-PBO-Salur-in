@@ -24,35 +24,35 @@ const Home = () => {
 const [hoveredIndex, setHoveredIndex] = useState(0);
 
   const steps = [
-    {
-      title: "Mulai Kebaikanmu, Wujudkan Harapan Mereka",
-      description:
-        "Kami bantu kamu menyusun kampanye donasi dengan panduan langkah demi langkah. Tentukan tujuan, ceritakan kebutuhanmu, dan perbarui info kapan saja.",
-      badgeColor: "#1962F8",
-      cardTitle: "Wujudkan Harapan Mereka",
-      cardDesc:
-        "Jadi orang yang mendorong kebaikan dengan membuat campaign",
-    },
-    {
-      title: "Sebarkan Ceritamu, Ajak Lebih Banyak Hati",
-      description:
-        "Bagikan tautan kampanye ke orang-orang terdekat dan media sosial. Manfaatkan fitur berbagi di dashboard untuk menjangkau lebih luas dan menyentuh lebih banyak jiwa.",
-      badgeColor: "#A7C4F8",
-      cardTitle: "Sebarkan Ceritamu",
-      cardDesc:
-        "Bagikan kampanye agar lebih banyak orang ikut membantu.",
-    },
-    {
-      title: "Terima Donasi Secara Aman & Cepat",
-      description:
-        "Masukkan informasi rekening atau ajak penerima manfaat mengisi datanya. Dana akan dikirim dengan sistem yang aman, cepat, dan transparan.",
-      badgeColor: "transparent",
-      textColor: "#1962F8",
-      cardTitle: "Terima Donasi",
-      cardDesc:
-        "Pastikan data lengkap agar bantuan cepat tersalurkan.",
-    },
-  ];
+  {
+    title: "Mulai Kebaikanmu, Wujudkan Harapan Mereka",
+    description:
+      "Kami bantu kamu menyusun kampanye donasi dengan panduan langkah demi langkah. Tentukan tujuan, ceritakan kebutuhanmu, dan perbarui info kapan saja.",
+    badgeColor: "#1962F8",
+    cardTitle: "Wujudkan Harapan Mereka",
+    cardDesc: "Jadi orang yang mendorong kebaikan dengan membuat campaign",
+    cardImg: "/img/mulaicard1.jpeg", // ganti sesuai lokasi gambarmu
+  },
+  {
+    title: "Sebarkan Ceritamu, Ajak Lebih Banyak Hati",
+    description:
+      "Bagikan tautan kampanye ke orang-orang terdekat dan media sosial. Manfaatkan fitur berbagi di dashboard untuk menjangkau lebih luas dan menyentuh lebih banyak jiwa.",
+    badgeColor: "#A7C4F8",
+    cardTitle: "Sebarkan Ceritamu",
+    cardDesc: "Bagikan kampanye agar lebih banyak orang ikut membantu.",
+    cardImg: "/img/mulaicard2.jpeg",
+  },
+  {
+    title: "Terima Donasi Secara Aman & Cepat",
+    description:
+      "Masukkan informasi rekening atau ajak penerima manfaat mengisi datanya. Dana akan dikirim dengan sistem yang aman, cepat, dan transparan.",
+    badgeColor: "transparent",
+    textColor: "#1962F8",
+    cardTitle: "Terima Donasi",
+    cardDesc: "Pastikan data lengkap agar bantuan cepat tersalurkan.",
+    cardImg: "/img/mulaicard3.jpg",
+  },
+];
 
 
   return (
@@ -78,7 +78,7 @@ const [hoveredIndex, setHoveredIndex] = useState(0);
         <div className="mt-[30px]  flex-1 flex justify-center items-center relative min-h-[400px]">
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[520px] h-[520px] border-2 border-blue-100 rounded-full opacity-40 z-0"></div>
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[420px] h-[420px] border border-blue-100 rounded-full opacity-30 z-0"></div>
-          <div className="relative z-10 flex flex-row gap-8 items-center">
+          <div className="relative z-10 flex flex-row gap-8 items-center ">
             <div className="flex flex-col gap-6 items-end">
               <Image
                 src="/img/imgsec1.png"
@@ -100,7 +100,7 @@ const [hoveredIndex, setHoveredIndex] = useState(0);
               alt="Children Happy"
               width={260}
               height={340}
-              className="rounded-xl object-cover shadow-lg w-[280px] h-[340px]"
+              className="rounded-xl object-cover shadow-lg w-[400px] h-[190px]"
             />
           </div>
         </div>
@@ -126,26 +126,36 @@ const [hoveredIndex, setHoveredIndex] = useState(0);
         </div>
       </section>
 
-      <section className="py-16 md:px-[110px] bg-white">
+      <section className="px-6 md:px-[110px] py-16 container mx-auto flex bg-white">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-10">
+          {/* Gambar */}
           <div className="w-full md:w-1/2">
-            <div className="bg-gray-300 h-[300px] w-full rounded-lg"></div>
+            <Image
+              src="/img/tentangkami.jpeg" // <- ganti dengan path gambar nyata kamu
+              alt="Tentang Kami"
+              width={600}
+              height={400}
+              className="w-full h-auto rounded-lg object-cover"
+            />
           </div>
+
+          {/* Teks */}
           <div className="w-full md:w-1/2">
             <h2 className="text-2xl font-bold mb-4 text-gray-800">
               Tentang Kami
             </h2>
             <p className="text-gray-600 leading-relaxed">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua." Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-              reprehenderit in voluptate velit esse cillum dolore eu fugiat
-              nulla pariatur.
+              Salur.in adalah platform donasi digital yang memudahkan siapa saja untuk menyalurkan 
+              bantuan secara aman, transparan, dan berdampak. Kami hadir sebagai jembatan antara 
+              mereka yang ingin membantu dan mereka yang membutuhkan, dengan menyediakan sistem 
+              penggalangan dana yang terpercaya untuk berbagai keperluan sosial, pendidikan, kesehatan, dan kemanusiaan. 
+              Melalui salur.in, kami mengajak masyarakat untuk menjadi bagian dari perubahan positif 
+              dengan semangat kolaborasi dan kepedulian.
             </p>
           </div>
         </div>
       </section>
+
 
       <section className="bg-sky-50 py-16 md:px-[110px]">
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-12">
@@ -183,7 +193,16 @@ const [hoveredIndex, setHoveredIndex] = useState(0);
         <div className="flex-1 relative">
           <div className="absolute top-4 left-4 w-full h-full bg-[#A7C4F8] rounded-lg rotate-[2deg]"></div>
           <div className="absolute top-2 left-2 w-full h-full bg-[#739FF6] rounded-lg rotate-[-2deg]"></div>
-          <div className="relative bg-[#4285F4] text-white rounded-lg p-6 text-center shadow-lg z-10 transition-all duration-300 ease-in-out">
+          <div className="relative bg-[#4285F4] text-white rounded-lg p-6 text-center shadow-lg z-10 transition-all duration-300 ease-in-out space-y-4">
+            <div className="w-full h-96 relative rounded overflow-hidden">
+              <Image
+                src={steps[hoveredIndex].cardImg}
+                alt={steps[hoveredIndex].cardTitle}
+                fill
+                className="object-cover"
+                
+              />
+            </div>
             <h3 className="text-lg font-semibold">
               {steps[hoveredIndex].cardTitle}
             </h3>
@@ -197,7 +216,7 @@ const [hoveredIndex, setHoveredIndex] = useState(0);
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-12">
           <div className="flex-1">
             <Image
-              src="/images/anak-palestina.jpg"
+              src="/img/anakpalestineflag.png"
               alt="Anak Palestina"
               width={500}
               height={500}
@@ -206,7 +225,7 @@ const [hoveredIndex, setHoveredIndex] = useState(0);
           </div>
 
           <div className="flex-1 space-y-4 text-center md:text-left">
-            <h2 className="text-[#3793F9] text-xl font-bold">
+            <h2 className="text-[#3793F9] text-[20px] md:text-[35px] font-semibold">
               Di balik tangan yang terbuka,
             </h2>
             <h2 className="text-[#A7D0F9] text-[20px] md:text-[35px] font-semibold">
