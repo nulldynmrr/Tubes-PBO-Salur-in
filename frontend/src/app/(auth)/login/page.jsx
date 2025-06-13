@@ -70,7 +70,6 @@ const Login = () => {
       </Head>
 
       <div className="flex">
-        {/* Left Side - Fixed */}
         <div className="hidden md:flex fixed h-screen w-[48%] bg-blue-600 text-white items-center justify-center p-10 overflow-hidden">
           <div className="absolute inset-0 bg-blue-700 opacity-10"></div>
           <div className="relative z-10 text-center max-w-md">
@@ -93,7 +92,6 @@ const Login = () => {
           </div>
         </div>
 
-        {/* Right Side - Scrollable */}
         <div className="w-full md:ml-[48%] min-h-screen overflow-y-auto flex items-center justify-center p-8 md:p-16">
           <div className="w-full max-w-md">
             <div className="text-center mb-8">
