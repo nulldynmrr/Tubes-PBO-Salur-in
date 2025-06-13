@@ -1,17 +1,15 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export function middleware(request: NextRequest) {
-  const isLogin = true;
-  // // Get auth token from cookies
-  // const authToken = request.cookies.get("auth_token")?.value;
-  // const isLogin = !!authToken;
+export async function middleware(req: NextRequest) {
+  const token = req.cookies.get("auth_token")?.value;
+  if (!token) return NextResponse.redirect(new URL("/login", req.url));
 
-  if (!isLogin) {
-    return NextResponse.redirect(new URL("/login", request.url));
-  }
+  const res = await fetch("http://localhost:8080/api/auth/validate", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!res.ok) return NextResponse.redirect(new URL("/login", req.url));
+
+  return NextResponse.next();
 }
 
-export const config = {
-  matcher: ["/admin/:path*", "/campaign/:path*"],
-};
+export const config = { matcher: ["/dashboard/:path*"] };
