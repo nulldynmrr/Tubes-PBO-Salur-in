@@ -7,12 +7,6 @@ import lombok.AllArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class DonationRequest {
+public class DonaterRequest {
     private String username;
-    private String email;
-    private String phoneNumber;
-    private Boolean isAnonymous;
-
-    private Double amount;
-    private Integer campaignId;
 }
