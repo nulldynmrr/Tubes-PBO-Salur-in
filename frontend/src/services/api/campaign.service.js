@@ -21,7 +21,27 @@ export const campaignService = {
       );
 
       if (!response.ok) {
-        throw new Error("Failed to fetch campaigns");
+        throw new Error("Gagal mengambil daftar campaign");
+      }
+
+      return await response.json();
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // Get my campaigns
+  async getMyCampaigns() {
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}${API_ENDPOINTS.CAMPAIGNER.CAMPAIGNS.MY_CAMPAIGNS}`,
+        {
+          headers: getHeaders(),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Gagal mengambil daftar campaign saya");
       }
 
       return await response.json();
@@ -54,7 +74,7 @@ export const campaignService = {
   async createCampaign(campaignData) {
     try {
       const response = await fetch(
-        `${API_BASE_URL}${API_ENDPOINTS.CAMPAIGN.CREATE}`,
+        `${API_BASE_URL}${API_ENDPOINTS.CAMPAIGNER.CAMPAIGNS.CREATE}`,
         {
           method: "POST",
           headers: getHeaders(),
@@ -63,7 +83,7 @@ export const campaignService = {
       );
 
       if (!response.ok) {
-        throw new Error("Failed to create campaign");
+        throw new Error("Gagal membuat campaign");
       }
 
       return await response.json();
@@ -85,7 +105,7 @@ export const campaignService = {
       );
 
       if (!response.ok) {
-        throw new Error("Failed to update campaign");
+        throw new Error("Gagal mengupdate campaign");
       }
 
       return await response.json();
@@ -106,7 +126,7 @@ export const campaignService = {
       );
 
       if (!response.ok) {
-        throw new Error("Failed to delete campaign");
+        throw new Error("Gagal menghapus campaign");
       }
 
       return true;

@@ -1,39 +1,45 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { LayoutGrid, Users, FileText, UserX } from "lucide-react";
-import { dataCampaign } from "@/data/campaign";
-import { dataUsers } from "@/data/users";
 import StatCard from "@/components/card/StatCard";
-import { useState } from "react";
-
-//fetch data
-// const [dataCampaign, setDataCampaign] = useState([]);
-// const [loading, setLoading] = useState(true);
-
-// useEffect(() => {
-//   const fetchCampaigns = async () => {
-//     try {
-//       const response = await fetch(
-//         `${process.env.NEXT_PUBLIC_API_URL}/api/campaigns`
-//       );
-//       const data = await response.json();
-//       setDataCampaign(data);
-//     } catch (error) {
-//       console.error("Gagal fetch campaign:", error);
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   fetchCampaigns();
-// }, []);
-
-const kolomTabel = ["No", "Nama Campaign", "Deskripsi", "Proposal", "Status"];
+import { dataCampaign as dummyCampaign } from "@/data/campaign";
+import { dataUsers as dummyUsers } from "@/data/users";
 
 const Dashboard = () => {
-  const admin = "Dinar Muhammad Akbar";
+  const admin = "Alex Abraham";
   const [searchQuery, setSearchQuery] = useState("");
+  const [dataCampaign, setDataCampaign] = useState([]);
+  const [dataUsers, setDataUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [campaignRes, usersRes] = await Promise.all([
+          fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/campaigns`),
+          fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users`),
+        ]);
+
+        const campaignData = await campaignRes.json();
+        const userData = await usersRes.json();
+
+        setDataCampaign(campaignData);
+        setDataUsers(userData);
+      } catch (err) {
+        console.error("Gagal fetch data dari backend:", err);
+        setDataCampaign(dummyCampaign);
+        setDataUsers(dummyUsers);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const kolomTabel = ["No", "Nama Campaign", "Deskripsi", "Proposal", "Status"];
 
   const dataDonasiCampaign = dataCampaign.flatMap(
     (item) => item.pengajuanDonasi
@@ -61,7 +67,13 @@ const Dashboard = () => {
     );
   });
 
-  console.log("Isi dataCampaign:", dataCampaign);
+  if (loading) {
+    return (
+      <main className="px-6 py-10 text-center text-gray-500">
+        Loading data...
+      </main>
+    );
+  }
 
   if (!dataCampaign || dataCampaign.length === 0) {
     return (

@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import InputField from "@/components/ui/form-field/InputField";
-import { validateName, validatePassword } from "@/lib/utils/form-validator";
+import { validateEmail, validatePassword } from "@/lib/utils/form-validator";
 import Link from "next/link";
 import Image from "next/image";
 import { dataCampaign } from "@/data/campaign";
@@ -14,7 +14,7 @@ import Head from "next/head";
 const Login = () => {
   const router = useRouter();
   const [formData, setFormData] = useState({
-    name: "",
+    email: "",
     password: "",
   });
 
@@ -111,14 +111,14 @@ const Login = () => {
 
             <form className="space-y-6" onSubmit={handleSubmit}>
               <InputField
-                id="name"
-                name="name"
-                label="Nama Lengkap"
-                placeholder="Masukkan Nama Lengkap"
-                value={formData.name}
+                id="email"
+                name="email"
+                label="Email"
+                placeholder="Masukkan Email"
+                value={formData.email}
                 onChange={handleChange}
                 required
-                validate={validateName}
+                validate={validateEmail}
               />
               <InputField
                 id="password"
