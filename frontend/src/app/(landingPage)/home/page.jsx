@@ -225,7 +225,7 @@ const fadeInRight = {
             variants={fadeInRight}
           >
             <Image
-              src="/img/tentangkami.jpeg"
+              src="/img/tentangkami.jpg"
               alt="Tentang Kami"
               width={600}
               height={400}
