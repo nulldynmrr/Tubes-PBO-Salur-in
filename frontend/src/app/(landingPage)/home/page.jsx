@@ -32,7 +32,7 @@ const [hoveredIndex, setHoveredIndex] = useState(0);
     badgeColor: "#1962F8",
     cardTitle: "Wujudkan Harapan Mereka",
     cardDesc: "Jadi orang yang mendorong kebaikan dengan membuat campaign",
-    cardImg: "/img/mulaicard1.jpeg", // ganti sesuai lokasi gambarmu
+    cardImg: "/img/mulaicard1.jpeg", 
   },
   {
     title: "Sebarkan Ceritamu, Ajak Lebih Banyak Hati",
