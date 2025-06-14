@@ -7,6 +7,28 @@ import { dataUsers } from "@/data/users";
 import StatCard from "@/components/card/StatCard";
 import { useState } from "react";
 
+//fetch data
+// const [dataCampaign, setDataCampaign] = useState([]);
+// const [loading, setLoading] = useState(true);
+
+// useEffect(() => {
+//   const fetchCampaigns = async () => {
+//     try {
+//       const response = await fetch(
+//         `${process.env.NEXT_PUBLIC_API_URL}/api/campaigns`
+//       );
+//       const data = await response.json();
+//       setDataCampaign(data);
+//     } catch (error) {
+//       console.error("Gagal fetch campaign:", error);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   fetchCampaigns();
+// }, []);
+
 const kolomTabel = ["No", "Nama Campaign", "Deskripsi", "Proposal", "Status"];
 
 const Dashboard = () => {

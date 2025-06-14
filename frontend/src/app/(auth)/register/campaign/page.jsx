@@ -8,9 +8,11 @@ import {
 } from "@/lib/utils/form-validator";
 import { authService } from "@/services/auth.service";
 import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Link from "next/link";
 import Image from "next/image";
+import Head from "next/head";
 
 const RegisterCampaign = () => {
   const router = useRouter();
@@ -43,7 +45,7 @@ const RegisterCampaign = () => {
     if (emailError) newErrors.email = emailError;
     if (passwordError) newErrors.password = passwordError;
     if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "Password tidak cocok";
+      newErrors.confirmPassword = "Password tidak sama";
     }
     if (!formData.organization) {
       newErrors.organization = "Nama organisasi harus diisi";
@@ -82,162 +84,186 @@ const RegisterCampaign = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row bg-gray-50">
-      <div className="md:w-[48%] bg-blue-600 text-white flex flex-col items-center justify-center p-10 relative overflow-hidden">
-        <div className="absolute inset-0 bg-blue-700 opacity-10"></div>
-        <div className="relative z-10 text-center">
-          <h1 className="text-4xl font-bold mb-4">Mari Berbagi</h1>
-          <p className="text-xl mb-8">Wujudkan Harapan Bersama</p>
-          <div className="w-96 h-96 relative">
-            <Image
-              src="/img/ilustrasi 1.svg"
-              alt="Ilustrasi Donasi"
-              width={600}
-              height={600}
-              className="w-full h-full object-contain"
-              priority
-            />
+    <>
+      <Head>
+        <title>Daftar Campaign Donasi - Salurin</title>
+        <meta
+          name="description"
+          content="Daftarkan diri Anda untuk membuat campaign donasi dan bantu sesama dengan Salurin."
+        />
+      </Head>
+
+      <div className="flex">
+        {/* Left Side - Fixed */}
+        <div className="hidden md:flex fixed h-screen w-[48%] bg-blue-600 text-white items-center justify-center p-10 overflow-hidden">
+          <div className="absolute inset-0 bg-blue-700 opacity-10"></div>
+          <div className="relative z-10 text-center max-w-md">
+            <h1 className="text-4xl font-bold mb-4 leading-tight">
+              Mari Berbagi
+            </h1>
+            <p className="text-xl mb-8 leading-relaxed">
+              Wujudkan Harapan Bersama
+            </p>
+            <div className="w-96 h-96 relative mx-auto">
+              <Image
+                src="/img/ilustrasi 1.svg"
+                alt="Ilustrasi donasi bersama Salurin"
+                width={600}
+                height={600}
+                className="w-full h-full object-contain"
+                priority
+              />
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="md:w-[52%] flex items-center justify-center p-8 md:p-16">
-        <div className="w-full max-w-md">
-          <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-gray-800 mb-2">LOGO</h1>
+        {/* Right Side - Scrollable */}
+        <div className="w-full md:ml-[48%] min-h-screen overflow-y-auto flex items-center justify-center p-8 md:p-16">
+          <div className="w-full max-w-md">
+            <div className="text-center mb-8">
+              <Link href="/" className="inline-block">
+                <Image
+                  src="/img/logo_salurin.svg"
+                  alt="Logo Salurin"
+                  width={160}
+                  height={80}
+                  priority
+                />
+              </Link>
+              <p className="text-gray-500 mt-2">
+                Mari buat campaign donasi untuk membantu sesama
+              </p>
+            </div>
 
-            <p className="text-gray-500 mt-2">
-              Mari buat campaign donasi untuk membantu sesama
-            </p>
-          </div>
+            <form className="space-y-6" onSubmit={handleSubmit}>
+              <InputField
+                id="name"
+                name="name"
+                label="Nama Lengkap"
+                type="text"
+                placeholder="Masukkan nama lengkap"
+                value={formData.name}
+                onChange={handleChange}
+                required
+                error={errors.name}
+              />
 
-          <form className="space-y-6" onSubmit={handleSubmit}>
-            <InputField
-              id="name"
-              name="name"
-              label="Nama Lengkap"
-              type="text"
-              placeholder="Masukkan nama lengkap"
-              value={formData.name}
-              onChange={handleChange}
-              required
-              error={errors.name}
-            />
+              <InputField
+                id="email"
+                name="email"
+                label="Email"
+                type="email"
+                placeholder="Masukkan email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+                error={errors.email}
+              />
 
-            <InputField
-              id="email"
-              name="email"
-              label="Email"
-              type="email"
-              placeholder="Masukkan email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              error={errors.email}
-            />
+              <InputField
+                id="organization"
+                name="organization"
+                label="Nama Organisasi"
+                type="text"
+                placeholder="Masukkan nama organisasi"
+                value={formData.organization}
+                onChange={handleChange}
+                required
+                error={errors.organization}
+              />
 
-            <InputField
-              id="organization"
-              name="organization"
-              label="Nama Organisasi"
-              type="text"
-              placeholder="Masukkan nama organisasi"
-              value={formData.organization}
-              onChange={handleChange}
-              required
-              error={errors.organization}
-            />
+              <InputField
+                id="phone"
+                name="phone"
+                label="Nomor Telepon"
+                type="tel"
+                placeholder="Masukkan nomor telepon"
+                value={formData.phone}
+                onChange={handleChange}
+                required
+                error={errors.phone}
+              />
 
-            <InputField
-              id="phone"
-              name="phone"
-              label="Nomor Telepon"
-              type="tel"
-              placeholder="Masukkan nomor telepon"
-              value={formData.phone}
-              onChange={handleChange}
-              required
-              error={errors.phone}
-            />
+              <InputField
+                id="password"
+                name="password"
+                label="Password"
+                type="password"
+                placeholder="Masukkan password"
+                value={formData.password}
+                onChange={handleChange}
+                required
+                error={errors.password}
+              />
 
-            <InputField
-              id="password"
-              name="password"
-              label="Password"
-              type="password"
-              placeholder="Masukkan password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-              error={errors.password}
-            />
+              <InputField
+                id="confirmPassword"
+                name="confirmPassword"
+                label="Konfirmasi Password"
+                type="password"
+                placeholder="Konfirmasi password"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                required
+                error={errors.confirmPassword}
+              />
 
-            <InputField
-              id="confirmPassword"
-              name="confirmPassword"
-              label="Konfirmasi Password"
-              type="password"
-              placeholder="Konfirmasi password"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              required
-              error={errors.confirmPassword}
-            />
-
-            <button
-              type="submit"
-              disabled={isLoading}
-              className={`w-full py-3 px-4 rounded-lg text-white font-medium transition-all
+              <button
+                type="submit"
+                disabled={isLoading}
+                className={`w-full py-3 px-4 rounded-lg text-white font-medium transition-all
                 ${
                   isLoading
                     ? "bg-blue-400 cursor-not-allowed"
                     : "bg-blue-600 hover:bg-blue-700 active:bg-blue-800"
                 }`}
-            >
-              {isLoading ? (
-                <span className="flex items-center justify-center">
-                  <svg
-                    className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
-                  </svg>
-                  Memproses...
-                </span>
-              ) : (
-                "Daftar"
-              )}
-            </button>
-          </form>
-
-          <div className="mt-6 text-center">
-            <p className="text-sm text-gray-600">
-              Sudah punya akun?{" "}
-              <Link
-                href="/login"
-                className="text-blue-600 hover:text-blue-800 font-medium hover:underline"
               >
-                Login
-              </Link>
-            </p>
+                {isLoading ? (
+                  <span className="flex items-center justify-center">
+                    <svg
+                      className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
+                    </svg>
+                    Memproses...
+                  </span>
+                ) : (
+                  "Daftar"
+                )}
+              </button>
+            </form>
+
+            <div className="mt-6 text-center">
+              <p className="text-sm text-gray-600">
+                Sudah punya akun?{" "}
+                <Link
+                  href="/login"
+                  className="text-blue-600 hover:text-blue-800 font-medium hover:underline"
+                >
+                  Login
+                </Link>
+              </p>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+      <ToastContainer />
+    </>
   );
 };
 
