@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import InputField from "@/components/ui/form-field/InputField";
-import { validateName, validatePassword } from "@/lib/utils/form-validator";
+import { validateEmail, validateName, validatePassword } from "@/lib/utils/form-validator";
 import Link from "next/link";
 import Image from "next/image";
 import { dataCampaign } from "@/data/campaign";
@@ -14,7 +14,7 @@ import Head from "next/head";
 const Login = () => {
   const router = useRouter();
   const [formData, setFormData] = useState({
-    name: "",
+    email: "",
     password: "",
   });
 
@@ -26,12 +26,12 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const nameError = validateName(formData.name);
+    const emailError = validateEmail(formData.email);
     const passwordError = validatePassword(formData.password);
 
-    if (nameError || passwordError) {
-      if (nameError) {
-        toast.error(nameError, { toastId: "name-error" });
+    if (emailError || passwordError) {
+      if (emailError) {
+        toast.error(emailError, { toastId: "email-error" });
       }
       if (passwordError) {
         toast.error(passwordError, { toastId: "password-error" });
@@ -41,20 +41,20 @@ const Login = () => {
 
     try {
       // Coba login dengan API menggunakan auth service
-      const data = await authService.login(formData.name, formData.password);
+      const data = await authService.login(formData.email, formData.password);
       authService.setAuthToken(data.token);
       toast.success("Login berhasil!", { toastId: "login-success" });
       router.push("/donasi");
     } catch (error) {
       // Jika API gagal, coba login dengan data lokal
       const user = dataCampaign.find(
-        (u) => u.nama === formData.name && u.password === formData.password
+        (u) => u.email === formData.email && u.password === formData.password
       );
       if (user) {
         toast.success("Login berhasil!", { toastId: "login-success" });
         router.push("/donasi");
       } else {
-        toast.error("Username atau password salah", { toastId: "login-error" });
+        toast.error("Email atau password salah", { toastId: "login-error" });
       }
     }
   };
@@ -111,14 +111,14 @@ const Login = () => {
 
             <form className="space-y-6" onSubmit={handleSubmit}>
               <InputField
-                id="name"
-                name="name"
-                label="Nama Lengkap"
-                placeholder="Masukkan Nama Lengkap"
-                value={formData.name}
+                id="email"
+                name="email"
+                label="Email"
+                placeholder="Masukkan Email"
+                value={formData.email}
                 onChange={handleChange}
                 required
-                validate={validateName}
+                validate={validateEmail}
               />
               <InputField
                 id="password"
@@ -134,7 +134,7 @@ const Login = () => {
 
               <button
                 type="submit"
-                className="w-full py-3 px-4 rounded-lg text-white font-medium bg-blue-600 hover:bg-blue-700 active:bg-blue-800 transition-all"
+                className="w-full py-3 px-4 rounded-lg text-white font-mediaum bg-blue-600 hover:bg-blue-700 active:bg-blue-800 transition-all"
               >
                 Login
               </button>
