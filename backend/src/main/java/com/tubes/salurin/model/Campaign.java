@@ -1,4 +1,4 @@
-package com.tubes.salurin.model;
+    package com.tubes.salurin.model;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
