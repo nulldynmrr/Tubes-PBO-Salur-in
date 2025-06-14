@@ -17,6 +17,15 @@ export default function Transaksi({ params }) {
   const { slug } = params;
   const router = useRouter();
 
+  const formatSlug = (slug) => {
+    return slug
+      .split("-")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+  };
+
+  const formattedTitle = formatSlug(Array.isArray(slug) ? slug[0] : slug);
+
   const [formData, setFormData] = useState({
     nama: "",
     email: "",
@@ -29,6 +38,7 @@ export default function Transaksi({ params }) {
   });
 
   const [step, setStep] = useState(0);
+  const [previewImage, setPreviewImage] = useState(null);
 
   const onChange = (e) => {
     const { name, value, type, checked, files } = e.target;
@@ -36,6 +46,10 @@ export default function Transaksi({ params }) {
       type === "radio" ? value === "true" : type === "file" ? files[0] : value;
 
     setFormData((prev) => ({ ...prev, [name]: val }));
+
+    if (type === "file" && files.length > 0) {
+      setPreviewImage(URL.createObjectURL(files[0]));
+    }
   };
 
   const onSubmit = (e) => {
@@ -96,7 +110,8 @@ export default function Transaksi({ params }) {
   return (
     <section className="h-screen flex flex-col px-6 md:px-[210px] py-4 ">
       <h1 className="text-2xl font-semibold text-center mb-4">
-        Transaksi Donasi untuk: <span className="text-blue-500">{slug}</span>
+        Transaksi Donasi untuk{" "}
+        <span className="text-blue-500">{formattedTitle}</span>
       </h1>
 
       <div className="mt-10 relative flex justify-around items-center mb-4">
@@ -276,11 +291,22 @@ export default function Transaksi({ params }) {
           className="flex flex-col flex-grow justify-between px-[180px] mt-8"
         >
           <div className="space-y-4 overflow-y-auto mt-4">
-            <label className="flex flex-col items-center justify-center border-2 border-dashed p-6 rounded-lg cursor-pointer text-center hover:bg-gray-50 transition">
-              <Upload className="w-10 h-10 text-blue-500 mb-2" />
-              <span className="text-gray-700 font-medium">
-                Unggah Bukti Pembayaran
-              </span>
+            <label className="flex flex-col items-center justify-center border-2 border-dashed p-6 rounded-lg cursor-pointer text-center hover:bg-gray-50 transition relative">
+              {previewImage ? (
+                <img
+                  src={previewImage}
+                  alt="Preview Bukti Pembayaran"
+                  className="max-h-48 object-contain rounded"
+                />
+              ) : (
+                <>
+                  <Upload className="w-10 h-10 text-blue-500 mb-2" />
+                  <span className="text-gray-700 font-medium">
+                    Unggah Bukti Pembayaran
+                  </span>
+                </>
+              )}
+
               <input
                 type="file"
                 name="bukti_pembayaran"

@@ -1,8 +1,12 @@
-import React from "react";
+"use client";
+import React, { use, useState } from "react";
 import { FaFileUpload, FaImage, FaCalendarAlt, FaAngleRight } from "react-icons/fa";
 import Navbar from "@/components/Navbar";
 
 const Submission = () => {
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+
   return (
     <div>
       <Navbar />
@@ -59,16 +63,21 @@ const Submission = () => {
             />
           </div>
 
-          {/* Kategori */}
+            {/* Kategori */}
           <div>
             <label className="block mb-1 text-sm font-medium">Kategori Campaign Donasi</label>
-            <div className="relative">
-              <input
-                type="text"
-                className="w-full border border-gray-300 px-4 py-2 pr-10 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-              />
-              <FaAngleRight className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-            </div>
+            <select className="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400">
+              <option value="">-- Pilih Kategori --</option>
+              <option value="bencana-alam">Bencana Alam</option>
+              <option value="kesehatan">Kesehatan</option>
+              <option value="pendidikan">Pendidikan</option>
+              <option value="kemanusiaan">Kemanusiaan</option>
+              <option value="tempat-ibadah">Tempat Ibadah</option>
+              <option value="panti-asuhan">Panti Asuhan & Lansia</option>
+              <option value="lingkungan">Lingkungan</option>
+              <option value="pembangunan-sosial">Pembangunan Sosial</option>
+              <option value="kegiatan-keagamaan">Kegiatan Keagamaan</option>
+            </select>
           </div>
 
           {/* Selfie */}
@@ -98,12 +107,20 @@ const Submission = () => {
             />
           </div>
 
-          {/* Tanggal Mulai */}
+           {/* Durasi Awal Campaign */}
           <div>
-            <label className="block mb-1 text-sm font-medium">Durasi Awal Campaign</label>
+            <label className="block mb-1 text-sm font-medium">Tanggal Awal Campaign</label>
             <input
               type="date"
               className="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+              value={startDate}
+              onChange={(e) => {
+                setStartDate(e.target.value);
+                // Jika endDate sudah diisi dan menjadi tidak valid, reset
+                if (endDate && e.target.value > endDate) {
+                  setEndDate("");
+                }
+              }}
             />
           </div>
 
@@ -119,16 +136,16 @@ const Submission = () => {
             </div>
           </div>
 
-          {/* Tanggal Akhir */}
+          {/* Durasi Akhir Campaign */}
           <div>
-            <label className="block mb-1 text-sm font-medium">Durasi Akhir Campaign</label>
-            <div className="relative">
-              <input
-                type="date"
-                className="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-              />
-              
-            </div>
+            <label className="block mb-1 text-sm font-medium">Tanggal Akhir Campaign</label>
+            <input
+              type="date"
+              className="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+              value={endDate}
+              min={startDate} // ⬅️ ini mencegah tanggal sebelum durasi awal
+              onChange={(e) => setEndDate(e.target.value)}
+            />
           </div>
           
           

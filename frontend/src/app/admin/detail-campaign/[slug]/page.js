@@ -18,108 +18,180 @@ const CampaignDetail = () => {
   const pathname = usePathname();
   const slug = pathname.split("/").pop();
 
-  useEffect(() => {
-    if (!slug) return;
+  // fetch data
+  // useEffect(() => {
+  //   const fetchCampaignDetail = async () => {
+  //     if (!slug) return;
 
-    const parts = slug.split("-");
-    const id = parts[parts.length - 1];
-    const namaCampaignSlug = parts.slice(0, -1).join("-").toLowerCase();
+  //     setIsLoading(true);
+  //     const parts = slug.split("-");
+  //     const id = parts[parts.length - 1];
+  //     const slugNamaCampaign = parts.slice(0, -1).join("-").toLowerCase();
 
-    // Ambil data dari localStorage jika ada, jika tidak gunakan data default
-    const storedData = localStorage.getItem("dataCampaign");
-    const campaignData = storedData ? JSON.parse(storedData) : dataCampaign;
+  //     try {
+  //       const res = await fetch(
+  //         `${process.env.NEXT_PUBLIC_API_URL}/api/campaigns/campaign-detail/${id}`
+  //       );
+  //       if (!res.ok) throw new Error("Gagal fetch dari API");
 
-    // Find campaign and donasi
-    const foundCampaign = campaignData.find((c) => {
-      const foundDonasi = c.pengajuanDonasi.find(
-        (d) => String(d.id_donasi) === id
-      );
-      if (!foundDonasi) return false;
+  //       const data = await res.json();
+  //       const validSlug = data.judulCampaign.toLowerCase().replace(/\s+/g, "-");
 
-      const campaignSlug = foundDonasi.judulCampaign
-        .toLowerCase()
-        .replace(/\s+/g, "-");
-      return campaignSlug === namaCampaignSlug;
-    });
+  //       if (validSlug !== slugNamaCampaign) throw new Error("Slug tidak cocok");
 
-    if (foundCampaign) {
-      const foundDonasi = foundCampaign.pengajuanDonasi.find(
-        (d) => String(d.id_donasi) === id
-      );
-      setCampaign(foundCampaign);
-      setDonasi(foundDonasi);
-      setStatus(foundDonasi.status);
-    }
+  //       setDonasi(data);
+  //       setCampaign({ namaCampaign: data.campaignOwner.namaCampaign }); // jika nested
+  //       setStatus(data.status);
+  //     } catch (err) {
+  //       toast.error("Gagal memuat campaign detail");
+  //       console.error("Fetch Error:", err);
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
 
-    setIsLoading(false);
-  }, [slug]);
+  //   fetchCampaignDetail();
+  // }, [slug]);
 
-  const handleStatusUpdate = async (newStatus) => {
+  //update status
+  const updateStatus = async (newStatus) => {
+    if (!donasi?.id_donasi) return;
+
     try {
       setIsLoading(true);
-
-      // Update status di data campaign
-      const updatedCampaign = dataCampaign.map((c) => {
-        if (c.pengajuanDonasi.some((d) => d.id_donasi === donasi.id_donasi)) {
-          return {
-            ...c,
-            pengajuanDonasi: c.pengajuanDonasi.map((d) => {
-              if (d.id_donasi === donasi.id_donasi) {
-                return { ...d, status: newStatus };
-              }
-              return d;
-            }),
-          };
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/campaigns/${donasi.id_donasi}/status`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status: newStatus }),
         }
-        return c;
-      });
+      );
 
-      // Simpan perubahan ke localStorage
-      localStorage.setItem("dataCampaign", JSON.stringify(updatedCampaign));
+      if (!res.ok) throw new Error("Gagal update status");
 
-      // Update state lokal
       setStatus(newStatus);
 
-      // Show success message
-      if (newStatus === "diterima") {
-        toast.success(`Campaign ${newStatus}`, {
+      toast[newStatus === "diterima" ? "success" : "error"](
+        `Campaign ${newStatus}`,
+        {
           position: "top-right",
           autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-        });
-      } else {
-        toast.error(`Campaign ${newStatus}`, {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-        });
-      }
+        }
+      );
 
-      // Tunggu sebentar agar toast terlihat
       await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // Redirect ke halaman dashboard
       router.push("/admin/dashboard");
-    } catch (error) {
-      toast.error("Terjadi kesalahan saat mengupdate status", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-      });
-      console.error("Error updating status:", error);
+    } catch (err) {
+      toast.error("Gagal memperbarui status campaign");
+      console.error("Update Error:", err);
     } finally {
       setIsLoading(false);
     }
   };
+
+  // useEffect(() => {
+  //   if (!slug) return;
+
+  //   const parts = slug.split("-");
+  //   const id = parts[parts.length - 1];
+  //   const namaCampaignSlug = parts.slice(0, -1).join("-").toLowerCase();
+
+  //   // Ambil data dari localStorage jika ada, jika tidak gunakan data default
+  //   const storedData = localStorage.getItem("dataCampaign");
+  //   const campaignData = storedData ? JSON.parse(storedData) : dataCampaign;
+
+  //   // Find campaign and donasi
+  //   const foundCampaign = campaignData.find((c) => {
+  //     const foundDonasi = c.pengajuanDonasi.find(
+  //       (d) => String(d.id_donasi) === id
+  //     );
+  //     if (!foundDonasi) return false;
+
+  //     const campaignSlug = foundDonasi.judulCampaign
+  //       .toLowerCase()
+  //       .replace(/\s+/g, "-");
+  //     return campaignSlug === namaCampaignSlug;
+  //   });
+
+  //   if (foundCampaign) {
+  //     const foundDonasi = foundCampaign.pengajuanDonasi.find(
+  //       (d) => String(d.id_donasi) === id
+  //     );
+  //     setCampaign(foundCampaign);
+  //     setDonasi(foundDonasi);
+  //     setStatus(foundDonasi.status);
+  //   }
+
+  //   setIsLoading(false);
+  // }, [slug]);
+
+  // const updateStatus = async (newStatus) => {
+  //   try {
+  //     setIsLoading(true);
+
+  //     // Update status di data campaign
+  //     const updatedCampaign = dataCampaign.map((c) => {
+  //       if (c.pengajuanDonasi.some((d) => d.id_donasi === donasi.id_donasi)) {
+  //         return {
+  //           ...c,
+  //           pengajuanDonasi: c.pengajuanDonasi.map((d) => {
+  //             if (d.id_donasi === donasi.id_donasi) {
+  //               return { ...d, status: newStatus };
+  //             }
+  //             return d;
+  //           }),
+  //         };
+  //       }
+  //       return c;
+  //     });
+
+  //     // Simpan perubahan ke localStorage
+  //     localStorage.setItem("dataCampaign", JSON.stringify(updatedCampaign));
+
+  //     // Update state lokal
+  //     setStatus(newStatus);
+
+  //     // Show success message
+  //     if (newStatus === "diterima") {
+  //       toast.success(`Campaign ${newStatus}`, {
+  //         position: "top-right",
+  //         autoClose: 2000,
+  //         hideProgressBar: false,
+  //         closeOnClick: true,
+  //         pauseOnHover: true,
+  //         draggable: true,
+  //       });
+  //     } else {
+  //       toast.error(`Campaign ${newStatus}`, {
+  //         position: "top-right",
+  //         autoClose: 2000,
+  //         hideProgressBar: false,
+  //         closeOnClick: true,
+  //         pauseOnHover: true,
+  //         draggable: true,
+  //       });
+  //     }
+
+  //     // Tunggu sebentar agar toast terlihat
+  //     await new Promise((resolve) => setTimeout(resolve, 1000));
+
+  //     // Redirect ke halaman dashboard
+  //     router.push("/admin/dashboard");
+  //   } catch (error) {
+  //     toast.error("Terjadi kesalahan saat mengupdate status", {
+  //       position: "top-right",
+  //       autoClose: 2000,
+  //       hideProgressBar: false,
+  //       closeOnClick: true,
+  //       pauseOnHover: true,
+  //       draggable: true,
+  //     });
+  //     console.error("Error updating status:", error);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
   //fetch data
   // useEffect(() => {
@@ -181,7 +253,7 @@ const CampaignDetail = () => {
   //   fetchCampaignDetail();
   // }, [slug]);
 
-  // const handleStatusUpdate = async (newStatus) => {
+  // const updateStatus = async (newStatus) => {
   //   if (!donasi) return;
 
   //   try {
@@ -354,14 +426,14 @@ const CampaignDetail = () => {
       <div className="fixed bottom-0 left-0 w-full h-20 bg-white border-t shadow-xl z-50 flex items-center justify-center">
         <div className="flex gap-4">
           <button
-            onClick={() => handleStatusUpdate("ditolak")}
+            onClick={() => updateStatus("ditolak")}
             disabled={isLoading}
             className="inline-block min-w-[200px] px-6 py-2 rounded-3xl text-center text-white bg-red-600 hover:bg-red-700 active:bg-red-800 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isLoading ? "Memproses..." : "Campaign Ditolak"}
           </button>
           <button
-            onClick={() => handleStatusUpdate("diterima")}
+            onClick={() => updateStatus("diterima")}
             disabled={isLoading}
             className="inline-block min-w-[200px] px-6 py-2 rounded-3xl text-center text-white bg-[#1962F8] hover:bg-[#1554d6] active:bg-[#0e3ea6] transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >

@@ -1,7 +1,11 @@
 "use client";
 import React, { useState } from "react";
 import InputField from "@/components/ui/form-field/InputField";
-import { validateEmail, validateName, validatePassword } from "@/lib/utils/form-validator";
+import {
+  validateEmail,
+  validateName,
+  validatePassword,
+} from "@/lib/utils/form-validator";
 import Link from "next/link";
 import Image from "next/image";
 import { dataCampaign } from "@/data/campaign";
