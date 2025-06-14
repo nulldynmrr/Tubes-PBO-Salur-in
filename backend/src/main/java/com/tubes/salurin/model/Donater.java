@@ -3,24 +3,24 @@ package com.tubes.salurin.model;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
+import lombok.Setter;
 
 @Entity
 @Table(name = "donaters")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
-@AllArgsConstructor
-@SuperBuilder
-@EqualsAndHashCode
+public class Donater extends User{
+    @Column(name = "contact")
+    @NotBlank(message = "Nomor kontak harus diisi")
+    @Pattern(regexp = "\\d{10,15}", message = "Nomor kontak harus 10–15 digit angka")
+    private String contactNumber;
 
-public class Donater implements Donateable {
-    @Column(name = "name")
-    private String name;
     @Column(name = "anonymous")
-    private boolean isAnonymous;
+    private Boolean anonymous;
 }
 

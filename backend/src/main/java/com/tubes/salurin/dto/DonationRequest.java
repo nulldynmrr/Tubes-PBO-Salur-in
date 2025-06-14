@@ -1,14 +1,18 @@
 package com.tubes.salurin.dto;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class DonationRequest {
-    @NotNull(message = "Amount cannot be empty")
-    @Positive(message = "Amount must be positive")
-    private Double amount;
+    private String username;
+    private String email;
+    private String phoneNumber;
+    private Boolean anonymous;
 
-    private boolean isAnonymous;
+    private Double amount;
+    private Integer campaignId;
 }
