@@ -114,7 +114,7 @@ const Login = () => {
                 id="email"
                 name="email"
                 label="Email"
-                placeholder="Masukkan Nama Lengkap"
+                placeholder="Masukkan Email"
                 value={formData.email}
                 onChange={handleChange}
                 required
@@ -134,7 +134,7 @@ const Login = () => {
 
               <button
                 type="submit"
-                className="w-full py-3 px-4 rounded-lg text-white font-medium bg-blue-600 hover:bg-blue-700 active:bg-blue-800 transition-all"
+                className="w-full py-3 px-4 rounded-lg text-white font-mediaum bg-blue-600 hover:bg-blue-700 active:bg-blue-800 transition-all"
               >
                 Login
               </button>
