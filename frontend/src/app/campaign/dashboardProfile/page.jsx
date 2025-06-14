@@ -32,6 +32,27 @@ export default function ProfilePage() {
         return 'bg-gray-100 text-gray-700';
     }
   };
+
+  const [profilePic, setProfilePic] = useState("/img/profilepic.jpg");
+  const [previewPic, setPreviewPic] = useState(null);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file && file.type.startsWith("image/")) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewPic(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const saveProfilePic = () => {
+    if (previewPic) {
+      setProfilePic(previewPic);
+      setPreviewPic(null); // optionally clear preview
+    }
+  };
   return (
     <div>
        <Navbar />
