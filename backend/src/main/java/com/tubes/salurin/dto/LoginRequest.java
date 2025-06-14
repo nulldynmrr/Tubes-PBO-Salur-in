@@ -2,16 +2,14 @@ package com.tubes.salurin.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 public class LoginRequest {
-    @NotBlank(message = "Email harus diisi")
-    @Email(message = "Format email tidak valid")
+    @NotBlank(message = "Email cannot be empty")
+    @Email(message = "Invalid email format")
     private String email;
 
-    @NotBlank(message = "Password harus diisi")
+    @NotBlank(message = "Password cannot be empty")
     private String password;
 }

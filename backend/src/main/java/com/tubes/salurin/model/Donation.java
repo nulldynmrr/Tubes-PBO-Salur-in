@@ -1,5 +1,7 @@
 package com.tubes.salurin.model;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,28 +11,28 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Table(name = "donations")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
+@AllArgsConstructor
+
 public class Donation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @Column(name = "amount")
+    private double amount;
     
+    @CreationTimestamp
     @ManyToOne
-    @JoinColumn(name = "donater_id", nullable = false)
+    @JoinColumn(name = "donater_id")
     private Donater donater;
 
     @ManyToOne
-    @JoinColumn(name = "campaign_id", nullable = false)
+    @JoinColumn(name = "campaign_id")
     private Campaign campaign;
-
-    @Column(name = "amount", nullable = false)
-    private double amount;
 }
