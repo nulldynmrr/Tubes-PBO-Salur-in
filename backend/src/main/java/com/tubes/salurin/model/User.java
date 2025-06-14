@@ -53,4 +53,5 @@ public abstract class User{
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
     UserRole role;
+
 }
