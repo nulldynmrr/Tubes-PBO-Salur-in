@@ -27,28 +27,28 @@ import lombok.Setter;
 public abstract class User{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer user_id;
     
-    @Column(name = "username", unique = true)
-    @NotBlank(message = "Username harus diisi")
+    @Column(name = "nama lengkap", unique = true)
+    @NotBlank(message = "Nama lengkap harus diisi")
     @Pattern(
     regexp = "^[A-Za-z\\s]{2,}$",
-    message = "Username hanya boleh mengandung huruf dan spasi, minimal 2 karakter"
+    message = "Nama lengkap hanya boleh mengandung huruf dan spasi, minimal 2 karakter"
     )
-    private String username;
+    private String nama_lengkap;
 
     @Column(name = "email", unique = true)
     @NotBlank(message = "Email harus diisi")
     @Email(message = "Format email tidak valid")
     private String email;
 
-    @Column(name = "password")
-    @NotBlank(message = "Password harus diisi")
+    @Column(name = "nomor telepon")
+    @NotBlank(message = "nomor telepon harus diisi")
     @Pattern(
-        regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*?&]).{8,}$",
-        message = "Password harus terdiri dari minimal 8 karakter dan mencakup huruf, angka, serta simbol"
+        regexp = "^\\d{10,15}$",
+        message = "Nomor telepon harus terdiri dari 10-15 digit angka"
     )
-    private String password; 
+    private String nomor_telepon; 
 
     @Column(name = "role")
     @Enumerated(EnumType.STRING)

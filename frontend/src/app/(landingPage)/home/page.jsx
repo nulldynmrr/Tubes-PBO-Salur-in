@@ -41,35 +41,35 @@ const Home = () => {
   const [hoveredIndex, setHoveredIndex] = useState(0);
 
   const steps = [
-    {
-      title: "Mulai Kebaikanmu, Wujudkan Harapan Mereka",
-      description:
-        "Kami bantu kamu menyusun kampanye donasi dengan panduan langkah demi langkah. Tentukan tujuan, ceritakan kebutuhanmu, dan perbarui info kapan saja.",
-      badgeColor: "#1962F8",
-      cardTitle: "Wujudkan Harapan Mereka",
-      cardDesc: "Jadi orang yang mendorong kebaikan dengan membuat campaign",
-      cardImg: "/img/mulaicard1.jpeg", // ganti sesuai lokasi gambarmu
-    },
-    {
-      title: "Sebarkan Ceritamu, Ajak Lebih Banyak Hati",
-      description:
-        "Bagikan tautan kampanye ke orang-orang terdekat dan media sosial. Manfaatkan fitur berbagi di dashboard untuk menjangkau lebih luas dan menyentuh lebih banyak jiwa.",
-      badgeColor: "#A7C4F8",
-      cardTitle: "Sebarkan Ceritamu",
-      cardDesc: "Bagikan kampanye agar lebih banyak orang ikut membantu.",
-      cardImg: "/img/mulaicard2.jpeg",
-    },
-    {
-      title: "Terima Donasi Secara Aman & Cepat",
-      description:
-        "Masukkan informasi rekening atau ajak penerima manfaat mengisi datanya. Dana akan dikirim dengan sistem yang aman, cepat, dan transparan.",
-      badgeColor: "transparent",
-      textColor: "#1962F8",
-      cardTitle: "Terima Donasi",
-      cardDesc: "Pastikan data lengkap agar bantuan cepat tersalurkan.",
-      cardImg: "/img/mulaicard3.jpg",
-    },
-  ];
+  {
+    title: "Mulai Kebaikanmu, Wujudkan Harapan Mereka",
+    description:
+      "Kami bantu kamu menyusun kampanye donasi dengan panduan langkah demi langkah. Tentukan tujuan, ceritakan kebutuhanmu, dan perbarui info kapan saja.",
+    badgeColor: "#1962F8",
+    cardTitle: "Wujudkan Harapan Mereka",
+    cardDesc: "Jadi orang yang mendorong kebaikan dengan membuat campaign",
+    cardImg: "/img/mulaicard1.jpeg", // ganti sesuai lokasi gambarmu
+  },
+  {
+    title: "Sebarkan Ceritamu, Ajak Lebih Banyak Hati",
+    description:
+      "Bagikan tautan kampanye ke orang-orang terdekat dan media sosial. Manfaatkan fitur berbagi di dashboard untuk menjangkau lebih luas dan menyentuh lebih banyak jiwa.",
+    badgeColor: "#A7C4F8",
+    cardTitle: "Sebarkan Ceritamu",
+    cardDesc: "Bagikan kampanye agar lebih banyak orang ikut membantu.",
+    cardImg: "/img/mulaicard2.jpeg",
+  },
+  {
+    title: "Terima Donasi Secara Aman & Cepat",
+    description:
+      "Masukkan informasi rekening atau ajak penerima manfaat mengisi datanya. Dana akan dikirim dengan sistem yang aman, cepat, dan transparan.",
+    badgeColor: "transparent",
+    textColor: "#1962F8",
+    cardTitle: "Terima Donasi",
+    cardDesc: "Pastikan data lengkap agar bantuan cepat tersalurkan.",
+    cardImg: "/img/mulaicard3.jpg",
+  },
+];
 
   const fadeIn = {
     hidden: { opacity: 0 },
@@ -264,7 +264,7 @@ const Home = () => {
           {/* Gambar */}
           <motion.div className="w-full md:w-1/2" variants={fadeInRight}>
             <Image
-              src="/img/tentangkami.jpeg"
+              src="/img/tentangkami.jpg"
               alt="Tentang Kami"
               width={600}
               height={400}
