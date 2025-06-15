@@ -1,73 +1,107 @@
 "use client";
-import React, { use, useState } from "react";
-import { FaFileUpload, FaImage, FaCalendarAlt, FaAngleRight } from "react-icons/fa";
+import React, { useState } from "react";
 import Navbar from "@/components/Navbar";
 
 const Submission = () => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [formData, setFormData] = useState({
+    namaOrganisasi: "",
+    nomorTelepon: "",
+    deskripsi: "",
+    alamat: "",
+    kategori: "",
+    target: "",
+    judul: "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   return (
     <div>
       <Navbar />
+      <div className="pt-[75px] px-6 md:px-[110px] py-4">
+        <h2 className="text-2xl font-semibold text-gray-700 mb-8 text-center">
+          Formulir Campaign Donasi
+        </h2>
 
-      <div className="max-w-4xl mx-auto py-32 px-3">
-        <h2 className="text-2xl font-semibold mb-8">Form Pengajuan Campaign Donasi</h2>
-
-        <form className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Nama Organisasi */}
+        <form className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label className="block mb-1 text-sm font-medium">Nama Organisasi</label>
+            <label className="block text-sm text-gray-600 mb-2">
+              Nama Organisasi
+            </label>
             <input
+              name="namaOrganisasi"
+              value={formData.namaOrganisasi}
+              onChange={handleChange}
               type="text"
-              className="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full px-4 py-2 text-sm border border-gray-300 rounded-lg bg-white text-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none"
             />
           </div>
 
-          {/* Gambar Campaign */}
           <div>
-            <label className="block mb-1 text-sm font-medium">Gambar Campaign Donasi</label>
-            <div className="relative">
-              <input
-                type="file"
-                className="w-full border border-gray-300 px-4 py-2 pr-10 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-              />
-              <FaImage className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-            </div>
-          </div>
-
-          {/* Nomor Telepon */}
-          <div>
-            <label className="block mb-1 text-sm font-medium">Nomor Telepon</label>
+            <label className="block text-sm text-gray-600 mb-2">
+              Gambar Campaign Donasi
+            </label>
             <input
-              type="text"
-              className="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+              type="file"
+              className="w-full px-4 py-2 text-sm border border-gray-300 rounded-lg bg-white text-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none"
             />
           </div>
 
-          {/* Deskripsi */}
           <div>
-            <label className="block mb-1 text-sm font-medium">Deskripsi Campaign Donasi</label>
+            <label className="block text-sm text-gray-600 mb-2">
+              Nomor Telepon
+            </label>
             <input
+              name="nomorTelepon"
+              value={formData.nomorTelepon}
+              onChange={handleChange}
               type="text"
-              className="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full px-4 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
             />
           </div>
 
-          {/* Alamat */}
           <div>
-            <label className="block mb-1 text-sm font-medium">Alamat Lengkap</label>
+            <label className="block text-sm text-gray-600 mb-2">
+              Deskripsi Campaign Donasi
+            </label>
             <input
+              name="deskripsi"
+              value={formData.deskripsi}
+              onChange={handleChange}
               type="text"
-              className="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full px-4 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
             />
           </div>
 
-            {/* Kategori */}
           <div>
-            <label className="block mb-1 text-sm font-medium">Kategori Campaign Donasi</label>
-            <select className="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400">
-              <option value="">-- Pilih Kategori --</option>
+            <label className="block text-sm text-gray-600 mb-2">
+              Alamat Lengkap
+            </label>
+            <input
+              name="alamat"
+              value={formData.alamat}
+              onChange={handleChange}
+              type="text"
+              className="w-full px-4 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm text-gray-600 mb-2">
+              Kategori Campaign Donasi
+            </label>
+            <select
+              name="kategori"
+              value={formData.kategori}
+              onChange={handleChange}
+              className="w-full px-4 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            >
+              <option>-- Pilih Kategori --</option>
               <option value="bencana-alam">Bencana Alam</option>
               <option value="kesehatan">Kesehatan</option>
               <option value="pendidikan">Pendidikan</option>
@@ -80,88 +114,92 @@ const Submission = () => {
             </select>
           </div>
 
-          {/* Selfie */}
           <div>
-            <label className="block mb-1 text-sm font-medium">Selfie dengan KTP</label>
+            <label className="block text-sm text-gray-600 mb-2">
+              Selfie dengan KTP
+            </label>
             <input
               type="file"
-              className="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full px-4 py-2 text-sm border border-gray-300 rounded-lg bg-white text-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none"
             />
           </div>
 
-          {/* Target Donasi */}
           <div>
-            <label className="block mb-1 text-sm font-medium">Target Donasi</label>
+            <label className="block text-sm text-gray-600 mb-2">
+              Target Donasi
+            </label>
             <input
+              name="target"
+              value={formData.target}
+              onChange={handleChange}
               type="number"
-              className="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full px-4 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
             />
           </div>
 
-          {/* Judul Campaign */}
+
           <div>
-            <label className="block mb-1 text-sm font-medium">Judul Campaign Donasi</label>
+            <label className="block text-sm text-gray-600 mb-2">
+              Judul Campaign Donasi
+            </label>
             <input
+              name="judul"
+              value={formData.judul}
+              onChange={handleChange}
               type="text"
-              className="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full px-4 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
             />
           </div>
 
-           {/* Durasi Awal Campaign */}
           <div>
-            <label className="block mb-1 text-sm font-medium">Tanggal Awal Campaign</label>
+            <label className="block text-sm text-gray-600 mb-2">
+              Tanggal Awal Campaign
+            </label>
             <input
               type="date"
-              className="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
               value={startDate}
               onChange={(e) => {
                 setStartDate(e.target.value);
-                // Jika endDate sudah diisi dan menjadi tidak valid, reset
-                if (endDate && e.target.value > endDate) {
-                  setEndDate("");
-                }
+                if (endDate && e.target.value > endDate) setEndDate("");
               }}
+              className="w-full px-4 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
             />
           </div>
 
-          {/* Proposal */}
           <div>
-            <label className="block mb-1 text-sm font-medium">Proposal Campaign Donasi</label>
-            <div className="relative">
-              <input
-                type="file"
-                className="w-full border border-gray-300 px-4 py-2 pr-10 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-              />
-              <FaFileUpload className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-            </div>
+            <label className="block text-sm text-gray-600 mb-2">
+              Proposal Campaign Donasi
+            </label>
+            <input
+              type="file"
+              className="w-full px-4 py-2 text-sm border border-gray-300 rounded-lg bg-white text-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            />
           </div>
 
-          {/* Durasi Akhir Campaign */}
           <div>
-            <label className="block mb-1 text-sm font-medium">Tanggal Akhir Campaign</label>
+            <label className="block text-sm text-gray-600 mb-2">
+              Tanggal Akhir Campaign
+            </label>
             <input
               type="date"
-              className="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+              min={startDate}
               value={endDate}
-              min={startDate} // ⬅️ ini mencegah tanggal sebelum durasi awal
               onChange={(e) => setEndDate(e.target.value)}
+              className="w-full px-4 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
             />
           </div>
-          
-          
         </form>
 
-        {/* Tombol */}
         <div className="flex justify-center gap-4 mt-10">
           <button
             type="button"
-            className="bg-red-400 text-white px-6 py-2 rounded hover:bg-red-500 transition"
+            className="px-6 py-2 rounded-lg text-gray-700 bg-gray-200 hover:bg-gray-300 transition text-sm"
           >
             Kembali
           </button>
           <button
             type="submit"
-            className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition"
+            className="px-6 py-2 rounded-lg text-white bg-blue-600 hover:bg-blue-700 transition text-sm"
           >
             Submit
           </button>

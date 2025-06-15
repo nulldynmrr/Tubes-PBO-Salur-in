@@ -19,6 +19,64 @@ const CampaignDetail = () => {
   const slug = pathname.split("/").pop();
 
   // fetch data
+  useEffect(() => {
+    const fetchCampaignDetail = async () => {
+      if (!slug) return;
+  
+      setIsLoading(true);
+      const parts = slug.split("-");
+      const id = parts[parts.length - 1];
+      const slugNamaCampaign = parts.slice(0, -1).join("-").toLowerCase();
+  
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/campaigns/campaign-detail/${id}`
+        );
+        if (!res.ok) throw new Error("Gagal fetch dari API");
+  
+        const data = await res.json();
+        const validSlug = data.judulCampaign.toLowerCase().replace(/\s+/g, "-");
+  
+        if (validSlug !== slugNamaCampaign) throw new Error("Slug tidak cocok");
+  
+        setDonasi(data);
+        setCampaign({ namaCampaign: data.campaignOwner.namaCampaign });
+        setStatus(data.status);
+      } catch (err) {
+        console.warn("Fetch API gagal, gunakan data dummy", err);
+  
+        // fallback ke dummy
+        const foundCampaign = dataCampaign.find((c) =>
+          c.pengajuanDonasi.some((d) => String(d.id_donasi) === id)
+        );
+  
+        if (foundCampaign) {
+          const foundDonasi = foundCampaign.pengajuanDonasi.find(
+            (d) => String(d.id_donasi) === id
+          );
+          const validSlug = foundDonasi.judulCampaign
+            .toLowerCase()
+            .replace(/\s+/g, "-");
+  
+          if (validSlug === slugNamaCampaign) {
+            setDonasi(foundDonasi);
+            setCampaign(foundCampaign);
+            setStatus(foundDonasi.status);
+          } else {
+            toast.error("Slug tidak valid di dummy");
+          }
+        } else {
+          toast.error("Campaign tidak ditemukan di dummy");
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    };
+  
+    fetchCampaignDetail();
+  }, [slug]);
+  
+  
   // useEffect(() => {
   //   const fetchCampaignDetail = async () => {
   //     if (!slug) return;
