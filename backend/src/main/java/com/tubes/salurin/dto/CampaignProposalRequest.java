@@ -2,13 +2,15 @@ package com.tubes.salurin.dto;
 
 import lombok.Data;
 
+import java.time.LocalDate;
+
 @Data
-public class CampaignResponse {
-    private Long id;
+public class CampaignProposalRequest {
     private String title;
     private String description;
     private double targetAmount;
     private String imagePath;
     private String proposalPdfPath;
-    private String status;
+    private LocalDate dateStart;
+    private LocalDate dateEnd;
 }

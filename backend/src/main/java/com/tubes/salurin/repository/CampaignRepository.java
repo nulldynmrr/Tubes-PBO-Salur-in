@@ -1,13 +1,12 @@
 package com.tubes.salurin.repository;
 
-import java.util.Optional;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
-import com.tubes.salurin.model.Campaign;
+import com.tubes.salurin.entity.Campaign;
 
-@Repository
-public interface CampaignRepository extends JpaRepository<Campaign, Integer> {
-    Optional<Campaign> findByCampaignTitle(String campaignTitle);
+public interface CampaignRepository extends JpaRepository<Campaign, Long> {
+    List<Campaign> findByOwner_Id(Long ownerId);
+    List<Campaign> findByApprovedTrue();
 }

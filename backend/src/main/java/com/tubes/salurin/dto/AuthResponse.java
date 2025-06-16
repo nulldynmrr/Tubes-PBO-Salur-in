@@ -1,13 +1,11 @@
 package com.tubes.salurin.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 public class AuthResponse {
     private String token;
-    private String role;
+    private String name;
 }
