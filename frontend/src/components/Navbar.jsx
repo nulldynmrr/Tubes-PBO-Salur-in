@@ -14,21 +14,32 @@ export const Navbar = () => {
   const isAdmin = pathname.startsWith("/admin");
   const isCampaign = pathname.startsWith("/campaign");
   const isDonor = pathname.startsWith("/donor");
+  const isDashboard = pathname === "/campaign/dashboard";
+  const user = authService.getUser();
 
   const handleLogout = () => {
     authService.logout();
-    window.location.href = "/";
   };
 
   const renderNavLinks = () => {
     if (isAdmin || isCampaign) {
       return (
-        <button
-          onClick={handleLogout}
-          className="text-gray-700 hover:text-black"
-        >
-          Logout
-        </button>
+        <>
+          {!isDashboard && (
+            <Link
+              href="/campaign/dashboard"
+              className="text-gray-700 hover:text-black"
+            >
+              Dashboard
+            </Link>
+          )}
+          <button
+            onClick={handleLogout}
+            className="text-gray-700 hover:text-black"
+          >
+            Logout
+          </button>
+        </>
       );
     }
 
@@ -71,9 +82,19 @@ export const Navbar = () => {
         <Link href="/" className="text-gray-700 hover:text-black">
           Komunitas
         </Link>
-        <SecondaryButton nextRoute="/register/campaign">
-          Daftar Campaign
-        </SecondaryButton>
+        {!user && (
+          <SecondaryButton nextRoute="/register/campaign">
+            Daftar Campaign
+          </SecondaryButton>
+        )}
+        {user && !isDashboard && (
+          <Link
+            href="/campaign/dashboard"
+            className="text-gray-700 hover:text-black"
+          >
+            Dashboard
+          </Link>
+        )}
       </>
     );
   };
