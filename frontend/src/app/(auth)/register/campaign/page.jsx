@@ -9,7 +9,11 @@ import {
 <<<<<<< HEAD
 =======
   validateName,
+<<<<<<< HEAD
 >>>>>>> bab1b112dddb80496c48a4a0693c2fc6d970968c
+=======
+>>>>>>> 44c46147c3a8b5b92e15f23789ee508033e2bbe2
+>>>>>>> e5c05a497198f65b6603f4b6a5e5addf0400dedf
   validatePhone,
 } from "@/lib/utils/form-validator";
 import { authService } from "@/services/auth.service";
@@ -64,7 +68,11 @@ const RegisterCampaign = () => {
   const handleSubmit = async (e) => {
 =======
   const onSubmit = async (e) => {
+<<<<<<< HEAD
 >>>>>>> bab1b112dddb80496c48a4a0693c2fc6d970968c
+=======
+>>>>>>> 44c46147c3a8b5b92e15f23789ee508033e2bbe2
+>>>>>>> e5c05a497198f65b6603f4b6a5e5addf0400dedf
     e.preventDefault();
 
     const nameMessage = validateName(formData.name);
@@ -134,7 +142,11 @@ const RegisterCampaign = () => {
         "admin"
       );
       toast.success("Registrasi berhasil!", { toastId: "register-success" });
+<<<<<<< HEAD
 >>>>>>> bab1b112dddb80496c48a4a0693c2fc6d970968c
+=======
+>>>>>>> 44c46147c3a8b5b92e15f23789ee508033e2bbe2
+>>>>>>> e5c05a497198f65b6603f4b6a5e5addf0400dedf
       router.push("/login");
     } catch (error) {
       toast.error(error.message || "Registrasi gagal. Silakan coba lagi.", {
