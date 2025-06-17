@@ -6,6 +6,10 @@ import {
   validateName,
   validateEmail,
   validatePassword,
+<<<<<<< HEAD
+=======
+  validateName,
+>>>>>>> 44c46147c3a8b5b92e15f23789ee508033e2bbe2
   validatePhone,
 } from "@/lib/utils/form-validator";
 import { authService } from "@/services/auth.service";
@@ -21,15 +25,15 @@ const RegisterCampaign = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    password: "",
-    confirmPassword: "",
     organization: "",
     phone: "",
+    password: "",
+    confirmPassword: "",
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleChange = (e) => {
+  const onChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
     if (errors[name]) {
@@ -37,6 +41,7 @@ const RegisterCampaign = () => {
     }
   };
 
+<<<<<<< HEAD
   const validateForm = () => {
     const schema = {
       name: "name",
@@ -57,14 +62,57 @@ const RegisterCampaign = () => {
   };
 
   const handleSubmit = async (e) => {
+=======
+  const onSubmit = async (e) => {
+>>>>>>> 44c46147c3a8b5b92e15f23789ee508033e2bbe2
     e.preventDefault();
 
-    if (!validateForm()) {
+    const nameMessage = validateName(formData.name);
+    const emailMessage = validateEmail(formData.email);
+    const passwordMessage = validatePassword(formData.password);
+    const confirmPasswordMessage =
+      formData.password !== formData.confirmPassword
+        ? "Password tidak sama"
+        : "";
+    const organizationMessage = !formData.organization
+      ? "Nama organisasi harus diisi"
+      : "";
+    const phoneMessage = !formData.phone ? "Nomor telepon harus diisi" : "";
+
+    if (
+      nameMessage ||
+      emailMessage ||
+      passwordMessage ||
+      confirmPasswordMessage ||
+      organizationMessage ||
+      phoneMessage
+    ) {
+      if (nameMessage) {
+        toast.error(nameMessage, { toastId: "name-error" });
+      }
+      if (emailMessage) {
+        toast.error(emailMessage, { toastId: "email-error" });
+      }
+      if (passwordMessage) {
+        toast.error(passwordMessage, { toastId: "password-error" });
+      }
+      if (confirmPasswordMessage) {
+        toast.error(confirmPasswordMessage, {
+          toastId: "confirm-password-error",
+        });
+      }
+      if (organizationMessage) {
+        toast.error(organizationMessage, { toastId: "organization-error" });
+      }
+      if (phoneMessage) {
+        toast.error(phoneMessage, { toastId: "phone-error" });
+      }
       return;
     }
 
     setIsLoading(true);
     try {
+<<<<<<< HEAD
       await authService.register({
         name: formData.name,
         email: formData.email,
@@ -74,9 +122,24 @@ const RegisterCampaign = () => {
         role: "OWNER",
       });
       toast.success("Registrasi berhasil!");
+=======
+      await authService.register(
+        {
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+          organization: formData.organization,
+          phone: formData.phone,
+        },
+        "admin"
+      );
+      toast.success("Registrasi berhasil!", { toastId: "register-success" });
+>>>>>>> 44c46147c3a8b5b92e15f23789ee508033e2bbe2
       router.push("/login");
     } catch (error) {
-      toast.error(error.message || "Registrasi gagal. Silakan coba lagi.");
+      toast.error(error.message || "Registrasi gagal. Silakan coba lagi.", {
+        toastId: "register-failed",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -134,53 +197,49 @@ const RegisterCampaign = () => {
               </p>
             </div>
 
-            <form className="space-y-6" onSubmit={handleSubmit}>
+            <form className="space-y-6" onSubmit={onSubmit}>
               <InputField
                 id="name"
                 name="name"
                 label="Nama Lengkap"
-                type="text"
-                placeholder="Masukkan nama lengkap"
+                placeholder="Masukkan Nama Lengkap"
                 value={formData.name}
-                onChange={handleChange}
+                onChange={onChange}
                 required
-                error={errors.name}
+                validate={validateName}
               />
 
               <InputField
                 id="email"
                 name="email"
                 label="Email"
-                type="email"
-                placeholder="Masukkan email"
+                placeholder="Masukkan Email"
                 value={formData.email}
-                onChange={handleChange}
+                onChange={onChange}
                 required
-                error={errors.email}
+                validate={validateEmail}
               />
 
               <InputField
                 id="organization"
                 name="organization"
                 label="Nama Organisasi"
-                type="text"
-                placeholder="Masukkan nama organisasi"
+                placeholder="Masukkan Nama Organisasi"
                 value={formData.organization}
-                onChange={handleChange}
+                onChange={onChange}
                 required
-                error={errors.organization}
+                validate={validateName}
               />
 
               <InputField
                 id="phone"
                 name="phone"
                 label="Nomor Telepon"
-                type="tel"
-                placeholder="Masukkan nomor telepon"
+                placeholder="Masukkan Nomor Telepon"
                 value={formData.phone}
-                onChange={handleChange}
+                onChange={onChange}
                 required
-                error={errors.phone}
+                validate={validatePhone}
               />
 
               <InputField
@@ -188,11 +247,11 @@ const RegisterCampaign = () => {
                 name="password"
                 label="Password"
                 type="password"
-                placeholder="Masukkan password"
+                placeholder="Masukkan Password"
                 value={formData.password}
-                onChange={handleChange}
+                onChange={onChange}
                 required
-                error={errors.password}
+                validate={validatePassword}
               />
 
               <InputField
@@ -200,50 +259,18 @@ const RegisterCampaign = () => {
                 name="confirmPassword"
                 label="Konfirmasi Password"
                 type="password"
-                placeholder="Konfirmasi password"
+                placeholder="Konfirmasi Password"
                 value={formData.confirmPassword}
-                onChange={handleChange}
+                onChange={onChange}
                 required
-                error={errors.confirmPassword}
+                validate={validatePassword}
               />
 
               <button
                 type="submit"
-                disabled={isLoading}
-                className={`w-full py-3 px-4 rounded-lg text-white font-medium transition-all
-                ${
-                  isLoading
-                    ? "bg-blue-400 cursor-not-allowed"
-                    : "bg-blue-600 hover:bg-blue-700 active:bg-blue-800"
-                }`}
+                className="w-full py-3 px-4 rounded-lg text-white font-mediaum bg-blue-600 hover:bg-blue-700 active:bg-blue-800 transition-all"
               >
-                {isLoading ? (
-                  <span className="flex items-center justify-center">
-                    <svg
-                      className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      ></circle>
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      ></path>
-                    </svg>
-                    Memproses...
-                  </span>
-                ) : (
-                  "Daftar"
-                )}
+                Register
               </button>
             </form>
 
@@ -251,7 +278,7 @@ const RegisterCampaign = () => {
               <p className="text-sm text-gray-600">
                 Sudah punya akun?{" "}
                 <Link
-                  href="/login"
+                  href="/login/campaign"
                   className="text-blue-600 hover:text-blue-800 font-medium hover:underline"
                 >
                   Login

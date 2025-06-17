@@ -43,8 +43,8 @@ export const dataUsers = [
     nomor_telepon: "089876543210",
     donasi: [
       {
-        id_donasi: "3",
-        total_donasi: 150000,
+        id_donasi: "5",
+        total_donasi: 30000000,
         pembayaran_via: "BANK",
         bank_tujuan: "Mandiri",
         bukti_pembayaran: "bukti-fauzi-1.jpg",
@@ -57,7 +57,7 @@ export const dataUsers = [
         bukti_pembayaran: "bukti-fauzi-2.jpg",
       },
       {
-        id_donasi: "5",
+        id_donasi: "3",
         total_donasi: 10000000,
         pembayaran_via: "BANK",
         bank_tujuan: "BNI",

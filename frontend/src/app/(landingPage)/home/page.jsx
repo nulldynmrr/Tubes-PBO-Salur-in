@@ -293,7 +293,6 @@ const Home = () => {
 
       <section className="bg-sky-50 py-16 md:px-[110px]">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-12">
-          {/* Left Steps */}
           <div className="flex-1 space-y-6">
             <h2 className="text-2xl md:text-3xl font-bold text-gray-800">
               Mulai Kebaikanmu, Wujudkan Harapan Mereka
@@ -323,7 +322,6 @@ const Home = () => {
             ))}
           </div>
 
-          {/* Right Card */}
           <div className="flex-1 relative">
             <div className="absolute top-4 left-4 w-full h-full bg-[#A7C4F8] rounded-lg rotate-[2deg]"></div>
             <div className="absolute top-2 left-2 w-full h-full bg-[#739FF6] rounded-lg rotate-[-2deg]"></div>
@@ -359,7 +357,6 @@ const Home = () => {
         viewport={{ once: true, amount: 0.2 }}
       >
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-12">
-          {/* Image Section */}
           <motion.div className="flex-1" variants={fadeInUp}>
             <Image
               src="/img/anakpalestineflag.png"
@@ -370,7 +367,6 @@ const Home = () => {
             />
           </motion.div>
 
-          {/* Text Section */}
           <motion.div
             className="flex-1 space-y-4 text-center md:text-left"
             initial="hidden"
@@ -415,59 +411,7 @@ const Home = () => {
         </div>
       </motion.section>
 
-      <section className="py-16 md:px-[110px] bg-sky-50">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-semibold">Program Donasi</h2>
-            <a
-              href="/donasi"
-              className="text-sm text-gray-600 hover:text-blue-600"
-            >
-              Lihat Semua
-            </a>
-          </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {dataCampaign
-              .flatMap((campaign) => campaign.pengajuanDonasi)
-              .slice(0, 3)
-              .map((donasi) => (
-                <DonationCard
-                  key={donasi.id_donasi}
-                  campaign={{
-                    namaCampaign: donasi.judulCampaign,
-                    gambarBuktiCampaign: donasi.gambarBuktiCampaign,
-                    deskripsi: donasi.deskripsi,
-                    progress: hitungPersentaseDonasi(
-                      donasi.id_donasi,
-                      dataCampaign,
-                      dataUsers
-                    ),
-                  }}
-                />
-              ))}
-
-            {/* {dataCampaign
-              .flatMap((campaign) => campaign.pengajuanDonasi)
-              .slice(0, 3)
-              .map((donasi) => (
-                <DonationCard
-                  key={donasi.id_donasi}
-                  campaign={{
-                    namaCampaign: donasi.judulCampaign,
-                    gambarBuktiCampaign: donasi.gambarBuktiCampaign,
-                    deskripsi: donasi.deskripsi,
-                    progress: hitungPersentaseDonasi(
-                      donasi.id_donasi,
-                      dataCampaign,
-                      dataUsers
-                    ),
-                  }}
-                />
-              ))} */}
-          </div>
-        </div>
-      </section>
 
       {/* FAQ */}
       <section>

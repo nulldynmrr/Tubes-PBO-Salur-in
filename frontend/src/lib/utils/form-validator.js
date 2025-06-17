@@ -110,36 +110,18 @@ export const validatePostalCode = (value) => {
   return "";
 };
 
-// Validasi nomor kartu kredit menggunakan algoritma Luhn
+// Validasi nomor rekening: hanya angka dan minimal 3 digit
 export const validateCreditCard = (value) => {
-  if (!value.trim()) return "";
+  const cleaned = value.replace(/\s|-/g, "");
 
-  // Hapus spasi dan tanda hubung
-  const cardNumber = value.replace(/[\s-]/g, "");
+  if (!cleaned.trim()) return "Nomor rekening wajib diisi";
 
-  // Periksa apakah hanya berisi digit
-  if (!/^\d+$/.test(cardNumber)) {
-    return "Credit card can only contain digits";
+  if (!/^\d+$/.test(cleaned)) {
+    return "Nomor rekening hanya boleh berisi angka";
   }
 
-  // Luhn algorithm
-  let sum = 0;
-  let shouldDouble = false;
-
-  for (let i = cardNumber.length - 1; i >= 0; i--) {
-    let digit = Number.parseInt(cardNumber.charAt(i));
-
-    if (shouldDouble) {
-      digit *= 2;
-      if (digit > 9) digit -= 9;
-    }
-
-    sum += digit;
-    shouldDouble = !shouldDouble;
-  }
-
-  if (sum % 10 !== 0) {
-    return "Invalid credit card number";
+  if (cleaned.length < 3) {
+    return "Nomor rekening minimal 3 digit";
   }
 
   return "";
