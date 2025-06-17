@@ -34,27 +34,6 @@ export const authService = {
     }
   },
 
-<<<<<<< HEAD
-  // ✅ Add this below the regular login
-  loginAdmin: async (email, password) => {
-    const res = await fetch(`${API_BASE_URL}/auth/admin/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
-    if (!res.ok) throw new Error("Login admin gagal");
-    return res.json();
-  },
-
-  register: async (userData) => {
-    const res = await fetch(`${API_BASE_URL}${API_ENDPOINTS.AUTH.REGISTER}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(userData),
-    });
-    if (!res.ok) throw new Error("Registrasi gagal");
-    return res.json();
-=======
   register: async (userData, role) => {
     try {
       const res = await fetch(
@@ -91,15 +70,6 @@ export const authService = {
     localStorage.clear();
     // Redirect to home page
     window.location.href = "/";
-<<<<<<< HEAD
->>>>>>> 44c46147c3a8b5b92e15f23789ee508033e2bbe2
-=======
-<<<<<<< HEAD
->>>>>>> bab1b112dddb80496c48a4a0693c2fc6d970968c
-=======
->>>>>>> 44c46147c3a8b5b92e15f23789ee508033e2bbe2
->>>>>>> e5c05a497198f65b6603f4b6a5e5addf0400dedf
->>>>>>> ed6759752313be4269540b964de3f94051740753
   },
 
   setAuthToken: (token) => {

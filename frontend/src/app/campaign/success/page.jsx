@@ -10,9 +10,8 @@ const SuccessPage = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       router.push("/campaign/dashboard");
-    }, 6000);
+    }, 4000);
 
-    // Simpan status penarikan di localStorage
     localStorage.setItem("withdrawalStatus", "completed");
 
     return () => clearTimeout(timer);

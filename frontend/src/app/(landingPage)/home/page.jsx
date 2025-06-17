@@ -411,9 +411,6 @@ const Home = () => {
         </div>
       </motion.section>
 
-
-
-      {/* FAQ */}
       <section>
         <FAQ />
       </section>

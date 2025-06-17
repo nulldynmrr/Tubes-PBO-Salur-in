@@ -110,7 +110,7 @@ export const validatePostalCode = (value) => {
   return "";
 };
 
-// Validasi nomor rekening: hanya angka dan minimal 3 digit
+// Validasi nomor rekening
 export const validateCreditCard = (value) => {
   const cleaned = value.replace(/\s|-/g, "");
 
