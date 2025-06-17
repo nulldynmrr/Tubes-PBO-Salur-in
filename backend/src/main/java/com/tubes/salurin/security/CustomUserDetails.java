@@ -11,31 +11,30 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class CustomUserDetails implements UserDetails {
-
     private final User user;
     private final Collection<? extends GrantedAuthority> authorities;
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
+    public Collection<? extends GrantedAuthority> getAuthorities(){
         return authorities;
     }
 
     @Override
-    public String getPassword() {
+    public String getPassword(){
         return user.getPassword();
     }
 
     @Override
-    public String getUsername() {
-        return user.getEmail();
+    public String getUsername(){
+        return user.getEmail(); 
     }
 
-    @Override public boolean isAccountNonExpired() { return true; }
-    @Override public boolean isAccountNonLocked() { return true; }
-    @Override public boolean isCredentialsNonExpired() { return true; }
-    @Override public boolean isEnabled() { return true; }
+    @Override public boolean isAccountNonExpired(){return true;}
+    @Override public boolean isAccountNonLocked(){return true;}
+    @Override public boolean isCredentialsNonExpired(){return true;}
+    @Override public boolean isEnabled(){return true;}
 
-    public User getUser() {
+    public User getUser(){
         return user;
     }
 }

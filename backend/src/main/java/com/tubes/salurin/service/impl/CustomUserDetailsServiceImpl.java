@@ -24,7 +24,6 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class CustomUserDetailsServiceImpl implements UserDetailsService {
-
     private final DonorRepository donorRepo;
     private final CampaignOwnerRepository ownerRepo;
     private final AdminRepository adminRepo;

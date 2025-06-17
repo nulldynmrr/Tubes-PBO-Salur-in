@@ -11,6 +11,17 @@ export const authService = {
     return res.json();
   },
 
+  // ✅ Add this below the regular login
+  loginAdmin: async (email, password) => {
+    const res = await fetch(`${API_BASE_URL}/auth/admin/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+    if (!res.ok) throw new Error("Login admin gagal");
+    return res.json();
+  },
+
   register: async (userData) => {
     const res = await fetch(`${API_BASE_URL}${API_ENDPOINTS.AUTH.REGISTER}`, {
       method: "POST",

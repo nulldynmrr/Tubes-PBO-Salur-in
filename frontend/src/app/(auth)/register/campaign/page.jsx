@@ -2,9 +2,11 @@
 import React, { useState } from "react";
 import InputField from "@/components/ui/form-field/InputField";
 import {
+  validateForm as runFormValidation,
+  validateName,
   validateEmail,
   validatePassword,
-  validateName,
+  validatePhone,
 } from "@/lib/utils/form-validator";
 import { authService } from "@/services/auth.service";
 import { useRouter } from "next/navigation";
@@ -36,26 +38,22 @@ const RegisterCampaign = () => {
   };
 
   const validateForm = () => {
-    const newErrors = {};
-    const nameError = validateName(formData.name);
-    const emailError = validateEmail(formData.email);
-    const passwordError = validatePassword(formData.password);
+    const schema = {
+      name: "name",
+      email: "email",
+      password: "password",
+      confirmPassword: {
+        type: "match",
+        options: { fieldToMatch: formData.password },
+      },
+      organization: "required",
+      phone: "phone",
+    };
 
-    if (nameError) newErrors.name = nameError;
-    if (emailError) newErrors.email = emailError;
-    if (passwordError) newErrors.password = passwordError;
-    if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "Password tidak sama";
-    }
-    if (!formData.organization) {
-      newErrors.organization = "Nama organisasi harus diisi";
-    }
-    if (!formData.phone) {
-      newErrors.phone = "Nomor telepon harus diisi";
-    }
+    const validationErrors = runFormValidation(formData, schema);
+    setErrors(validationErrors);
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return Object.keys(validationErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
@@ -67,12 +65,13 @@ const RegisterCampaign = () => {
 
     setIsLoading(true);
     try {
-      await authService.registerCampaign({
+      await authService.register({
         name: formData.name,
         email: formData.email,
         password: formData.password,
         organization: formData.organization,
         phone: formData.phone,
+        role: "OWNER",
       });
       toast.success("Registrasi berhasil!");
       router.push("/login");

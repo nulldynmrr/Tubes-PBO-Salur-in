@@ -20,22 +20,21 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class DonationServiceImpl implements DonationService {
-
     private final DonationRepository donationRepository;
     private final CampaignRepository campaignRepository;
     private final DonorRepository donorRepository;
 
     @Override
-    public DonationResponse createDonation(DonationRequest request) {
+    public DonationResponse createDonation(DonationRequest request){
         Donation donation = new Donation();
         donation.setAmount(request.getAmount());
         donation.setMessage(request.getMessage());
 
         Campaign campaign = campaignRepository.findById(request.getCampaignId())
-            .orElseThrow(() -> new RuntimeException("Campaign not found"));
+            .orElseThrow(() -> new RuntimeException("Campaign tidak ditemukan"));
         donation.setCampaign(campaign);
         Donor donor = donorRepository.findById(request.getDonorId())
-            .orElseThrow(() -> new RuntimeException("Donor not found"));
+            .orElseThrow(() -> new RuntimeException("Donatur tidak ditemukan"));
         donation.setDonor(donor);
 
         donationRepository.save(donation);
@@ -43,22 +42,22 @@ public class DonationServiceImpl implements DonationService {
     }
 
     @Override
-    public List<DonationResponse> getMyDonations() {
+    public List<DonationResponse> getMyDonations(){
         return donationRepository.findAll().stream().map(this::toDto).collect(Collectors.toList());
     }
 
     @Override
-    public List<DonationResponse> getAllDonations() {
+    public List<DonationResponse> getAllDonations(){
         return donationRepository.findAll().stream().map(this::toDto).collect(Collectors.toList());
     }
 
     @Override
-    public DonationResponse getDonationDetail(Long id) {
+    public DonationResponse getDonationDetail(Long id){
         Donation donation = donationRepository.findById(id).orElseThrow();
         return toDto(donation);
     }
 
-    private DonationResponse toDto(Donation d) {
+    private DonationResponse toDto(Donation d){
         DonationResponse dto = new DonationResponse();
         dto.setId(d.getId());
         dto.setAmount(d.getAmount());

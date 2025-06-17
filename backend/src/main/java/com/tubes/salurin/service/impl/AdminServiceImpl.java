@@ -18,7 +18,7 @@ public class AdminServiceImpl implements AdminService {
     private final CampaignRepository campaignRepo;
 
     @Override
-    public void deleteUserById(Long id) {
+    public void deleteUserById(Long id){
         donorRepo.findById(id).ifPresentOrElse(
             donorRepo::delete,
             () -> ownerRepo.findById(id).ifPresentOrElse(

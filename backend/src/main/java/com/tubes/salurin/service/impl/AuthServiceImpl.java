@@ -21,56 +21,51 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
-
-    private final CampaignOwnerRepository ownerRepo;
-    private final AdminRepository adminRepo;
+    private final CampaignOwnerRepository ownerRepository;
+    private final AdminRepository adminRepository;
     private final JwtService jwtService;
     private final AuthenticationManager authManager;
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public AuthResponse registerUser(RegisterRequest request) {
+    public AuthResponse registerUser(RegisterRequest request){
         CampaignOwner owner = new CampaignOwner();
         owner.setName(request.getName());
         owner.setEmail(request.getEmail());
         owner.setPassword(passwordEncoder.encode(request.getPassword()));
         owner.setPhone(request.getPhone());
         owner.setOrganization(request.getOrganization());
-        ownerRepo.save(owner);
+        ownerRepository.save(owner);
         return new AuthResponse(jwtService.generateToken(owner), "OWNER");
-        
     }
 
     @Override
-    public AuthResponse login(LoginRequest request) {
-        try {
-            authManager.authenticate(
-                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-            );
-        } catch (Exception e) {
-            throw new RuntimeException("Invalid email or password");
-        }
+    public AuthResponse login(LoginRequest request){
+        authManager.authenticate(
+            new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+        );
 
+        CampaignOwner owner = ownerRepository.findByEmail(request.getEmail())
+            .orElseThrow(() -> new UsernameNotFoundException("Email tidak ditemukan"));
 
-         CampaignOwner owner = ownerRepo.findByEmail(request.getEmail())
-        .orElseThrow(() -> new UsernameNotFoundException("Campaign Owner not found"));
+        String role = "OWNER";
+        String token = jwtService.generateToken(owner);
 
-    return new AuthResponse(jwtService.generateToken(owner), "OWNER");
+        return new AuthResponse(token, role);
     }
-
+    
     @Override
-    public AuthResponse loginAdmin(LoginRequest request) {
-        try {
-            authManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-            );
-        } catch (Exception e) {
-            throw new RuntimeException("Invalid admin credentials");
-        }
+    public AuthResponse loginAdmin(LoginRequest request){
+        authManager.authenticate(
+            new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+        );
 
-        Admin admin = adminRepo.findByEmail(request.getEmail())
-            .orElseThrow(() -> new UsernameNotFoundException("Admin not found"));
+        Admin admin = adminRepository.findByEmail(request.getEmail())
+            .orElseThrow(() -> new UsernameNotFoundException("Email tidak"));
 
-        return new AuthResponse(jwtService.generateToken(admin), "ADMIN");
+        String role = "ADMIN";
+        String token = jwtService.generateToken(admin);
+
+        return new AuthResponse(token, role);
     }
 }

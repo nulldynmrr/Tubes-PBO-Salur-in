@@ -11,7 +11,6 @@ import lombok.Data;
 @Entity
 @Data
 public class Donation {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

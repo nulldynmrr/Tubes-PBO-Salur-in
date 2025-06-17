@@ -3,6 +3,7 @@ package com.tubes.salurin.service.impl;
 import java.security.Key;
 import java.util.Date;
 
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import com.tubes.salurin.entity.User;
@@ -13,17 +14,16 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 
 @Service
-public class JwtServiceImpl implements JwtService {
+public class JwtServiceImpl implements JwtService{
+    private static final long EXPIRATION = 86400000;
+    private static final String SECRET = "d0f1c1bc-a4c7-439e-bfd2-3542da27a751"; 
 
-    private static final long EXPIRATION = 1000 * 60 * 60 * 24; // 24 hours
-    private static final String SECRET = "my-super-secret-jwt-key-that-is-very-secure"; // Use .env in production
-
-    private Key getSignKey() {
+    private Key getSignKey(){
         return Keys.hmacShaKeyFor(SECRET.getBytes());
     }
 
     @Override
-    public String generateToken(User user) {
+    public String generateToken(User user){
         return Jwts.builder()
                 .setSubject(user.getEmail())
                 .setIssuedAt(new Date())
@@ -33,7 +33,7 @@ public class JwtServiceImpl implements JwtService {
     }
 
     @Override
-    public String extractEmail(String token) {
+    public String extractEmail(String token){
         return Jwts.parserBuilder()
                 .setSigningKey(getSignKey())
                 .build()
@@ -43,11 +43,12 @@ public class JwtServiceImpl implements JwtService {
     }
 
     @Override
-    public boolean isTokenValid(String token, User user) {
-        return extractEmail(token).equals(user.getEmail()) && !isExpired(token);
+    public boolean isTokenValid(String token, UserDetails userDetails){
+        String email = extractEmail(token);
+        return email.equals(userDetails.getUsername()) && !isExpired(token);
     }
 
-    private boolean isExpired(String token) {
+    private boolean isExpired(String token){
         return Jwts.parserBuilder()
                 .setSigningKey(getSignKey())
                 .build()

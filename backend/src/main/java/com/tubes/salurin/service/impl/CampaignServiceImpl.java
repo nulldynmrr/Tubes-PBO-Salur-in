@@ -16,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class CampaignServiceImpl implements CampaignService {
-
     private final CampaignRepository campaignRepo;
 
     @Override
@@ -34,7 +33,6 @@ public class CampaignServiceImpl implements CampaignService {
 
     @Override
     public List<CampaignResponse> getMyCampaigns() {
-        // In real app: fetch only campaigns by authenticated owner
         return campaignRepo.findAll().stream().map(this::toDto).collect(Collectors.toList());
     }
 

@@ -1,6 +1,7 @@
 export const API_ENDPOINTS = {
   AUTH: {
     LOGIN: "/auth/login",
+    LOGIN_ADMIN: "/auth/login/admin",
     REGISTER: "/auth/register",
   },
   CAMPAIGNER: {
