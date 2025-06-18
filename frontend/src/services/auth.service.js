@@ -35,7 +35,10 @@ export const authService = {
 
       return data;
     } catch (error) {
-      console.log("Backend tidak tersedia, menggunakan data dummy");
+      console.log(
+        "Backend tidak tersedia, menggunakan data dummy:",
+        error.message
+      );
 
       // Fallback ke data dummy
       if (role === "admin") {

@@ -50,59 +50,98 @@ export const campaignService = {
 
   getMine: async () => {
     try {
+      console.log("Mencoba mengambil data dari backend...");
       const res = await fetch(`${API_BASE_URL}${CAMPAIGN_ENDPOINTS.MY}`, {
-        headers: { Authorization: `Bearer ${getToken()}` },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getToken()}`,
+        },
       });
 
-      if (!res.ok) throw new Error("Gagal mengambil data campaign");
+      if (!res.ok) {
+        throw new Error("Gagal mengambil data campaign");
+      }
 
       const data = await res.json();
+      console.log("Berhasil mengambil data dari backend");
       return data;
     } catch (error) {
-      console.log("Backend tidak tersedia, menggunakan data dummy");
+      console.log("BACKEND BELUM CONNECT:", error.message);
+      console.log("MENGAMBIL DATA DARI DUMMY DATA");
 
-      const user = JSON.parse(localStorage.getItem("user"));
-      if (!user) return [];
+      try {
+        const user = JSON.parse(localStorage.getItem("user"));
+        console.log("User yang sedang login:", user);
 
-      const userCampaign = dataCampaign.find(
-        (campaign) => campaign && campaign.email === user.email
-      );
-
-      if (!userCampaign || !userCampaign.pengajuanDonasi) return [];
-
-      return userCampaign.pengajuanDonasi.map((donasi) => {
-        let totalDonations = 0;
-        if (dataUsers && Array.isArray(dataUsers)) {
-          dataUsers.forEach((user) => {
-            if (user.donasi && Array.isArray(user.donasi)) {
-              user.donasi.forEach((d) => {
-                if (d.id_donasi === donasi.id_donasi) {
-                  totalDonations += d.total_donasi;
-                }
-              });
-            }
-          });
+        if (!user) {
+          console.log("Tidak ada data user di localStorage");
+          return [];
         }
 
-        const targetAmount = parseInt(
-          donasi.targetDonasi.replace(/[^0-9]/g, "")
+        console.log("Mencari data campaign untuk user:", user.email);
+
+        const userCampaign = dataCampaign.find(
+          (campaign) => campaign && campaign.email === user.email
         );
 
-        return {
-          id: donasi.id_donasi,
-          title: donasi.judulCampaign,
-          currentAmount: totalDonations,
-          targetAmount: targetAmount,
-          status: donasi.status || "aktif",
-          createdAt: donasi.durasiAwal,
-          endDate: donasi.durasiAkhir,
-          description: donasi.deskripsi,
-          category: donasi.kategori,
-          location: donasi.lokasi,
-          proposal: donasi.proposal,
-          image: donasi.gambarBuktiCampaign,
-        };
-      });
+        if (!userCampaign || !userCampaign.pengajuanDonasi) {
+          console.log("Tidak ditemukan data campaign untuk user:", user.email);
+          return [];
+        }
+
+        console.log("Data campaign ditemukan untuk user:", user.email);
+        console.log("Jumlah campaign:", userCampaign.pengajuanDonasi.length);
+
+        const transformedData = userCampaign.pengajuanDonasi.map((donasi) => {
+          let totalDonations = 0;
+          if (dataUsers && Array.isArray(dataUsers)) {
+            dataUsers.forEach((user) => {
+              if (user.donasi && Array.isArray(user.donasi)) {
+                user.donasi.forEach((d) => {
+                  if (d.id_donasi === donasi.id_donasi) {
+                    totalDonations += d.total_donasi;
+                  }
+                });
+              }
+            });
+          }
+
+          const targetAmount = parseInt(
+            donasi.targetDonasi.replace(/[^0-9]/g, "")
+          );
+
+          console.log(`Transformasi data campaign:`, {
+            judul: donasi.judulCampaign,
+            totalDonasi: totalDonations,
+            targetDonasi: targetAmount,
+            status: donasi.status,
+          });
+
+          return {
+            id: donasi.id_donasi,
+            title: donasi.judulCampaign,
+            currentAmount: totalDonations,
+            targetAmount: targetAmount,
+            status: donasi.status || "aktif",
+            createdAt: donasi.durasiAwal,
+            endDate: donasi.durasiAkhir,
+            description: donasi.deskripsi,
+            category: donasi.kategori,
+            location: donasi.lokasi,
+            proposal: donasi.proposal,
+            image: donasi.gambarBuktiCampaign,
+          };
+        });
+
+        console.log(
+          "Transformasi data selesai, total campaign:",
+          transformedData.length
+        );
+        return transformedData;
+      } catch (dummyError) {
+        console.error("Error saat menggunakan data dummy:", dummyError);
+        return [];
+      }
     }
   },
 

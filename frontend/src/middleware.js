@@ -4,7 +4,6 @@ export function middleware(request) {
   const token = request.cookies.get("auth_token")?.value;
   const { pathname } = request.nextUrl;
 
-  // Public paths that don't require authentication
   const publicPaths = [
     "/",
     "/login",
@@ -15,31 +14,40 @@ export function middleware(request) {
 
   const isPublicPath = publicPaths.some((path) => pathname.startsWith(path));
 
-  const isAdminPath = pathname.startsWith("/admin");
-  const isCampaignPath = pathname.startsWith("/campaign");
-  const isDonorPath = pathname.startsWith("/donor");
-
   if (!token && !isPublicPath) {
-    const url = new URL("/login", request.url);
-    url.searchParams.set("callbackUrl", pathname);
-    return NextResponse.redirect(url);
-  }
-
-  if (token && isPublicPath) {
-    return NextResponse.next();
+    if (pathname.startsWith("/admin")) {
+      return NextResponse.redirect(new URL("/login/admin", request.url));
+    }
+    if (pathname.startsWith("/campaign")) {
+      return NextResponse.redirect(new URL("/login/campaign", request.url));
+    }
+    if (pathname.startsWith("/donor")) {
+      return NextResponse.redirect(new URL("/login/donor", request.url));
+    }
+    return NextResponse.redirect(new URL("/login", request.url));
   }
 
   if (token) {
-    if (isAdminPath && !pathname.startsWith("/admin/login")) {
-      return NextResponse.next();
+    if (pathname.startsWith("/admin")) {
+      if (!pathname.startsWith("/admin/login")) {
+        return NextResponse.redirect(new URL("/login/admin", request.url));
+      }
     }
 
-    if (isCampaignPath && !pathname.startsWith("/campaign/login")) {
-      return NextResponse.next();
+    if (pathname.startsWith("/campaign")) {
+      if (!pathname.startsWith("/campaign/login")) {
+        return NextResponse.redirect(new URL("/login/campaign", request.url));
+      }
     }
 
-    if (isDonorPath && !pathname.startsWith("/donor/login")) {
-      return NextResponse.next();
+    if (pathname.startsWith("/donor")) {
+      if (!pathname.startsWith("/donor/login")) {
+        return NextResponse.redirect(new URL("/login/donor", request.url));
+      }
+    }
+
+    if (isPublicPath && pathname.startsWith("/login")) {
+      return NextResponse.redirect(new URL("/", request.url));
     }
   }
 
