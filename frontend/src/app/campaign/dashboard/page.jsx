@@ -5,11 +5,15 @@ import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Input from "@/components/ui/input";
 import Button from "@/components/ui/button/PrimaryButton";
-import { campaignService } from "@/services/campaignService";
 import { dataCampaign } from "@/data/campaign";
 import { dataUsers } from "@/data/users";
 import { authService } from "@/services/auth.service";
 import { Toaster, toast } from "react-hot-toast";
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+const CAMPAIGN_ENDPOINTS = {
+  MY: "/api/campaigners/campaigns/my",
+};
 
 export default function Campaign() {
   const [activeTab, setActiveTab] = useState("campaign");
@@ -17,110 +21,130 @@ export default function Campaign() {
   const [user, setUser] = useState(null);
   const [campaigns, setCampaigns] = useState([]);
   const router = useRouter();
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        console.log("Starting to fetch data...");
+        console.log("=== MULAI PENGAMBILAN DATA ===");
 
         const userData = await authService.getCurrentUser();
-        console.log("Current user data from auth:", userData);
+        console.log("1. Data user dari auth:", userData);
 
         if (!userData) {
-          console.log("No user data found, redirecting to login");
           toast.error("Silakan login terlebih dahulu");
           router.push("/login/campaign");
           return;
         }
 
-        const userInfo = {
-          name: userData.name,
-          email: userData.email,
-          organization: userData.organization,
-          phone: userData.phone,
-        };
-        console.log("Setting user info:", userInfo);
-        setUser(userInfo);
-
-        try {
-          console.log("Attempting to fetch from BE...");
-          const response = await campaignService.getMine();
-          console.log("BE response:", response);
-
-          if (response && Array.isArray(response)) {
-            const transformedCampaigns = response.map((campaign, index) => ({
-              no: index + 1,
-              id: campaign.id,
-              id_donasi: campaign.id,
-              title: campaign.title,
-              amountRaised: campaign.currentAmount || 0,
-              amountTarget: campaign.targetAmount || 0,
-              status: campaign.status,
-              endDate: campaign.endDate || campaign.createdAt,
-              isTargetReached:
-                (campaign.currentAmount || 0) >= (campaign.targetAmount || 0),
-            }));
-            console.log("Transformed BE campaigns:", transformedCampaigns);
-            setCampaigns(transformedCampaigns);
-            return;
-          }
-        } catch (error) {
-          console.log("BE connection failed, using dummy data:", error);
-        }
-
-        // Fallback to dummy data
-        console.log("Using dummy data for campaigns");
         const userCampaign = dataCampaign.find(
-          (campaign) => campaign && campaign.email === userData.email
+          (campaign) => campaign.email === userData.email
         );
 
-        if (!userCampaign || !userCampaign.pengajuanDonasi) {
-          console.log("No campaigns found in dummy data");
-          setCampaigns([]);
-          return;
+        if (userCampaign) {
+          const userInfo = {
+            name: userCampaign.nama,
+            email: userCampaign.email,
+            organization: userCampaign.namaCampaign,
+            phone: userCampaign.nomorTelepon,
+          };
+          console.log("3. Info user yang akan disimpan:", userInfo);
+          setUser(userInfo);
         }
 
-        const userCampaigns = userCampaign.pengajuanDonasi.map(
-          (donasi, index) => {
-            let totalDonations = 0;
-            if (
-              donasi.status === "diterima" &&
-              dataUsers &&
-              Array.isArray(dataUsers)
-            ) {
-              dataUsers.forEach((user) => {
-                if (user.donasi && Array.isArray(user.donasi)) {
-                  user.donasi.forEach((d) => {
-                    if (d.id_donasi === donasi.id_donasi) {
-                      totalDonations += d.total_donasi;
+        try {
+          const token = localStorage.getItem("auth_token");
+          console.log("   Token yang digunakan:", token);
+
+          const res = await fetch(`${API_BASE_URL}${CAMPAIGN_ENDPOINTS.MY}`, {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          if (!res.ok) {
+            throw new Error("Gagal mengambil data campaign");
+          }
+
+          const campaignData = await res.json();
+
+          if (campaignData && Array.isArray(campaignData)) {
+            const transformedCampaigns = campaignData.map(
+              (campaign, index) => ({
+                no: index + 1,
+                id: campaign.id,
+                id_donasi: campaign.id,
+                title: campaign.title,
+                amountRaised: campaign.currentAmount || 0,
+                amountTarget: campaign.targetAmount || 0,
+                status: campaign.status,
+                endDate: campaign.endDate || campaign.createdAt,
+                isTargetReached:
+                  (campaign.currentAmount || 0) >= (campaign.targetAmount || 0),
+              })
+            );
+
+            setCampaigns(transformedCampaigns);
+          } else {
+            setCampaigns([]);
+          }
+        } catch (error) {
+          // Fallback ke data dummy
+          if (userCampaign && userCampaign.pengajuanDonasi) {
+            console.log(
+              "8. Data pengajuan donasi dari user:",
+              userCampaign.pengajuanDonasi
+            );
+
+            const transformedCampaigns = userCampaign.pengajuanDonasi.map(
+              (donasi, index) => {
+                let totalDonations = 0;
+                if (dataUsers && Array.isArray(dataUsers)) {
+                  dataUsers.forEach((user) => {
+                    if (user.donasi && Array.isArray(user.donasi)) {
+                      user.donasi.forEach((d) => {
+                        if (d.id_donasi === donasi.id_donasi) {
+                          totalDonations += d.total_donasi;
+                        }
+                      });
                     }
                   });
                 }
-              });
-            }
 
-            const targetAmount = parseInt(
-              donasi.targetDonasi.replace(/[^0-9]/g, "")
+                const targetAmount = parseInt(
+                  donasi.targetDonasi.replace(/[^0-9]/g, "")
+                );
+
+                const transformed = {
+                  no: index + 1,
+                  id: donasi.id_donasi,
+                  id_donasi: donasi.id_donasi,
+                  title: donasi.judulCampaign,
+                  amountRaised: totalDonations,
+                  amountTarget: targetAmount,
+                  status: donasi.status,
+                  endDate: donasi.durasiAkhir,
+                  isTargetReached: totalDonations >= targetAmount,
+                };
+                console.log(
+                  `9. Transformasi campaign ${index + 1}:`,
+                  transformed
+                );
+                return transformed;
+              }
             );
-
-            return {
-              no: index + 1,
-              id: donasi.id_donasi,
-              id_donasi: donasi.id_donasi,
-              title: donasi.judulCampaign,
-              amountRaised: totalDonations,
-              amountTarget: targetAmount,
-              status: donasi.status,
-              endDate: donasi.durasiAkhir,
-              isTargetReached: totalDonations >= targetAmount,
-            };
+            console.log(
+              "10. Data dummy yang sudah ditransformasi:",
+              transformedCampaigns
+            );
+            setCampaigns(transformedCampaigns);
+          } else {
+            setCampaigns([]);
           }
-        );
-
-        setCampaigns(userCampaigns);
+        }
       } catch (error) {
-        console.error("Error in fetchData:", error);
         toast.error("Terjadi kesalahan saat memuat data");
       } finally {
         setLoading(false);
