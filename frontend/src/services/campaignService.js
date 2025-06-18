@@ -23,6 +23,7 @@ export const campaignService = {
       });
       const result = await res.json();
       if (!res.ok) throw new Error(result.message || "Gagal membuat campaign");
+      console.log("Campaign berhasil dibuat");
       return result;
     } catch (error) {
       console.log("Backend tidak tersedia, menggunakan data dummy");
@@ -32,7 +33,12 @@ export const campaignService = {
 
   getAll: async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}${CAMPAIGN_ENDPOINTS.BASE}`);
+      const res = await fetch(`${API_BASE_URL}${CAMPAIGN_ENDPOINTS.BASE}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getToken()}`,
+        },
+      });
       if (!res.ok) throw new Error("Gagal mengambil data campaign");
       const data = await res.json();
       return data;

@@ -7,7 +7,6 @@ import SelectField from "@/components/ui/form-field/SelectField";
 import {
   validateName,
   validateEmail,
-  validatePhone,
   validateJumlahDonasi,
 } from "@/lib/utils/form-validator";
 import { ToastContainer, toast } from "react-toastify";
@@ -37,6 +36,7 @@ export default function Transaksi({ params }) {
     bank_tujuan: "",
     bukti_pembayaran: null,
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   const [step, setStep] = useState(0);
   const [previewImage, setPreviewImage] = useState(null);
@@ -55,17 +55,6 @@ export default function Transaksi({ params }) {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-
-    if (!formData.isAnonim) {
-      if (
-        !validateName(formData.nama) ||
-        !validateEmail(formData.email) ||
-        !validatePhone(formData.telepon)
-      ) {
-        toast.error("Harap isi data pribadi dengan benar.");
-        return;
-      }
-    }
 
     if (step === 0) {
       setStep(1);
@@ -198,17 +187,18 @@ export default function Transaksi({ params }) {
                   onChange={onChange}
                   required
                   validate={validateName}
+                  disabled={isLoading}
                 />
                 <InputField
                   id="email"
                   name="email"
                   label="Email"
-                  type="email"
                   placeholder="Masukkan Email"
                   value={formData.email}
                   onChange={onChange}
                   required
                   validate={validateEmail}
+                  disabled={isLoading}
                 />
                 <InputField
                   id="telepon"
@@ -219,7 +209,7 @@ export default function Transaksi({ params }) {
                   value={formData.telepon}
                   onChange={onChange}
                   required
-                  validate={validatePhone}
+                  disabled={isLoading}
                 />
               </>
             )}
@@ -262,7 +252,6 @@ export default function Transaksi({ params }) {
                 { value: "BCA", label: "BCA" },
                 { value: "BNI", label: "BNI" },
                 { value: "Mandiri", label: "Mandiri" },
-                { value: "QRIS", label: "QRIS" },
               ]}
               placeholder="Pilih Pembayaran"
               required
@@ -278,7 +267,6 @@ export default function Transaksi({ params }) {
                 { value: "BCA", label: "BCA - 75412541xx" },
                 { value: "BNI", label: "BNI - 123455xxx" },
                 { value: "Mandiri", label: "Mandiri - 5432231" },
-                { value: "QRIS", label: "QRIS" },
               ]}
               placeholder="Pilih Bank Tujuan"
               required

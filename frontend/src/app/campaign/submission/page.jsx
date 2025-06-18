@@ -211,9 +211,7 @@ const Submission = () => {
               className="w-full px-4 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
             />
           </div>
-        </form>
-
-        <div className="flex justify-center mt-4 gap-4">
+          <div className="flex justify-center mt-4 gap-4">
           <button
             type="button"
             onClick={() => router.push("/campaign/dashboard")}
@@ -228,6 +226,7 @@ const Submission = () => {
             Submit
           </button>
         </div>
+        </form>
       </div>
     </div>
   );

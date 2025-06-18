@@ -97,7 +97,7 @@ const RegisterCampaign = () => {
         "admin"
       );
       toast.success("Registrasi berhasil!", { toastId: "register-success" });
-      router.push("/login");
+      router.push("/login/campaign");
     } catch (error) {
       toast.error(error.message || "Registrasi gagal. Silakan coba lagi.", {
         toastId: "register-failed",
