@@ -23,12 +23,9 @@ const LoginCampaign = () => {
     setLoading(true);
 
     try {
-      // Try to login with backend first
       try {
         const response = await authService.login(email, password, "campaign");
         if (response) {
-          // Store user data from BE
-          localStorage.setItem("user", JSON.stringify(response));
           toast.success("Login berhasil!");
           setTimeout(() => {
             router.push("/campaign/dashboard");
@@ -38,25 +35,23 @@ const LoginCampaign = () => {
         console.warn("API login failed, using dummy data:", apiErr);
         toast.success("Login berhasil!");
 
-        // Fallback to dummy data login
         const campaignUser = dummyData.find(
           (item) => item.email === email && item.password === password
         );
 
         if (campaignUser) {
-          // Store dummy user data
           const userData = {
             name: campaignUser.namaCampaign,
             email: campaignUser.email,
             role: "campaign",
             id: campaignUser.id_donasi,
+            organization: campaignUser.namaCampaign,
+            phone: campaignUser.nomorTelepon,
+            alamat: campaignUser.alamat,
+            pengajuanDonasi: campaignUser.pengajuanDonasi || [],
           };
-          localStorage.setItem("user", JSON.stringify(userData));
-
-          // Store dummy campaign data if not exists
-          if (!localStorage.getItem("dataCampaign")) {
-            localStorage.setItem("dataCampaign", JSON.stringify(dummyData));
-          }
+          authService.setUser(userData);
+          authService.setAuthToken("dummy_token");
 
           setTimeout(() => {
             router.push("/campaign/dashboard");
@@ -169,6 +164,17 @@ const LoginCampaign = () => {
                   className="text-blue-600 hover:text-blue-800 font-medium hover:underline"
                 >
                   Daftar
+                </Link>
+              </p>
+            </div>
+            <div className="mt-6 text-center">
+              <p className="text-sm text-gray-600">
+                Login sebagai Admin?{" "}
+                <Link
+                  href="/login/admin"
+                  className="text-blue-600 hover:text-blue-800 font-medium hover:underline"
+                >
+                  Masuk
                 </Link>
               </p>
             </div>

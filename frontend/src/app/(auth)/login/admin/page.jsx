@@ -149,12 +149,12 @@ const LoginAdmin = () => {
 
             <div className="mt-6 text-center">
               <p className="text-sm text-gray-600">
-                Belum punya akun?{" "}
+                Login sebagai campaign?{" "}
                 <Link
-                  href="/register/admin"
+                  href="/login/campaign"
                   className="text-blue-600 hover:text-blue-800 font-medium hover:underline"
                 >
-                  Daftar
+                  Masuk
                 </Link>
               </p>
             </div>
