@@ -6,7 +6,7 @@ import {
   validateName,
   validateEmail,
   validatePassword,
-  validateName,
+
   validatePhone,
 } from "@/lib/utils/form-validator";
 import { authService } from "@/services/auth.service";

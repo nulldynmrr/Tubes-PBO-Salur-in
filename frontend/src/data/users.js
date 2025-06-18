@@ -28,7 +28,7 @@ export const dataUsers = [
     nomor_telepon: "",
     donasi: [
       {
-        id_donasi: "2",
+        id_donasi: "3",
         total_donasi: 20000,
         pembayaran_via: "E-WALET",
         e_wallet_tujuan: "DANA",
@@ -50,18 +50,11 @@ export const dataUsers = [
         bukti_pembayaran: "bukti-fauzi-1.jpg",
       },
       {
-        id_donasi: "4",
+        id_donasi: "7",
         total_donasi: 8500000,
         pembayaran_via: "E-WALET",
         e_wallet_tujuan: "ShopeePay",
         bukti_pembayaran: "bukti-fauzi-2.jpg",
-      },
-      {
-        id_donasi: "3",
-        total_donasi: 10000000,
-        pembayaran_via: "BANK",
-        bank_tujuan: "BNI",
-        bukti_pembayaran: "bukti-fauzi-3.jpg",
       },
     ],
   },

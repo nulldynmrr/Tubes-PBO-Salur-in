@@ -10,33 +10,55 @@ const getToken = () => localStorage.getItem("auth_token");
 
 export const donationService = {
   donate: async (data) => {
-    const res = await fetch(`${API_BASE_URL}${DONATION_ENDPOINTS.BASE}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${getToken()}`,
-      },
-      body: JSON.stringify(data),
-    });
-    const result = await res.json();
-    if (!res.ok) throw new Error(result.message || "Gagal berdonasi");
-    return result;
+    try {
+      const res = await fetch(`${API_BASE_URL}${DONATION_ENDPOINTS.BASE}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getToken()}`,
+        },
+        body: JSON.stringify(data),
+      });
+      const result = await res.json();
+      if (!res.ok) throw new Error(result.message || "Gagal berdonasi");
+      return result;
+    } catch (error) {
+      console.log("Backend tidak tersedia, menggunakan data dummy");
+      throw error;
+    }
   },
 
   getAll: async () => {
-    const res = await fetch(`${API_BASE_URL}${DONATION_ENDPOINTS.BASE}`);
-    return await res.json();
+    try {
+      const res = await fetch(`${API_BASE_URL}${DONATION_ENDPOINTS.BASE}`);
+      return await res.json();
+    } catch (error) {
+      console.log("Backend tidak tersedia, menggunakan data dummy");
+      throw error;
+    }
   },
 
   getMine: async () => {
-    const res = await fetch(`${API_BASE_URL}${DONATION_ENDPOINTS.MY}`, {
-      headers: { Authorization: `Bearer ${getToken()}` },
-    });
-    return await res.json();
+    try {
+      const res = await fetch(`${API_BASE_URL}${DONATION_ENDPOINTS.MY}`, {
+        headers: { Authorization: `Bearer ${getToken()}` },
+      });
+      return await res.json();
+    } catch (error) {
+      console.log("Backend tidak tersedia, menggunakan data dummy");
+      throw error;
+    }
   },
 
   getById: async (id) => {
-    const res = await fetch(`${API_BASE_URL}${DONATION_ENDPOINTS.DETAIL(id)}`);
-    return await res.json();
+    try {
+      const res = await fetch(
+        `${API_BASE_URL}${DONATION_ENDPOINTS.DETAIL(id)}`
+      );
+      return await res.json();
+    } catch (error) {
+      console.log("Backend tidak tersedia, menggunakan data dummy");
+      throw error;
+    }
   },
 };

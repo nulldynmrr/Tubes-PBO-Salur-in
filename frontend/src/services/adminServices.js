@@ -11,40 +11,63 @@ export const ADMIN_ENDPOINTS = {
 
 export const adminService = {
   getAllCampaigns: async () => {
-    const res = await fetch(`${API_BASE_URL}${ADMIN_ENDPOINTS.GET_CAMPAIGNS}`, {
-      headers: { Authorization: `Bearer ${getToken()}` },
-    });
-    if (!res.ok) throw new Error("Gagal ambil data campaign");
-    return res.json();
+    try {
+      const res = await fetch(
+        `${API_BASE_URL}${ADMIN_ENDPOINTS.GET_CAMPAIGNS}`,
+        {
+          headers: { Authorization: `Bearer ${getToken()}` },
+        }
+      );
+      if (!res.ok) throw new Error("Gagal ambil data campaign");
+      return res.json();
+    } catch (error) {
+      console.log("Backend tidak tersedia, menggunakan data dummy");
+      throw error;
+    }
   },
 
   getAllUsers: async () => {
-    const res = await fetch(`${API_BASE_URL}${ADMIN_ENDPOINTS.GET_USERS}`, {
-      headers: { Authorization: `Bearer ${getToken()}` },
-    });
-    if (!res.ok) throw new Error("Gagal ambil data user");
-    return res.json();
+    try {
+      const res = await fetch(`${API_BASE_URL}${ADMIN_ENDPOINTS.GET_USERS}`, {
+        headers: { Authorization: `Bearer ${getToken()}` },
+      });
+      if (!res.ok) throw new Error("Gagal ambil data user");
+      return res.json();
+    } catch (error) {
+      console.log("Backend tidak tersedia, menggunakan data dummy");
+      throw error;
+    }
   },
 
   getCurrentAdmin: async () => {
-    const res = await fetch(
-      `${API_BASE_URL}${ADMIN_ENDPOINTS.GET_CURRENT_ADMIN}`,
-      {
-        headers: { Authorization: `Bearer ${getToken()}` },
-      }
-    );
-    if (!res.ok) throw new Error("Gagal ambil data admin");
-    return res.json();
+    try {
+      const res = await fetch(
+        `${API_BASE_URL}${ADMIN_ENDPOINTS.GET_CURRENT_ADMIN}`,
+        {
+          headers: { Authorization: `Bearer ${getToken()}` },
+        }
+      );
+      if (!res.ok) throw new Error("Gagal ambil data admin");
+      return res.json();
+    } catch (error) {
+      console.log("Backend tidak tersedia, menggunakan data dummy");
+      throw error;
+    }
   },
 
   deleteUser: async (id) => {
-    const res = await fetch(
-      `${API_BASE_URL}${ADMIN_ENDPOINTS.DELETE_USER(id)}`,
-      {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${getToken()}` },
-      }
-    );
-    if (!res.ok) throw new Error("Gagal menghapus user");
+    try {
+      const res = await fetch(
+        `${API_BASE_URL}${ADMIN_ENDPOINTS.DELETE_USER(id)}`,
+        {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${getToken()}` },
+        }
+      );
+      if (!res.ok) throw new Error("Gagal menghapus user");
+    } catch (error) {
+      console.log("Backend tidak tersedia, menggunakan data dummy");
+      throw error;
+    }
   },
 };

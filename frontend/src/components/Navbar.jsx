@@ -7,6 +7,7 @@ import { FaBars } from "react-icons/fa";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { authService } from "@/services/auth.service";
+import { useRouter } from "next/navigation";
 
 export const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -15,7 +16,8 @@ export const Navbar = () => {
   const isCampaign = pathname.startsWith("/campaign");
   const isDonor = pathname.startsWith("/donor");
   const isDashboard = pathname === "/campaign/dashboard";
-  const user = authService.getUser();
+  const user = authService.getCurrentUser();
+  const router = useRouter();
 
   const handleLogout = () => {
     authService.logout();

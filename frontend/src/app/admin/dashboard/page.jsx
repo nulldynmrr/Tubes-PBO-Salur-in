@@ -23,25 +23,29 @@ const Dashboard = () => {
   const kolomTabel = ["No", "Nama Campaign", "Deskripsi", "Proposal", "Status"];
 
   const getNamaCampaign = (idDonasi) => {
+    if (!idDonasi || !dataCampaign) return "Unknown Campaign";
+
     const campaign = dataCampaign.find((c) =>
-      c.pengajuanDonasi.some((d) => d.id_donasi === idDonasi)
+      c.pengajuanDonasi?.some((d) => d.id_donasi === idDonasi)
     );
     if (!campaign) return "Unknown Campaign";
 
-    const donasi = campaign.pengajuanDonasi.find(
+    const donasi = campaign.pengajuanDonasi?.find(
       (d) => d.id_donasi === idDonasi
     );
     return donasi ? donasi.judulCampaign : "Unknown Campaign";
   };
 
-  const dataDonasiCampaign = dataCampaign.flatMap(
-    (item) => item.pengajuanDonasi
-  );
+  const dataDonasiCampaign =
+    dataCampaign?.flatMap((item) => item.pengajuanDonasi || []) || [];
 
   const filteredCampaigns = dataDonasiCampaign.filter((item) => {
+    if (!item) return false;
+
     const campaignName = getNamaCampaign(item.id_donasi).toLowerCase();
-    const description = item.deskripsi.toLowerCase();
+    const description = (item.deskripsi || "").toLowerCase();
     const searchLower = searchQuery.toLowerCase();
+
     return (
       campaignName.includes(searchLower) || description.includes(searchLower)
     );
@@ -57,13 +61,15 @@ const Dashboard = () => {
           return;
         }
 
+        setAdmin(userData);
+
         // be
         try {
           const campaignsData = await campaignService.getAll();
           setDataCampaign(campaignsData);
         } catch (apiErr) {
           console.warn("API fetch failed, using dummy data:", apiErr);
-          toast.warn("Menggunakan data dummy karena backend belum tersedia");
+          toast.warn("Use Data");
 
           // Fallback to dummy data
           const storedData = localStorage.getItem("dataCampaign");
@@ -72,13 +78,15 @@ const Dashboard = () => {
           const transformedCampaigns = campaignData.map((campaign, index) => ({
             no: index + 1,
             name: campaign.namaCampaign,
-            amountRaised: campaign.pengajuanDonasi.reduce(
-              (total, donasi) => total + (donasi.jumlahDonasi || 0),
-              0
-            ),
+            amountRaised:
+              campaign.pengajuanDonasi?.reduce(
+                (total, donasi) => total + (donasi.jumlahDonasi || 0),
+                0
+              ) || 0,
             amountTarget: campaign.targetDonasi || 5000000,
             endDate: campaign.tanggalBerakhir || "08/12/2077",
             status: campaign.status || "On Going",
+            pengajuanDonasi: campaign.pengajuanDonasi || [],
           }));
 
           setDataCampaign(transformedCampaigns);
@@ -137,17 +145,19 @@ const Dashboard = () => {
   }
 
   const donasiIds = new Set();
-  dataUsers.forEach((user) => {
+  dataUsers?.forEach((user) => {
     user.donasi?.forEach((donasi) => {
-      donasiIds.add(donasi.id_donasi);
+      if (donasi?.id_donasi) {
+        donasiIds.add(donasi.id_donasi);
+      }
     });
   });
   const totDonatur = donasiIds.size;
 
   let totPengajuan = 0;
-  dataCampaign.forEach((campaign) => {
-    totPengajuan += campaign.pengajuanDonasi.filter(
-      (pengajuan) => pengajuan.status === "eksekusi"
+  dataCampaign?.forEach((campaign) => {
+    totPengajuan += (campaign.pengajuanDonasi || []).filter(
+      (pengajuan) => pengajuan?.status === "eksekusi"
     ).length;
   });
 
@@ -168,7 +178,7 @@ const Dashboard = () => {
 
       <main className="space-y-6 px-6 md:px-[110px] py-4 container mx-auto">
         <div>
-          <p className="text-gray-600">Hai, Admin</p>
+          <p className="text-gray-600">Hai</p>
           <h1 className="text-xl font-bold">{admin.name || "Super Admin"}</h1>
         </div>
 
@@ -240,15 +250,15 @@ const Dashboard = () => {
                     <td className="px-6 py-4">
                       {getNamaCampaign(item.id_donasi)}
                     </td>
-                    <td className="px-6 py-4">{item.deskripsi}</td>
-                    <td className="px-6 py-4">{item.proposal}</td>
+                    <td className="px-6 py-4">{item.deskripsi || "-"}</td>
+                    <td className="px-6 py-4">{item.proposal || "-"}</td>
                     <td className="px-6 py-4">
                       <span
                         className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusClass(
                           item.status
                         )}`}
                       >
-                        {item.status}
+                        {item.status || "Unknown"}
                       </span>
                     </td>
                   </tr>
