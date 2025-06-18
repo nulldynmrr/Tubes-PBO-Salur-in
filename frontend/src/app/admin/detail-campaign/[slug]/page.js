@@ -19,7 +19,6 @@ const CampaignDetail = () => {
   const pathname = usePathname();
   const slug = pathname.split("/").pop();
 
-  // fetch data
   useEffect(() => {
     const fetchCampaignDetail = async () => {
       if (!slug) return;
@@ -41,7 +40,6 @@ const CampaignDetail = () => {
       } catch (err) {
         console.warn("Fetch API gagal, gunakan data dummy", err);
 
-        // fallback ke dummy
         const foundCampaign = dataCampaign.find((c) =>
           c.pengajuanDonasi.some((d) => String(d.id_donasi) === id)
         );
@@ -77,37 +75,81 @@ const CampaignDetail = () => {
 
     try {
       setIsLoading(true);
-      try {
-        await campaignService.update(donasi.id_donasi, { status: newStatus });
-      } catch (apiErr) {
-        console.warn("Update API gagal, gunakan data dummy", apiErr);
+      let updateSuccess = false;
 
-        // Fallback to dummy data update
-        const updatedCampaigns = dataCampaign.map((c) => ({
-          ...c,
-          pengajuanDonasi: c.pengajuanDonasi.map((d) =>
-            d.id_donasi === donasi.id_donasi ? { ...d, status: newStatus } : d
-          ),
-        }));
+      try {
+        console.log("Mencoba update status ke backend...", {
+          id: donasi.id_donasi,
+          newStatus: newStatus,
+        });
+
+        const response = await campaignService.update(donasi.id_donasi, {
+          status: newStatus,
+          id_donasi: donasi.id_donasi,
+          judulCampaign: donasi.judulCampaign,
+        });
+
+        console.log("Response dari backend:", response);
+        updateSuccess = true;
+      } catch (apiErr) {
+        console.warn("Update API gagal:", apiErr);
+        updateSuccess = false;
+      }
+
+      try {
+        const storedData = localStorage.getItem("dataCampaign");
+        let currentData = storedData ? JSON.parse(storedData) : dataCampaign;
+
+        const updatedCampaigns = currentData.map((c) => {
+          const updatedPengajuan = c.pengajuanDonasi.map((d) => {
+            if (d.id_donasi === donasi.id_donasi) {
+              console.log(
+                "Updating donation:",
+                d.id_donasi,
+                "to status:",
+                newStatus
+              );
+              return { ...d, status: newStatus };
+            }
+            return d;
+          });
+
+          return {
+            ...c,
+            pengajuanDonasi: updatedPengajuan,
+          };
+        });
 
         localStorage.setItem("dataCampaign", JSON.stringify(updatedCampaigns));
+        console.log(
+          "Data berhasil diupdate di localStorage:",
+          updatedCampaigns
+        );
+      } catch (storageErr) {
+        console.error("Error updating localStorage:", storageErr);
       }
 
       setStatus(newStatus);
+      setDonasi((prev) => ({ ...prev, status: newStatus }));
 
-      toast[newStatus === "diterima" ? "success" : "error"](
-        `Campaign ${newStatus}`,
-        {
+      if (updateSuccess) {
+        toast.success(`Status campaign berhasil diubah menjadi ${newStatus}`, {
           position: "top-right",
           autoClose: 2000,
-        }
-      );
+        });
+      } else {
+        toast.warning(`Status diubah menjadi ${newStatus} (offline mode)`, {
+          position: "top-right",
+          autoClose: 2000,
+        });
+      }
 
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+
       router.push("/admin/dashboard");
     } catch (err) {
-      toast.error("Gagal memperbarui status campaign");
       console.error("Update Error:", err);
+      toast.error("Gagal memperbarui status campaign");
     } finally {
       setIsLoading(false);
     }
@@ -225,20 +267,31 @@ const CampaignDetail = () => {
 
       <div className="fixed bottom-0 left-0 w-full h-20 bg-white border-t shadow-xl z-50 flex items-center justify-center">
         <div className="flex gap-4">
-          <button
-            onClick={() => updateStatus("ditolak")}
-            disabled={isLoading}
-            className="inline-block min-w-[200px] px-6 py-2 rounded-3xl text-center text-white bg-red-600 hover:bg-red-700 active:bg-red-800 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isLoading ? "Memproses..." : "Campaign Ditolak"}
-          </button>
-          <button
-            onClick={() => updateStatus("diterima")}
-            disabled={isLoading}
-            className="inline-block min-w-[200px] px-6 py-2 rounded-3xl text-center text-white bg-[#1962F8] hover:bg-[#1554d6] active:bg-[#0e3ea6] transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isLoading ? "Memproses..." : "Campaign Diterima"}
-          </button>
+          {status === "eksekusi" ? (
+            <>
+              <button
+                onClick={() => updateStatus("ditolak")}
+                disabled={isLoading}
+                className="inline-block min-w-[200px] px-6 py-2 rounded-3xl text-center text-white bg-red-600 hover:bg-red-700 active:bg-red-800 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isLoading ? "Memproses..." : "Campaign Ditolak"}
+              </button>
+              <button
+                onClick={() => updateStatus("diterima")}
+                disabled={isLoading}
+                className="inline-block min-w-[200px] px-6 py-2 rounded-3xl text-center text-white bg-[#1962F8] hover:bg-[#1554d6] active:bg-[#0e3ea6] transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isLoading ? "Memproses..." : "Campaign Diterima"}
+              </button>
+            </>
+          ) : (
+            <button
+              onClick={() => router.push("/admin/dashboard")}
+              className="inline-block min-w-[200px] px-6 py-2 rounded-3xl text-center text-white bg-[#1962F8] hover:bg-[#1554d6] active:bg-[#0e3ea6] transition duration-200"
+            >
+              Kembali ke Dashboard
+            </button>
+          )}
         </div>
       </div>
     </div>

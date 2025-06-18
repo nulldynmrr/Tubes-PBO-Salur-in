@@ -7,20 +7,33 @@ import StatCard from "@/components/card/StatCard";
 import { adminService } from "@/services/adminServices";
 import { campaignService } from "@/services/campaignService";
 import { dataCampaign as dummyData } from "@/data/campaign";
+import { dataUsers } from "@/data/users";
 import { useRouter } from "next/navigation";
 import { authService } from "@/services/auth.service";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { donationService } from "@/services/donationServices";
 
 const Dashboard = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [dataCampaign, setDataCampaign] = useState([]);
-  const [dataUsers, setDataUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [admin, setAdmin] = useState({});
   const router = useRouter();
+  const [stats, setStats] = useState({
+    totalCampaign: 0,
+    totalDonatur: 0,
+    totalPengajuan: 0,
+  });
 
-  const kolomTabel = ["No", "Nama Campaign", "Deskripsi", "Proposal", "Status"];
+  const kolomTabel = [
+    "No",
+    "Judul Campaign",
+    "Deskripsi",
+    "Proposal",
+    "Status",
+    "Aksi",
+  ];
 
   const getNamaCampaign = (idDonasi) => {
     if (!idDonasi || !dataCampaign) return "Unknown Campaign";
@@ -34,6 +47,49 @@ const Dashboard = () => {
       (d) => d.id_donasi === idDonasi
     );
     return donasi ? donasi.judulCampaign : "Unknown Campaign";
+  };
+
+  const getStatusClass = (status) => {
+    switch (status) {
+      case "Complete":
+      case "diterima":
+        return "bg-green-50 text-green-700 border border-green-100";
+      case "On Going":
+      case "eksekusi":
+        return "bg-yellow-50 text-yellow-700 border border-yellow-100";
+      case "Rejected":
+      case "ditolak":
+        return "bg-red-50 text-red-700 border border-red-100";
+      default:
+        return "bg-gray-50 text-gray-700 border border-gray-100";
+    }
+  };
+
+  const getActionButton = (status, judulCampaign, idDonasi) => {
+    if (status === "eksekusi") {
+      const slug = `${judulCampaign
+        .toLowerCase()
+        .replace(/\s+/g, "-")}-${idDonasi}`;
+      return (
+        <Link
+          href={`/admin/detail-campaign/${slug}`}
+          className="inline-flex items-center justify-center min-w-[120px] px-4 py-2 text-amber-600 hover:text-amber-700 transition-colors text-sm font-medium"
+        >
+          Lihat Detail
+        </Link>
+      );
+    } else if (status === "diterima") {
+      const slug = judulCampaign.toLowerCase().replace(/\s+/g, "-");
+      return (
+        <Link
+          href={`/detail-donasi/${slug}`}
+          className="inline-flex items-center justify-center min-w-[120px] px-4 py-2 text-teal-600 hover:text-teal-700 transition-colors text-sm font-medium"
+        >
+          Lihat Donasi
+        </Link>
+      );
+    }
+    return null;
   };
 
   const dataDonasiCampaign =
@@ -51,6 +107,24 @@ const Dashboard = () => {
     );
   });
 
+  const getProposalLink = (item) => {
+    if (!item.proposal) return "-";
+
+    const campaignName = getNamaCampaign(item.id_donasi);
+    const slug = `${campaignName.toLowerCase().replace(/\s+/g, "-")}-${
+      item.id_donasi
+    }`;
+
+    return (
+      <Link
+        href={`/admin/detail-campaign/${slug}`}
+        className="text-blue-600 hover:text-blue-800 hover:underline"
+      >
+        Proposal {campaignName}
+      </Link>
+    );
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -63,15 +137,51 @@ const Dashboard = () => {
 
         setAdmin(userData);
 
-        // be
         try {
+          console.log("Mencoba mengambil data dari backend...");
           const campaignsData = await campaignService.getAll();
           setDataCampaign(campaignsData);
+
+          localStorage.setItem("dataCampaign", JSON.stringify(campaignsData));
+
+          const totalCampaign = campaignsData.length;
+
+          const totalPengajuan = campaignsData.reduce((total, campaign) => {
+            const eksekusiCount =
+              campaign.pengajuanDonasi?.filter(
+                (pengajuan) => pengajuan.status === "eksekusi"
+              ).length || 0;
+            return total + eksekusiCount;
+          }, 0);
+
+          try {
+            const donationsData = await donationService.getAll();
+            const uniqueDonors = new Set(
+              donationsData.map((donation) => donation.user_id)
+            );
+            console.log("Total donatur dari backend:", uniqueDonors.size);
+            setStats({
+              totalCampaign,
+              totalDonatur: uniqueDonors.size,
+              totalPengajuan,
+            });
+          } catch (donationErr) {
+            console.warn(
+              "Gagal mengambil data donatur dari backend, menggunakan data users:",
+              donationErr
+            );
+            const uniqueDonors = new Set(dataUsers.map((user) => user.user_id));
+            console.log("Total donatur dari data users:", uniqueDonors.size);
+            setStats({
+              totalCampaign,
+              totalDonatur: uniqueDonors.size,
+              totalPengajuan,
+            });
+          }
         } catch (apiErr) {
           console.warn("API fetch failed, using dummy data:", apiErr);
-          toast.warn("Use Data");
+          toast.warn("Menggunakan data dummy");
 
-          // Fallback to dummy data
           const storedData = localStorage.getItem("dataCampaign");
           const campaignData = storedData ? JSON.parse(storedData) : dummyData;
 
@@ -90,6 +200,31 @@ const Dashboard = () => {
           }));
 
           setDataCampaign(transformedCampaigns);
+
+          const totalCampaign = transformedCampaigns.length;
+
+          const totalPengajuan = transformedCampaigns.reduce(
+            (total, campaign) => {
+              const eksekusiCount =
+                campaign.pengajuanDonasi?.filter(
+                  (pengajuan) => pengajuan.status === "eksekusi"
+                ).length || 0;
+              return total + eksekusiCount;
+            },
+            0
+          );
+
+          const uniqueDonors = new Set(dataUsers.map((user) => user.user_id));
+          console.log(
+            "Total donatur dari data users (dummy):",
+            uniqueDonors.size
+          );
+
+          setStats({
+            totalCampaign,
+            totalDonatur: uniqueDonors.size,
+            totalPengajuan,
+          });
         }
       } catch (err) {
         console.error("Error in fetchData:", err);
@@ -101,22 +236,6 @@ const Dashboard = () => {
 
     fetchData();
   }, [router]);
-
-  const getStatusClass = (status) => {
-    switch (status) {
-      case "Complete":
-      case "diterima":
-        return "bg-green-100 text-green-700";
-      case "On Going":
-      case "eksekusi":
-        return "bg-yellow-100 text-yellow-700";
-      case "Rejected":
-      case "ditolak":
-        return "bg-red-100 text-red-700";
-      default:
-        return "bg-gray-100 text-gray-700";
-    }
-  };
 
   if (loading) {
     return (
@@ -144,23 +263,6 @@ const Dashboard = () => {
     );
   }
 
-  const donasiIds = new Set();
-  dataUsers?.forEach((user) => {
-    user.donasi?.forEach((donasi) => {
-      if (donasi?.id_donasi) {
-        donasiIds.add(donasi.id_donasi);
-      }
-    });
-  });
-  const totDonatur = donasiIds.size;
-
-  let totPengajuan = 0;
-  dataCampaign?.forEach((campaign) => {
-    totPengajuan += (campaign.pengajuanDonasi || []).filter(
-      (pengajuan) => pengajuan?.status === "eksekusi"
-    ).length;
-  });
-
   return (
     <div>
       <ToastContainer
@@ -185,19 +287,19 @@ const Dashboard = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <StatCard
             title="Total Campaign"
-            value={dataCampaign.length}
+            value={stats.totalCampaign}
             Icon={LayoutGrid}
             color="blue"
           />
           <StatCard
             title="Total Donatur"
-            value={totDonatur}
+            value={stats.totalDonatur}
             Icon={Users}
             color="green"
           />
           <StatCard
             title="Total Pengajuan"
-            value={totPengajuan}
+            value={stats.totalPengajuan}
             Icon={FileText}
             color="red"
           />
@@ -251,15 +353,22 @@ const Dashboard = () => {
                       {getNamaCampaign(item.id_donasi)}
                     </td>
                     <td className="px-6 py-4">{item.deskripsi || "-"}</td>
-                    <td className="px-6 py-4">{item.proposal || "-"}</td>
+                    <td className="px-6 py-4">{getProposalLink(item)}</td>
                     <td className="px-6 py-4">
                       <span
-                        className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusClass(
+                        className={`inline-flex items-center justify-center px-3 py-1.5 rounded-lg text-xs font-medium ${getStatusClass(
                           item.status
                         )}`}
                       >
                         {item.status || "Unknown"}
                       </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      {getActionButton(
+                        item.status,
+                        getNamaCampaign(item.id_donasi),
+                        item.id_donasi
+                      )}
                     </td>
                   </tr>
                 ))}
