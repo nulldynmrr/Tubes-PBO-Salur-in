@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import SecondaryButton from "./ui/button/SecondaryButton";
 import { FaBars } from "react-icons/fa";
@@ -11,30 +11,51 @@ import { useRouter } from "next/navigation";
 
 export const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const pathname = usePathname();
   const isAdmin = pathname.startsWith("/admin");
   const isCampaign = pathname.startsWith("/campaign");
   const isDonor = pathname.startsWith("/donor");
   const isDashboard = pathname === "/campaign/dashboard";
-  const user = authService.getCurrentUser();
   const router = useRouter();
+
+  useEffect(() => {
+    const checkUser = async () => {
+      try {
+        const currentUser = await authService.getCurrentUser();
+        console.log("Current user from auth:", currentUser);
+        setUser(currentUser);
+      } catch (error) {
+        console.error("Error checking user:", error);
+        setUser(null);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    checkUser();
+  }, []);
 
   const handleLogout = () => {
     authService.logout();
+    setUser(null);
   };
 
   const renderNavLinks = () => {
     if (isAdmin || isCampaign) {
       return (
         <>
-          {!isDashboard && (
-            <Link
-              href="/campaign/dashboard"
-              className="text-gray-700 hover:text-black"
-            >
-              Dashboard
-            </Link>
-          )}
+          {!isDashboard &&
+            !pathname.startsWith("/admin/dashboard") &&
+            !pathname.startsWith("/admin/detail-campaign") && (
+              <Link
+                href="/campaign/dashboard"
+                className="text-gray-700 hover:text-black"
+              >
+                Dashboard
+              </Link>
+            )}
           <button
             onClick={handleLogout}
             className="text-gray-700 hover:text-black"
@@ -84,22 +105,33 @@ export const Navbar = () => {
         <Link href="/" className="text-gray-700 hover:text-black">
           Komunitas
         </Link>
-        {!user && (
-          <SecondaryButton nextRoute="/register/campaign">
-            Daftar Campaign
-          </SecondaryButton>
-        )}
-        {user && !isDashboard && (
-          <Link
-            href="/campaign/dashboard"
+        {!user ? (
+          <>
+            <Link
+              href="/login/campaign"
+              className="text-blue-700 hover:text-black"
+            >
+              Login
+            </Link>
+            <SecondaryButton nextRoute="/register/campaign">
+              Daftar Campaign
+            </SecondaryButton>
+          </>
+        ) : (
+          <button
+            onClick={handleLogout}
             className="text-gray-700 hover:text-black"
           >
-            Dashboard
-          </Link>
+            Logout
+          </button>
         )}
       </>
     );
   };
+
+  if (isLoading) {
+    return null;
+  }
 
   return (
     <nav className="fixed w-full bg-gray-50 border-b-2 shadow-sm z-50">
