@@ -11,7 +11,7 @@ import { dataUsers } from "@/data/users";
 import { authService } from "@/services/auth.service";
 import { Toaster, toast } from "react-hot-toast";
 
-export default function campaign() {
+export default function Campaign() {
   const [activeTab, setActiveTab] = useState("campaign");
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
@@ -22,29 +22,46 @@ export default function campaign() {
     const fetchData = async () => {
       try {
         setLoading(true);
+        console.log("Starting to fetch data...");
+
         const userData = await authService.getCurrentUser();
-        console.log("Current user data:", userData);
+        console.log("Current user data from auth:", userData);
 
         if (!userData) {
+          console.log("No user data found, redirecting to login");
           toast.error("Silakan login terlebih dahulu");
           router.push("/login/campaign");
           return;
         }
-        setUser(userData);
+
+        const userInfo = {
+          name: userData.name,
+          email: userData.email,
+          organization: userData.organization,
+          phone: userData.phone,
+        };
+        console.log("Setting user info:", userInfo);
+        setUser(userInfo);
 
         try {
+          console.log("Attempting to fetch from BE...");
           const response = await campaignService.getMine();
           console.log("BE response:", response);
-          if (response && response.data) {
-            const transformedCampaigns = response.data.map((campaign) => ({
+
+          if (response && Array.isArray(response)) {
+            const transformedCampaigns = response.map((campaign, index) => ({
+              no: index + 1,
               id: campaign.id,
               id_donasi: campaign.id,
               title: campaign.title,
               amountRaised: campaign.currentAmount || 0,
-              amountTarget: campaign.targetAmount,
+              amountTarget: campaign.targetAmount || 0,
               status: campaign.status,
-              date: campaign.createdAt,
+              endDate: campaign.endDate || campaign.createdAt,
+              isTargetReached:
+                (campaign.currentAmount || 0) >= (campaign.targetAmount || 0),
             }));
+            console.log("Transformed BE campaigns:", transformedCampaigns);
             setCampaigns(transformedCampaigns);
             return;
           }
@@ -52,25 +69,26 @@ export default function campaign() {
           console.log("BE connection failed, using dummy data:", error);
         }
 
-        console.log("Searching for campaign with email:", userData.email);
-
+        // Fallback to dummy data
+        console.log("Using dummy data for campaigns");
         const userCampaign = dataCampaign.find(
           (campaign) => campaign && campaign.email === userData.email
         );
-        console.log("Found user campaign:", userCampaign);
 
         if (!userCampaign || !userCampaign.pengajuanDonasi) {
-          console.log("No campaign or pengajuanDonasi found");
+          console.log("No campaigns found in dummy data");
           setCampaigns([]);
           return;
         }
 
         const userCampaigns = userCampaign.pengajuanDonasi.map(
           (donasi, index) => {
-            console.log("Processing donasi:", donasi);
-
             let totalDonations = 0;
-            if (dataUsers && Array.isArray(dataUsers)) {
+            if (
+              donasi.status === "diterima" &&
+              dataUsers &&
+              Array.isArray(dataUsers)
+            ) {
               dataUsers.forEach((user) => {
                 if (user.donasi && Array.isArray(user.donasi)) {
                   user.donasi.forEach((d) => {
@@ -86,30 +104,24 @@ export default function campaign() {
               donasi.targetDonasi.replace(/[^0-9]/g, "")
             );
 
-            const campaignData = {
+            return {
               no: index + 1,
               id: donasi.id_donasi,
               id_donasi: donasi.id_donasi,
               title: donasi.judulCampaign,
               amountRaised: totalDonations,
               amountTarget: targetAmount,
-              status: donasi.status || "aktif",
+              status: donasi.status,
               endDate: donasi.durasiAkhir,
               isTargetReached: totalDonations >= targetAmount,
             };
-
-            console.log("Created campaign data:", campaignData);
-            return campaignData;
           }
         );
 
-        console.log("Final campaigns:", userCampaigns);
         setCampaigns(userCampaigns);
       } catch (error) {
-        console.error("Error fetching data:", error);
-        if (!authService.getUser()) {
-          toast.error("Terjadi kesalahan saat memuat data");
-        }
+        console.error("Error in fetchData:", error);
+        toast.error("Terjadi kesalahan saat memuat data");
       } finally {
         setLoading(false);
       }
@@ -129,20 +141,78 @@ export default function campaign() {
 
   const getStatusClass = (status) => {
     switch (status) {
-      case "Complete":
       case "diterima":
+      case "accepted":
         return "bg-green-100 text-green-700";
-      case "On Going":
       case "eksekusi":
+      case "executing":
         return "bg-yellow-100 text-yellow-700";
-      case "Rejected":
       case "ditolak":
+      case "rejected":
         return "bg-red-100 text-red-700";
       case "ditarik":
+      case "withdrawn":
         return "bg-blue-100 text-blue-700";
       default:
         return "bg-gray-100 text-gray-700";
     }
+  };
+
+  const getStatusText = (status) => {
+    switch (status) {
+      case "diterima":
+      case "accepted":
+        return "Diterima";
+      case "eksekusi":
+      case "executing":
+        return "Tunggu Verifikasi";
+      case "ditolak":
+      case "rejected":
+        return "Ditolak";
+      case "ditarik":
+      case "withdrawn":
+        return "Dana Sudah Ditarik";
+      default:
+        return status;
+    }
+  };
+
+  const renderAction = (campaign) => {
+    if (campaign.status === "eksekusi" || campaign.status === "executing") {
+      return (
+        <span className="text-yellow-600 font-medium">Tunggu Verifikasi</span>
+      );
+    }
+
+    if (campaign.status === "diterima" || campaign.status === "accepted") {
+      if (campaign.isTargetReached) {
+        return (
+          <button
+            onClick={() => onWithDraw(campaign)}
+            className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 text-sm"
+          >
+            Tarik Donasi
+          </button>
+        );
+      } else {
+        return (
+          <button
+            disabled
+            className="bg-gray-300 text-gray-600 px-3 py-1 rounded cursor-not-allowed text-sm"
+          >
+            Belum Capai Target
+          </button>
+        );
+      }
+    }
+
+    if (campaign.status === "ditarik" || campaign.status === "withdrawn") {
+      return (
+        <span className="text-blue-600 font-medium">Dana Sudah Terkirim</span>
+      );
+    }
+
+    return null;
   };
 
   if (loading) {
@@ -234,38 +304,17 @@ export default function campaign() {
                                 item.status
                               )}`}
                             >
-                              {item.status}
+                              {getStatusText(item.status)}
                             </span>
                           </td>
                           <td className="py-2 px-4 border">
-                            {item.isTargetReached &&
-                            item.status !== "ditarik" ? (
-                              <button
-                                onClick={() => onWithDraw(item)}
-                                className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 text-sm"
-                              >
-                                Tarik Donasi
-                              </button>
-                            ) : item.status === "ditarik" ||
-                              localStorage.getItem("withdrawalStatus") ===
-                                "completed" ? (
-                              <span className="text-blue-600 font-medium">
-                                Dana Sudah Terkirim
-                              </span>
-                            ) : (
-                              <button
-                                disabled
-                                className="bg-gray-300 text-gray-600 px-3 py-1 rounded cursor-not-allowed text-sm"
-                              >
-                                Belum Capai Target
-                              </button>
-                            )}
+                            {renderAction(item)}
                           </td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
-                  <div className="flex justify-center  gap-4 mt-8">
+                  <div className="flex justify-center gap-4 mt-8">
                     <Button nextRoute="/campaign/submission" className="mr-4">
                       Ajukan Donasi Lagi
                     </Button>

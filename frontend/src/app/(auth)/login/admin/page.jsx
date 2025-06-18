@@ -4,7 +4,6 @@ import InputField from "@/components/ui/form-field/InputField";
 import { validateEmail, validatePassword } from "@/lib/utils/form-validator";
 import Link from "next/link";
 import Image from "next/image";
-import { dataAdmin } from "@/data/admin";
 import { useRouter } from "next/navigation";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -17,6 +16,7 @@ const LoginAdmin = () => {
     email: "",
     password: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   const onChange = (e) => {
     const { name, value } = e.target;
@@ -25,26 +25,40 @@ const LoginAdmin = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
 
     try {
-      await authService.login(formData.email, formData.password, "admin");
-      authService.setAuthToken(data.token);
-      toast.success("Login Admin berhasil!", { toastId: "login-success" });
-      router.push("/admin/dashboard");
-    } catch (error) {
-      if (
-        formData.email === dataAdmin.email &&
-        formData.password === dataAdmin.password
-      ) {
-        // Simulasi penyimpanan token lokal
-        authService.setAuthToken("dummy-token-admin");
-        toast.success("Login Admin berhasil!", {
-          toastId: "login-success",
-        });
-        router.push("/admin/dashboard");
-      } else {
-        toast.error("Email atau password salah", { toastId: "login-error" });
+      const emailMessage = validateEmail(formData.email);
+      const passwordMessage = validatePassword(formData.password);
+
+      if (emailMessage) {
+        toast.error(emailMessage, { toastId: "email-error" });
+        setIsLoading(false);
+        return;
       }
+      if (passwordMessage) {
+        toast.error(passwordMessage, { toastId: "password-error" });
+        setIsLoading(false);
+        return;
+      }
+
+      const response = await authService.login(
+        formData.email,
+        formData.password,
+        "admin"
+      );
+
+      if (response.user) {
+        toast.success("Login Admin berhasil!", { toastId: "login-success" });
+        router.push("/admin/dashboard");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      toast.error(error.message || "Email atau password salah", {
+        toastId: "login-error",
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -108,6 +122,7 @@ const LoginAdmin = () => {
                 onChange={onChange}
                 required
                 validate={validateEmail}
+                disabled={isLoading}
               />
 
               <InputField
@@ -120,13 +135,15 @@ const LoginAdmin = () => {
                 onChange={onChange}
                 required
                 validate={validatePassword}
+                disabled={isLoading}
               />
 
               <button
                 type="submit"
-                className="w-full py-3 px-4 rounded-lg text-white font-mediaum bg-blue-600 hover:bg-blue-700 active:bg-blue-800 transition-all"
+                className="w-full py-3 px-4 rounded-lg text-white font-medium bg-blue-600 hover:bg-blue-700 active:bg-blue-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={isLoading}
               >
-                Login
+                {isLoading ? "Loading..." : "Login"}
               </button>
             </form>
 
@@ -144,7 +161,7 @@ const LoginAdmin = () => {
           </div>
         </div>
       </div>
-      <ToastContainer />
+      <ToastContainer position="top-right" autoClose={3000} />
     </>
   );
 };
