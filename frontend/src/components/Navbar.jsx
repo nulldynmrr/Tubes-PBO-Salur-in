@@ -34,24 +34,12 @@ export const Navbar = ({ hideLogout = false }) => {
 
     if (isLoggedIn) {
       return (
-        <>
-          {!isDashboard &&
-            !pathname.startsWith("/admin/dashboard") &&
-            !pathname.startsWith("/admin/detail-campaign") && (
-              <Link
-                href="/campaign/dashboard"
-                className="text-gray-700 hover:text-black"
-              >
-                Dashboard
-              </Link>
-            )}
-          <button
-            onClick={handleLogout}
-            className="text-gray-700 hover:text-black"
-          >
-            Logout
-          </button>
-        </>
+        <button
+          onClick={handleLogout}
+          className="text-gray-700 hover:text-black"
+        >
+          Logout
+        </button>
       );
     }
 

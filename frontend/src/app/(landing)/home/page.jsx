@@ -9,6 +9,7 @@ import DonationCard from "@/components/card/CampaignCard";
 import { FaTwitter, FaFacebook, FaInstagram } from "react-icons/fa";
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { hitungPersentaseDonasi } from "@/lib/utils/campaign-helpers";
 
 const Home = () => {
   //Connect BE
@@ -33,7 +34,17 @@ const Home = () => {
       donasiIds.add(donasi.id_donasi);
     });
   });
-  const totDonatur = donasiIds.size;
+
+  let totalTerkumpul = 0;
+  dataUsers.forEach((user) => {
+    user.donasi.forEach((donasi) => {
+      totalTerkumpul += Number(donasi.total_donasi) || 0;
+    });
+  });
+
+  const jumlahPendonasi = dataUsers.length;
+  s;
+  const jumlahCampaign = dataCampaign.length;
 
   const [hoveredIndex, setHoveredIndex] = useState(0);
 
@@ -224,19 +235,19 @@ const Home = () => {
               icon: (
                 <HandCoins size={36} className="mx-auto text-blue-500 mb-2" />
               ),
-              value: "13M",
+              value: `Rp${totalTerkumpul.toLocaleString("id-ID")}`,
               label: "Terkumpul",
             },
             {
               icon: <Users2 size={36} className="mx-auto text-blue-500 mb-2" />,
-              value: totDonatur,
+              value: jumlahPendonasi,
               label: "Pendonasi",
             },
             {
               icon: (
                 <Megaphone size={36} className="mx-auto text-blue-500 mb-2" />
               ),
-              value: "108",
+              value: jumlahCampaign,
               label: "Campaign",
             },
           ].map((item, i) => (
@@ -325,7 +336,7 @@ const Home = () => {
             <div className="absolute top-4 left-4 w-full h-full bg-[#A7C4F8] rounded-lg rotate-[2deg]"></div>
             <div className="absolute top-2 left-2 w-full h-full bg-[#739FF6] rounded-lg rotate-[-2deg]"></div>
             <motion.div
-              key={hoveredIndex} // agar animasi terjadi setiap index berubah
+              key={hoveredIndex}
               initial={{ opacity: 0, scale: 0.9, rotateY: -10 }}
               animate={{ opacity: 1, scale: 1, rotateY: 0 }}
               exit={{ opacity: 0, scale: 0.9, rotateY: 10 }}
@@ -435,33 +446,19 @@ const Home = () => {
                     namaCampaign: donasi.judulCampaign,
                     gambarBuktiCampaign: donasi.gambarBuktiCampaign,
                     deskripsi: donasi.deskripsi,
+                    kategori: donasi.kategori,
+                    targetAmount: donasi.targetDonasi,
                     progress: hitungPersentaseDonasi(
                       donasi.id_donasi,
                       dataCampaign,
                       dataUsers
                     ),
+                    link: `/detail-donasi/${donasi.judulCampaign
+                      .toLowerCase()
+                      .replace(/\s+/g, "-")}`,
                   }}
                 />
               ))}
-
-            {/* {dataCampaign
-              .flatMap((campaign) => campaign.pengajuanDonasi)
-              .slice(0, 3)
-              .map((donasi) => (
-                <DonationCard
-                  key={donasi.id_donasi}
-                  campaign={{
-                    namaCampaign: donasi.judulCampaign,
-                    gambarBuktiCampaign: donasi.gambarBuktiCampaign,
-                    deskripsi: donasi.deskripsi,
-                    progress: hitungPersentaseDonasi(
-                      donasi.id_donasi,
-                      dataCampaign,
-                      dataUsers
-                    ),
-                  }}
-                />
-              ))} */}
           </div>
         </div>
       </section>

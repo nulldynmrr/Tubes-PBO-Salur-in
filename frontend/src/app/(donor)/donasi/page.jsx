@@ -1,6 +1,6 @@
 "use client";
 
-import DonationCard from "@/components/card/DonationCard";
+import CampaignCard from "@/components/card/CampaignCard";
 import React, { useEffect, useState } from "react";
 import { dataCampaign } from "@/data/campaign";
 import { dataUsers } from "@/data/users";
@@ -106,7 +106,7 @@ const Donasi = () => {
 
       <section className="mt-6 px-6 md:px-[110px] py-4 container mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 items-stretch">
         {allDonations.map((donasi) => (
-          <DonationCard key={donasi.id_donasi} campaign={donasi.campaign} />
+          <CampaignCard key={donasi.id_donasi} campaign={donasi.campaign} />
         ))}
       </section>
     </>

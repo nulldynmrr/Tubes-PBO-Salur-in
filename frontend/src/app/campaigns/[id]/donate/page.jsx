@@ -104,12 +104,12 @@ export default function DonatePage() {
     <>
       <Navbar hideLogout />
       <section className="min-h-screen px-6 md:px-[210px] py-10">
-        <h2 className="text-2xl font-semibold text-center mb-6 text-gray-800">
+        <h2 className="text-2xl font-semibold text-center mt-6 mb-12 text-gray-800">
           Form Donasi
         </h2>
         <form
           onSubmit={handleSubmit}
-          className="max-w-xl mx-auto space-y-6 bg-white p-8 shadow-md rounded-lg"
+          className="max-w-xl mx-auto space-y-6 bg-white p-8"
         >
           <InputField
             id="amount"
