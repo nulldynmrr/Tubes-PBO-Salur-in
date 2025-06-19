@@ -14,15 +14,13 @@ public class Donation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private double amount;
-    private String message;
-    
     @ManyToOne
     @JoinColumn(name = "campaign_id")
     private Campaign campaign;
-
     @ManyToOne
     @JoinColumn(name = "donor_id")
     private Donor donor;
+    private String paymentMethod;
+    private String paymentProvider;
+    private double amount;
 }

@@ -7,6 +7,7 @@ public class DonationResponse {
     private Long id;
     private double amount;
     private String donorName;
-    private String message;
     private Long campaignId;
+    private String paymentMethod;
+    private String paymentProvider;
 }

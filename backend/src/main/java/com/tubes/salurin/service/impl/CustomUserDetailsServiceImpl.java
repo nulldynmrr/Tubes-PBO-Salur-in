@@ -12,11 +12,9 @@ import org.springframework.stereotype.Service;
 
 import com.tubes.salurin.entity.Admin;
 import com.tubes.salurin.entity.CampaignOwner;
-import com.tubes.salurin.entity.Donor;
 import com.tubes.salurin.entity.User;
 import com.tubes.salurin.repository.AdminRepository;
 import com.tubes.salurin.repository.CampaignOwnerRepository;
-import com.tubes.salurin.repository.DonorRepository;
 import com.tubes.salurin.security.CustomUserDetails;
 
 import lombok.RequiredArgsConstructor;
@@ -24,38 +22,29 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class CustomUserDetailsServiceImpl implements UserDetailsService {
-    private final DonorRepository donorRepo;
     private final CampaignOwnerRepository ownerRepo;
     private final AdminRepository adminRepo;
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = null;
-        String role = "";
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException{
+        User user = adminRepo.findByEmail(email).orElse(null);
 
-        if (donorRepo.findByEmail(email).isPresent()) {
-            Donor donor = donorRepo.findByEmail(email).get();
-            user = donor;
-            role = "ROLE_DONOR";
-        } else if (ownerRepo.findByEmail(email).isPresent()) {
-            CampaignOwner owner = ownerRepo.findByEmail(email).get();
-            user = owner;
-            role = "ROLE_OWNER";
-        } else if (adminRepo.findByEmail(email).isPresent()) {
-            Admin admin = adminRepo.findByEmail(email).get();
-            user = admin;
-            role = "ROLE_ADMIN";
-        } else {
-            throw new UsernameNotFoundException("User not found");
+        if (user == null) {
+            user = ownerRepo.findByEmail(email).orElse(null);
         }
 
-        return new CustomUserDetails(user, List.of(new SimpleGrantedAuthority(role)));
+        if (user == null) {
+            throw new UsernameNotFoundException("User tidak ditemukan dengan email: " + email);
+        }
+
+        return new CustomUserDetails(user, getAuthorities(user));
     }
 
-    public Collection<? extends GrantedAuthority> getAuthorities(User user) {
-        String role = (user instanceof Donor) ? "ROLE_DONOR"
+    private Collection<? extends GrantedAuthority> getAuthorities(User user){
+        String role = (user instanceof Admin) ? "ROLE_ADMIN"
                     : (user instanceof CampaignOwner) ? "ROLE_OWNER"
-                    : "ROLE_ADMIN";
+                    : "ROLE_NULL";
+
         return List.of(new SimpleGrantedAuthority(role));
     }
 }

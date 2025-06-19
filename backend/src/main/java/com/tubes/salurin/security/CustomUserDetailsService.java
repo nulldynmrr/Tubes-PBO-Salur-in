@@ -1,8 +1,11 @@
 package com.tubes.salurin.security;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -22,17 +25,23 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final AdminRepository adminRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException{
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Optional<CampaignOwner> owner = ownerRepository.findByEmail(email);
-        if (owner.isPresent()){
-            return new CustomUserDetails(owner.get(), List.of());
+        if (owner.isPresent()) {
+            CampaignOwner campaignOwner = owner.get();
+            return new CustomUserDetails(campaignOwner, getAuthorities("OWNER"));
         }
 
         Optional<Admin> admin = adminRepository.findByEmail(email);
-        if (admin.isPresent()){
-            return new CustomUserDetails(admin.get(), List.of());
+        if (admin.isPresent()) {
+            Admin adminUser = admin.get();
+            return new CustomUserDetails(adminUser, getAuthorities("ADMIN"));
         }
 
-        throw new UsernameNotFoundException("User tidak ditemukan");
+        throw new UsernameNotFoundException("User tidak ditemukan dengan email: " + email);
+    }
+
+    private Collection<? extends GrantedAuthority> getAuthorities(String role) {
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role));
     }
 }

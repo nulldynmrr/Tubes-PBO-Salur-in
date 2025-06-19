@@ -7,11 +7,11 @@ import SelectField from "@/components/ui/form-field/SelectField";
 import {
   validateName,
   validateEmail,
-  validatePhone,
   validateJumlahDonasi,
 } from "@/lib/utils/form-validator";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { donationService } from "@/services/donationServices";
 
 export default function Transaksi({ params }) {
   const { slug } = params;
@@ -36,6 +36,7 @@ export default function Transaksi({ params }) {
     bank_tujuan: "",
     bukti_pembayaran: null,
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   const [step, setStep] = useState(0);
   const [previewImage, setPreviewImage] = useState(null);
@@ -52,57 +53,64 @@ export default function Transaksi({ params }) {
     }
   };
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.isAnonim) {
-      if (
-        !validateName(formData.nama) ||
-        !validateEmail(formData.email) ||
-        !validatePhone(formData.telepon)
-      ) {
-        alert("Harap isi data dengan benar.");
-        return;
-      }
+    if (step === 0) {
+      setStep(1);
+      return;
     }
 
-    if (step < 2) {
-      setStep(step + 1);
-    } else {
-      console.log("Slug Campaign:", slug);
-      console.log("Data Donasi:", formData);
-    }
-
-    if (step === 2 && formData.isAnonim) {
+    if (step === 1) {
       if (
-        formData.total_donasi != "" &&
-        formData.bank_tujuan != "" &&
-        formData.bukti_pembayaran != ""
+        !formData.total_donasi ||
+        !formData.pembayaran_via ||
+        !formData.bank_tujuan
       ) {
-        router.push("/donasi");
-      } else {
-        toast.error("Harap diisi dengan benar", {
-          toastId: "user-not-registered",
-          autoClose: 3000,
-        });
+        toast.error("Mohon lengkapi data donasi.");
         return;
       }
-    } else if (step === 2 && !formData.isAnonim) {
-      if (
-        formData.nama != "" &&
-        formData.email != "" &&
-        formData.telepon != "" &&
-        formData.total_donasi != "" &&
-        formData.bank_tujuan != "" &&
-        formData.bukti_pembayaran != ""
-      ) {
-        router.push("/donasi");
-      } else {
-        toast.error("Harap diisi dengan benar", {
-          toastId: "user-not-registered",
-          autoClose: 3000,
-        });
+      setStep(2);
+      return;
+    }
+
+    if (step === 2) {
+      let isFormValid =
+        formData.total_donasi &&
+        formData.bank_tujuan &&
+        formData.bukti_pembayaran;
+
+      if (!formData.isAnonim) {
+        isFormValid =
+          isFormValid && formData.nama && formData.email && formData.telepon;
+      }
+
+      if (!isFormValid) {
+        toast.error("Harap lengkapi semua data dengan benar.");
         return;
+      }
+
+      try {
+        const donationData = {
+          campaignId: parseInt(slug[0]),
+          amount: parseInt(formData.total_donasi.replace(/[^0-9]/g, "")),
+          paymentMethod: formData.pembayaran_via,
+          bankAccount: formData.bank_tujuan,
+          isAnonymous: formData.isAnonim,
+          ...(formData.isAnonim
+            ? {}
+            : {
+                name: formData.nama,
+                email: formData.email,
+                phone: formData.telepon,
+              }),
+        };
+
+        await donationService.donate(donationData);
+        router.push("/transaksi/berhasil");
+      } catch (error) {
+        console.error("Error saving donation:", error);
+        toast.error("Terjadi kesalahan saat menyimpan data.");
       }
     }
   };
@@ -179,17 +187,18 @@ export default function Transaksi({ params }) {
                   onChange={onChange}
                   required
                   validate={validateName}
+                  disabled={isLoading}
                 />
                 <InputField
                   id="email"
                   name="email"
                   label="Email"
-                  type="email"
                   placeholder="Masukkan Email"
                   value={formData.email}
                   onChange={onChange}
                   required
                   validate={validateEmail}
+                  disabled={isLoading}
                 />
                 <InputField
                   id="telepon"
@@ -200,7 +209,7 @@ export default function Transaksi({ params }) {
                   value={formData.telepon}
                   onChange={onChange}
                   required
-                  validate={validatePhone}
+                  disabled={isLoading}
                 />
               </>
             )}
@@ -243,7 +252,6 @@ export default function Transaksi({ params }) {
                 { value: "BCA", label: "BCA" },
                 { value: "BNI", label: "BNI" },
                 { value: "Mandiri", label: "Mandiri" },
-                { value: "QRIS", label: "QRIS" },
               ]}
               placeholder="Pilih Pembayaran"
               required
@@ -259,7 +267,6 @@ export default function Transaksi({ params }) {
                 { value: "BCA", label: "BCA - 75412541xx" },
                 { value: "BNI", label: "BNI - 123455xxx" },
                 { value: "Mandiri", label: "Mandiri - 5432231" },
-                { value: "QRIS", label: "QRIS" },
               ]}
               placeholder="Pilih Bank Tujuan"
               required

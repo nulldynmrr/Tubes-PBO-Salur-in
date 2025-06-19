@@ -1,6 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import Navbar from "@/components/Navbar";
+import { useRouter } from "next/navigation";
+import { campaignService } from "@/services/campaignService";
 
 const Submission = () => {
   const [startDate, setStartDate] = useState("");
@@ -14,10 +16,29 @@ const Submission = () => {
     target: "",
     judul: "",
   });
+  const router = useRouter();
 
-  const handleChange = (e) => {
+  const onChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+
+    const payload = {
+      ...formData,
+      startDate,
+      endDate,
+    };
+
+    try {
+      await campaignService.create(payload);
+      alert("Campaign berhasil dibuat!");
+      router.push("/campaign/dashboard");
+    } catch (error) {
+      alert(error.message || "Gagal menyimpan campaign");
+    }
   };
 
   return (
@@ -28,7 +49,10 @@ const Submission = () => {
           Formulir Campaign Donasi
         </h2>
 
-        <form className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <form
+          onSubmit={onSubmit}
+          className="grid grid-cols-1 md:grid-cols-2 gap-6"
+        >
           <div>
             <label className="block text-sm text-gray-600 mb-2">
               Nama Organisasi
@@ -36,7 +60,7 @@ const Submission = () => {
             <input
               name="namaOrganisasi"
               value={formData.namaOrganisasi}
-              onChange={handleChange}
+              onChange={onChange}
               type="text"
               className="w-full px-4 py-2 text-sm border border-gray-300 rounded-lg bg-white text-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none"
             />
@@ -59,7 +83,7 @@ const Submission = () => {
             <input
               name="nomorTelepon"
               value={formData.nomorTelepon}
-              onChange={handleChange}
+              onChange={onChange}
               type="text"
               className="w-full px-4 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
             />
@@ -72,7 +96,7 @@ const Submission = () => {
             <input
               name="deskripsi"
               value={formData.deskripsi}
-              onChange={handleChange}
+              onChange={onChange}
               type="text"
               className="w-full px-4 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
             />
@@ -85,7 +109,7 @@ const Submission = () => {
             <input
               name="alamat"
               value={formData.alamat}
-              onChange={handleChange}
+              onChange={onChange}
               type="text"
               className="w-full px-4 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
             />
@@ -98,7 +122,7 @@ const Submission = () => {
             <select
               name="kategori"
               value={formData.kategori}
-              onChange={handleChange}
+              onChange={onChange}
               className="w-full px-4 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
             >
               <option>-- Pilih Kategori --</option>
@@ -131,12 +155,11 @@ const Submission = () => {
             <input
               name="target"
               value={formData.target}
-              onChange={handleChange}
+              onChange={onChange}
               type="number"
               className="w-full px-4 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
             />
           </div>
-
 
           <div>
             <label className="block text-sm text-gray-600 mb-2">
@@ -145,7 +168,7 @@ const Submission = () => {
             <input
               name="judul"
               value={formData.judul}
-              onChange={handleChange}
+              onChange={onChange}
               type="text"
               className="w-full px-4 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
             />
@@ -188,11 +211,10 @@ const Submission = () => {
               className="w-full px-4 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
             />
           </div>
-        </form>
-
-        <div className="flex justify-center gap-4 mt-10">
+          <div className="flex justify-center mt-4 gap-4">
           <button
             type="button"
+            onClick={() => router.push("/campaign/dashboard")}
             className="px-6 py-2 rounded-lg text-gray-700 bg-gray-200 hover:bg-gray-300 transition text-sm"
           >
             Kembali
@@ -204,6 +226,7 @@ const Submission = () => {
             Submit
           </button>
         </div>
+        </form>
       </div>
     </div>
   );

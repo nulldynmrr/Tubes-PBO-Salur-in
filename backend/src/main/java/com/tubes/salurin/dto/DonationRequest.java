@@ -4,9 +4,8 @@ import lombok.Data;
 
 @Data
 public class DonationRequest {
-    private Long donorId;
-    private double amount;
-    private String donorName;
-    private String message;
     private Long campaignId;
+    private String paymentMethod;
+    private String paymentProvider;
+    private double amount;
 }
