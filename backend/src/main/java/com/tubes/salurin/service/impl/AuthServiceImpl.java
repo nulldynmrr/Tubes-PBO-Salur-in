@@ -35,8 +35,9 @@ public class AuthServiceImpl implements AuthService {
         owner.setPassword(passwordEncoder.encode(request.getPassword()));
         owner.setPhone(request.getPhone());
         owner.setOrganization(request.getOrganization());
+        owner.setRole("OWNER");
         ownerRepository.save(owner);
-        return new AuthResponse(jwtService.generateToken(owner), "OWNER");
+        return new AuthResponse(jwtService.generateToken(owner), owner.getEmail(), "OWNER");
     }
 
     @Override
@@ -51,7 +52,7 @@ public class AuthServiceImpl implements AuthService {
         String role = "OWNER";
         String token = jwtService.generateToken(owner);
 
-        return new AuthResponse(token, role);
+        return new AuthResponse(token, owner.getEmail(), role);
     }
     
     @Override
@@ -61,11 +62,11 @@ public class AuthServiceImpl implements AuthService {
         );
 
         Admin admin = adminRepository.findByEmail(request.getEmail())
-            .orElseThrow(() -> new UsernameNotFoundException("Email tidak"));
+            .orElseThrow(() -> new UsernameNotFoundException("Email tidak ditemukan"));
 
         String role = "ADMIN";
         String token = jwtService.generateToken(admin);
 
-        return new AuthResponse(token, role);
+        return new AuthResponse(token, admin.getEmail(), role);
     }
 }

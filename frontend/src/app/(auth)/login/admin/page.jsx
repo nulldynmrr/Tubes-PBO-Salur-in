@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState } from "react";
 import InputField from "@/components/ui/form-field/InputField";
 import { validateEmail, validatePassword } from "@/lib/utils/form-validator";
@@ -7,10 +8,11 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { authService } from "@/services/auth.service";
 import Head from "next/head";
+import axios from "axios";
+import { clearAuth } from "@/lib/utils/auth";
 
-const LoginAdmin = () => {
+const Login = () => {
   const router = useRouter();
   const [formData, setFormData] = useState({
     email: "",
@@ -31,44 +33,46 @@ const LoginAdmin = () => {
       const emailMessage = validateEmail(formData.email);
       const passwordMessage = validatePassword(formData.password);
 
-      if (emailMessage) {
-        toast.error(emailMessage, { toastId: "email-error" });
-        setIsLoading(false);
-        return;
+    if (emailError || passwordError) {
+      if (emailError) {
+        toast.error(emailError, { toastId: "email-error" });
       }
-      if (passwordMessage) {
-        toast.error(passwordMessage, { toastId: "password-error" });
-        setIsLoading(false);
-        return;
+      if (passwordError) {
+        toast.error(passwordError, { toastId: "password-error" });
       }
+      return;
+    }
 
-      const response = await authService.login(
+    try {
+      // Coba login dengan API menggunakan auth service
+      const data = await authService.loginAdmin(
         formData.email,
-        formData.password,
-        "admin"
+        formData.password
       );
-
-      if (response.user) {
-        toast.success("Login Admin berhasil!", { toastId: "login-success" });
-        router.push("/admin/dashboard");
-      }
+      authService.setAuthToken(data.token);
+      toast.success("Login berhasil!", { toastId: "login-success" });
+      router.push("/admin/dashboard");
     } catch (error) {
-      console.error("Login error:", error);
-      toast.error(error.message || "Email atau password salah", {
-        toastId: "login-error",
-      });
-    } finally {
-      setIsLoading(false);
+      // Jika API gagal, coba login dengan data lokal
+      const user = dataCampaign.find(
+        (u) => u.email === formData.email && u.password === formData.password
+      );
+      if (user) {
+        toast.success("Login berhasil!", { toastId: "login-success" });
+        router.push("/donasi");
+      } else {
+        toast.error("Email atau password salah", { toastId: "login-error" });
+      }
     }
   };
 
   return (
     <>
       <Head>
-        <title>Login Admin - Salurin</title>
+        <title>Login - Salurin</title>
         <meta
           name="description"
-          content="Login Admin ke akun Salurin Anda untuk mengakses fitur donasi dan campaign."
+          content="Login ke akun Salurin Anda untuk mengakses fitur donasi dan campaign."
         />
       </Head>
 
@@ -140,30 +144,21 @@ const LoginAdmin = () => {
 
               <button
                 type="submit"
-                className="w-full py-3 px-4 rounded-lg text-white font-medium bg-blue-600 hover:bg-blue-700 active:bg-blue-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                disabled={isLoading}
+                className="w-full py-3 px-4 rounded-lg text-white font-mediaum bg-blue-600 hover:bg-blue-700 active:bg-blue-800 transition-all"
               >
                 {isLoading ? "Loading..." : "Login"}
               </button>
             </form>
 
             <div className="mt-6 text-center">
-              <p className="text-sm text-gray-600">
-                Login sebagai campaign?{" "}
-                <Link
-                  href="/login/campaign"
-                  className="text-blue-600 hover:text-blue-800 font-medium hover:underline"
-                >
-                  Masuk
-                </Link>
-              </p>
+              <p className="text-sm text-gray-600"></p>
             </div>
           </div>
         </div>
       </div>
-      <ToastContainer position="top-right" autoClose={3000} />
+      <ToastContainer />
     </>
   );
 };
 
-export default LoginAdmin;
+export default Login;

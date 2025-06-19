@@ -6,44 +6,33 @@ import SecondaryButton from "./ui/button/SecondaryButton";
 import { FaBars } from "react-icons/fa";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { authService } from "@/services/auth.service";
-import { useRouter } from "next/navigation";
 
-export const Navbar = () => {
+export const Navbar = ({ hideLogout = false }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const pathname = usePathname();
-  const isAdmin = pathname.startsWith("/admin");
-  const isCampaign = pathname.startsWith("/campaign");
-  const isDonor = pathname.startsWith("/donor");
-  const isDashboard = pathname === "/campaign/dashboard";
-  const router = useRouter();
 
-  useEffect(() => {
-    const checkUser = async () => {
-      try {
-        const currentUser = await authService.getCurrentUser();
-        console.log("Current user from auth:", currentUser);
-        setUser(currentUser);
-      } catch (error) {
-        console.error("Error checking user:", error);
-        setUser(null);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    checkUser();
-  }, []);
+  const isAdmin =
+    pathname.startsWith("/admin") || pathname.startsWith("/dashboard/admin");
+  const isLoggedIn =
+    isAdmin ||
+    pathname.startsWith("/owner") ||
+    pathname.startsWith("/campaign");
 
   const handleLogout = () => {
-    authService.logout();
-    setUser(null);
+    localStorage.clear();
+    if (isAdmin) {
+      window.location.href = "/login/admin";
+    } else {
+      window.location.href = "/home";
+    }
   };
 
   const renderNavLinks = () => {
-    if (isAdmin || isCampaign) {
+    if (hideLogout) return null;
+
+    if (isLoggedIn) {
       return (
         <>
           {!isDashboard &&
@@ -66,66 +55,13 @@ export const Navbar = () => {
       );
     }
 
-    if (isDonor) {
-      return (
-        <>
-          <Link
-            href="/donor/donations"
-            className="text-gray-700 hover:text-black"
-          >
-            Donasi
-          </Link>
-          <Link
-            href="/donor/history"
-            className="text-gray-700 hover:text-black"
-          >
-            Riwayat Donasi
-          </Link>
-          <Link
-            href="/donor/profile"
-            className="text-gray-700 hover:text-black"
-          >
-            Profil
-          </Link>
-          <button
-            onClick={handleLogout}
-            className="text-gray-700 hover:text-black"
-          >
-            Logout
-          </button>
-        </>
-      );
-    }
-
     return (
-      <>
-        <Link href="/" className="text-gray-700 hover:text-black">
-          Tentang Kami
-        </Link>
-        <Link href="/" className="text-gray-700 hover:text-black">
-          Komunitas
-        </Link>
-        {!user ? (
-          <>
-            <Link
-              href="/login/campaign"
-              className="text-blue-700 hover:text-black"
-            >
-              Login
-            </Link>
-            <SecondaryButton nextRoute="/register/campaign">
-              Daftar Campaign
-            </SecondaryButton>
-          </>
-        ) : (
-          <button
-            onClick={handleLogout}
-            className="text-gray-700 hover:text-black"
-          >
-            Logout
-          </button>
-        )}
-      </>
+      <div className="flex gap-4">
+        <SecondaryButton nextRoute="/login/owner">Login</SecondaryButton>
+        <SecondaryButton nextRoute="/register/owner">
+          Daftar Campaign
+        </SecondaryButton>
+      </div>
     );
   };
 
