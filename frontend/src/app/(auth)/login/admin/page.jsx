@@ -12,68 +12,60 @@ import Head from "next/head";
 import axios from "axios";
 import { clearAuth } from "@/lib/utils/auth";
 
-const Login = () => {
+const AdminLogin = () => {
   const router = useRouter();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-  const [isLoading, setIsLoading] = useState(false);
 
-  const onChange = (e) => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const onSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
 
-    try {
-      const emailMessage = validateEmail(formData.email);
-      const passwordMessage = validatePassword(formData.password);
+    const emailError = validateEmail(formData.email);
+    const passwordError = validatePassword(formData.password);
 
     if (emailError || passwordError) {
-      if (emailError) {
-        toast.error(emailError, { toastId: "email-error" });
-      }
-      if (passwordError) {
+      if (emailError) toast.error(emailError, { toastId: "email-error" });
+      if (passwordError)
         toast.error(passwordError, { toastId: "password-error" });
-      }
       return;
     }
 
     try {
-      // Coba login dengan API menggunakan auth service
-      const data = await authService.loginAdmin(
-        formData.email,
-        formData.password
+      const res = await axios.post(
+        "http://localhost:8080/api/auth/login/admin",
+        formData
       );
-      authService.setAuthToken(data.token);
+
+      const { token, email, role } = res.data;
+
+      localStorage.setItem("token", token);
+      localStorage.setItem("email", email);
+      localStorage.setItem("role", role);
+
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
       toast.success("Login berhasil!", { toastId: "login-success" });
       router.push("/admin/dashboard");
     } catch (error) {
-      // Jika API gagal, coba login dengan data lokal
-      const user = dataCampaign.find(
-        (u) => u.email === formData.email && u.password === formData.password
-      );
-      if (user) {
-        toast.success("Login berhasil!", { toastId: "login-success" });
-        router.push("/donasi");
-      } else {
-        toast.error("Email atau password salah", { toastId: "login-error" });
-      }
+      clearAuth();
+      toast.error("Login gagal. Email atau password salah.", {
+        toastId: "login-error",
+      });
     }
   };
 
   return (
     <>
       <Head>
-        <title>Login - Salurin</title>
-        <meta
-          name="description"
-          content="Login ke akun Salurin Anda untuk mengakses fitur donasi dan campaign."
-        />
+        <title>Login Admin - Salurin</title>
+        <meta name="description" content="Login ke akun admin Salurin." />
       </Head>
 
       <div className="flex">
@@ -111,24 +103,20 @@ const Login = () => {
                   priority
                 />
               </Link>
-              <p className="text-gray-500 mt-2">
-                Login Admin untuk mengakses akun Anda
-              </p>
+              <p className="text-gray-500 mt-2">Login menggunakan akun admin</p>
             </div>
 
-            <form className="space-y-6" onSubmit={onSubmit}>
+            <form className="space-y-6" onSubmit={handleSubmit}>
               <InputField
                 id="email"
                 name="email"
                 label="Email"
                 placeholder="Masukkan Email"
                 value={formData.email}
-                onChange={onChange}
+                onChange={handleChange}
                 required
                 validate={validateEmail}
-                disabled={isLoading}
               />
-
               <InputField
                 id="password"
                 name="password"
@@ -136,29 +124,25 @@ const Login = () => {
                 type="password"
                 placeholder="Masukkan Password"
                 value={formData.password}
-                onChange={onChange}
+                onChange={handleChange}
                 required
                 validate={validatePassword}
-                disabled={isLoading}
               />
 
               <button
                 type="submit"
-                className="w-full py-3 px-4 rounded-lg text-white font-mediaum bg-blue-600 hover:bg-blue-700 active:bg-blue-800 transition-all"
+                className="w-full py-3 px-4 rounded-lg text-white font-medium bg-blue-600 hover:bg-blue-700 active:bg-blue-800 transition-all"
               >
-                {isLoading ? "Loading..." : "Login"}
+                Login
               </button>
             </form>
-
-            <div className="mt-6 text-center">
-              <p className="text-sm text-gray-600"></p>
-            </div>
           </div>
         </div>
       </div>
+
       <ToastContainer />
     </>
   );
 };
 
-export default Login;
+export default AdminLogin;
