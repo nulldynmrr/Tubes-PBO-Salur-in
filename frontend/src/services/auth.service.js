@@ -1,46 +1,44 @@
+import axios from "axios";
 import { API_BASE_URL, API_ENDPOINTS } from "@/lib/constants/api";
 
 export const authService = {
   login: async (email, password) => {
-    const res = await fetch(`${API_BASE_URL}${API_ENDPOINTS.AUTH.LOGIN}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
+    const res = await axios.post(`${API_BASE_URL}${API_ENDPOINTS.AUTH.LOGIN}`, {
+      email,
+      password,
     });
-    if (!res.ok) throw new Error("Login gagal");
-    return res.json();
+    return res.data;
   },
 
-  // ✅ Add this below the regular login
   loginAdmin: async (email, password) => {
-    const res = await fetch(`${API_BASE_URL}/auth/admin/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
+    const res = await axios.post(`${API_BASE_URL}/auth/login/admin`, {
+      email,
+      password,
     });
-    if (!res.ok) throw new Error("Login admin gagal");
-    return res.json();
+    return res.data;
   },
 
   register: async (userData) => {
-    const res = await fetch(`${API_BASE_URL}${API_ENDPOINTS.AUTH.REGISTER}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(userData),
-    });
-    if (!res.ok) throw new Error("Registrasi gagal");
-    return res.json();
+    const res = await axios.post(
+      `${API_BASE_URL}${API_ENDPOINTS.AUTH.REGISTER}`,
+      userData
+    );
+    return res.data;
   },
 
   setAuthToken: (token) => {
-    document.cookie = `auth_token=${token}; path=/; Secure`;
+    localStorage.setItem("token", token);
+    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
   },
 
   getAuthToken: () => {
-    const cookies = document.cookie.split(";");
-    const authCookie = cookies.find((cookie) =>
-      cookie.trim().startsWith("auth_token=")
-    );
-    return authCookie ? authCookie.split("=")[1] : null;
+    return localStorage.getItem("token");
+  },
+
+  clearAuth: () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("email");
+    localStorage.removeItem("role");
+    delete axios.defaults.headers.common["Authorization"];
   },
 };

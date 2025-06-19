@@ -1,12 +1,9 @@
 package com.tubes.salurin.service.impl;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.tubes.salurin.dto.DonationRequest;
-import com.tubes.salurin.dto.DonationResponse;
 import com.tubes.salurin.entity.Campaign;
 import com.tubes.salurin.entity.Donation;
 import com.tubes.salurin.entity.Donor;
@@ -20,50 +17,35 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class DonationServiceImpl implements DonationService {
-    private final DonationRepository donationRepository;
-    private final CampaignRepository campaignRepository;
-    private final DonorRepository donorRepository;
+    private final DonationRepository donationRepo;
+    private final CampaignRepository campaignRepo;
+    private final DonorRepository donorRepo;
 
     @Override
-    public DonationResponse createDonation(DonationRequest request){
+    @Transactional
+    public Donation createDonation(Long campaignId, DonationRequest request) {
+        Campaign campaign = campaignRepo.findById(campaignId)
+                .orElseThrow(() -> new RuntimeException("Campaign not found"));
+
+        long donorCount = donorRepo.count();
+        Donor donor = new Donor();
+        donor.setName("donor" + (donorCount + 1));
+        donor = donorRepo.save(donor);
+
         Donation donation = new Donation();
-        donation.setAmount(request.getAmount());
-        donation.setMessage(request.getMessage());
-
-        Campaign campaign = campaignRepository.findById(request.getCampaignId())
-            .orElseThrow(() -> new RuntimeException("Campaign tidak ditemukan"));
         donation.setCampaign(campaign);
-        Donor donor = donorRepository.findById(request.getDonorId())
-            .orElseThrow(() -> new RuntimeException("Donatur tidak ditemukan"));
         donation.setDonor(donor);
+        donation.setAmount(request.getAmount());
+        donation.setPaymentMethod(request.getPaymentMethod());
+        donation.setPaymentProvider(request.getPaymentProvider());
 
-        donationRepository.save(donation);
-        return toDto(donation);
-    }
+        double updated = campaign.getAccumulated() + request.getAmount();
+        campaign.setAccumulated(updated);
+        if (updated >= campaign.getTargetAmount()) {
+            campaign.setStatus("COMPLETED");
+        }
 
-    @Override
-    public List<DonationResponse> getMyDonations(){
-        return donationRepository.findAll().stream().map(this::toDto).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<DonationResponse> getAllDonations(){
-        return donationRepository.findAll().stream().map(this::toDto).collect(Collectors.toList());
-    }
-
-    @Override
-    public DonationResponse getDonationDetail(Long id){
-        Donation donation = donationRepository.findById(id).orElseThrow();
-        return toDto(donation);
-    }
-
-    private DonationResponse toDto(Donation d){
-        DonationResponse dto = new DonationResponse();
-        dto.setId(d.getId());
-        dto.setAmount(d.getAmount());
-        dto.setDonorName(d.getDonor().getName());
-        dto.setMessage(d.getMessage());
-        dto.setCampaignId(d.getCampaign().getId());
-        return dto;
+        campaignRepo.save(campaign);
+        return donationRepo.save(donation);
     }
 }

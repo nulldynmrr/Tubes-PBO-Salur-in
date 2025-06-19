@@ -11,18 +11,17 @@ import com.tubes.salurin.repository.AdminRepository;
 @Configuration
 public class AdminRegisterSalurin {
     @Bean
-    public CommandLineRunner createAdmin(AdminRepository adminRepository, PasswordEncoder passwordEncoder) {
+    public CommandLineRunner createAdmin(AdminRepository adminRepository, PasswordEncoder passwordEncoder){
         return args ->{
             String adminEmail = "admin@salurin.com";
             String adminPassword = "Admin123!";
-
             boolean exists = adminRepository.findByEmail(adminEmail).isPresent();
             if (!exists){
                 Admin admin = new Admin();
                 admin.setEmail(adminEmail);
                 admin.setPassword(passwordEncoder.encode(adminPassword));
                 admin.setName("Admin Aplikasi");
-                
+                admin.setRole("ADMIN");
                 adminRepository.save(admin);
             }
         };

@@ -6,22 +6,31 @@ import SecondaryButton from "./ui/button/SecondaryButton";
 import { FaBars } from "react-icons/fa";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { authService } from "@/services/auth.service";
 
-export const Navbar = () => {
+export const Navbar = ({ hideLogout = false }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
-  const isAdmin = pathname.startsWith("/admin");
-  const isCampaign = pathname.startsWith("/campaign");
-  const isDonor = pathname.startsWith("/donor");
+
+  const isAdmin =
+    pathname.startsWith("/admin") || pathname.startsWith("/dashboard/admin");
+  const isLoggedIn =
+    isAdmin ||
+    pathname.startsWith("/owner") ||
+    pathname.startsWith("/campaign");
 
   const handleLogout = () => {
-    authService.logout();
-    window.location.href = "/";
+    localStorage.clear();
+    if (isAdmin) {
+      window.location.href = "/login/admin";
+    } else {
+      window.location.href = "/home";
+    }
   };
 
   const renderNavLinks = () => {
-    if (isAdmin || isCampaign) {
+    if (hideLogout) return null;
+
+    if (isLoggedIn) {
       return (
         <button
           onClick={handleLogout}
@@ -32,49 +41,13 @@ export const Navbar = () => {
       );
     }
 
-    if (isDonor) {
-      return (
-        <>
-          <Link
-            href="/donor/donations"
-            className="text-gray-700 hover:text-black"
-          >
-            Donasi
-          </Link>
-          <Link
-            href="/donor/history"
-            className="text-gray-700 hover:text-black"
-          >
-            Riwayat Donasi
-          </Link>
-          <Link
-            href="/donor/profile"
-            className="text-gray-700 hover:text-black"
-          >
-            Profil
-          </Link>
-          <button
-            onClick={handleLogout}
-            className="text-gray-700 hover:text-black"
-          >
-            Logout
-          </button>
-        </>
-      );
-    }
-
     return (
-      <>
-        <Link href="/" className="text-gray-700 hover:text-black">
-          Tentang Kami
-        </Link>
-        <Link href="/" className="text-gray-700 hover:text-black">
-          Komunitas
-        </Link>
-        <SecondaryButton nextRoute="/register/campaign">
+      <div className="flex gap-4">
+        <SecondaryButton nextRoute="/login/owner">Login</SecondaryButton>
+        <SecondaryButton nextRoute="/register/owner">
           Daftar Campaign
         </SecondaryButton>
-      </>
+      </div>
     );
   };
 
